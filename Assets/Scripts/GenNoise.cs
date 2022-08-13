@@ -20,7 +20,7 @@ public class GenNoise : MonoBehaviour
     public RenderTexture renderTexture;
     Texture2D texture;
     int kernel;
-    string path = "Assets/test.tga";
+    //string path = "Assets/Textures/MainMap.tga";
 
     public void Awake()
     {
@@ -57,8 +57,8 @@ public class GenNoise : MonoBehaviour
         texture.Apply();
         RenderTexture.active = previous;
 
-        byte[] bytes = texture.EncodeToTGA();
-        File.WriteAllBytes(path, bytes);
+        //byte[] bytes = texture.EncodeToTGA();
+        //File.WriteAllBytes(path, bytes);
     }
 
     private RenderTexture CreateRT(int size)

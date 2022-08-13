@@ -8,7 +8,10 @@ public class GameManager : MonoBehaviour
     public GenNoise genNoise;
     public MainMap mainMap;
 
-    [HideInInspector]public RenderTexture mainTexture;
+    public RenderTexture mainTexture
+    {
+        get { return genNoise.renderTexture; }
+    }
 
     public void Awake()
     {

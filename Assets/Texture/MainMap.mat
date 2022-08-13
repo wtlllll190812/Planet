@@ -66,26 +66,34 @@ Material:
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
+    - _ForestThreshold: 0.6
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _Metallic: 0
     - _Mode: 0
+    - _MoutainThreshold: 0.66
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _Threshold1: 0.65
+    - _Threshold1: 0.62
     - _Threshold2: 0.54
     - _UVSec: 0
     - _ZWrite: 1
+    - _oceanThreshold: 0.5
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Color1: {r: 0.13901742, g: 0.5188679, b: 0.19143751, a: 1}
     - _Color2: {r: 0.24798861, g: 0.8113208, b: 0.2813751, a: 1}
     - _Color3: {r: 0.51085794, g: 0.7586797, b: 0.9433962, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _ForestColor: {r: 0.2032692, g: 0.5283019, b: 0.18141685, a: 1}
+    - _GrassColor: {r: 0.28754002, g: 0.7735849, b: 0.29780638, a: 1}
+    - _MoutainColor: {r: 0.77007836, g: 0.93241966, b: 0.9339623, a: 1}
+    - _OceanColor: {r: 0.2462086, g: 0.6373671, b: 0.7169812, a: 1}
+    - _SandColor: {r: 0.8301887, g: 0.7588407, b: 0.58269846, a: 1}
     - _Threshold1: {r: 1, g: 1, b: 1, a: 1}
     - _Threshold2: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
