@@ -4,13 +4,14 @@ using System.Collections.Generic;
 
 public class Evotemper : EvoluteLayer
 {
+    public float deltaTem;
+
     public override void Init()
     {
-        throw new System.NotImplementedException();
     }
 
-    public override void Excute(RenderTexture texture, Material mainMaterial)
+    public override void Excute(RenderTexture texture, MainMap map)
     {
-        throw new System.NotImplementedException();
+        map._temperature += deltaTem;
     }
 }

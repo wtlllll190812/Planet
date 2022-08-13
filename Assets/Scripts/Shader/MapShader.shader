@@ -13,6 +13,8 @@ Shader "Custom/MapShader"
         _ForestThreshold("ForestThreshold",Float)=0.3
         _oceanThreshold("oceanThreshold",Float)=0.6
         _MoutainThreshold("MoutainThreshold",Float)=0.9
+            
+        _Temperature("Temperature",Float)=0.5
     }	
     SubShader
     {
@@ -51,6 +53,7 @@ Shader "Custom/MapShader"
             float _ForestThreshold;
             float _oceanThreshold;
             float _MoutainThreshold;
+            float _Temperature;
 
             v2f vert (appdata v)
             {
@@ -70,12 +73,14 @@ Shader "Custom/MapShader"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                float noise = tex2D(_MapTex, i.uv[0]).r;
-                if(noise>_MoutainThreshold)
-                    return _MoutainColor;
-                if(noise>_ForestThreshold)
-                    return _ForestColor;
-                if(noise>_oceanThreshold)
+                fixed4 outColor;
+                float height = tex2D(_MapTex, i.uv[0]).r;
+
+                if(height>_MoutainThreshold)
+                    outColor=_MoutainColor;
+                else if(height>_ForestThreshold)
+                    outColor= _ForestColor;
+                else if(height>_oceanThreshold)
                 {
                     int number=0;
                     for(int index=0;index<9;index++)
@@ -85,10 +90,15 @@ Shader "Custom/MapShader"
                             number++;
                     }
                     if(number!=0)
-                        return _SandColor;
-                    return _GrassColor;
+                        outColor= _SandColor;
+                    else
+                        outColor= _GrassColor;
                 }
-                return _OceanColor;
+                else 
+                    outColor= _OceanColor;
+
+                outColor+=_Temperature*2;
+                return outColor;
             }
             ENDCG
         }

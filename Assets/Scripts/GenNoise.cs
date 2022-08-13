@@ -18,9 +18,7 @@ public class GenNoise : MonoBehaviour
     public int seed;
 
     public RenderTexture renderTexture;
-    Texture2D texture;
-    int kernel;
-    //string path = "Assets/Textures/MainMap.tga";
+    string path = "Assets/Textures/MainMap.tga";
 
     public void Awake()
     {
@@ -29,12 +27,14 @@ public class GenNoise : MonoBehaviour
 
     void Init()
     {
+        if(renderTexture!=null)
+            renderTexture.Release();
         renderTexture = CreateRT((int)size);
-        kernel = computeShader.FindKernel("GenNoise");
+        int kernel = computeShader.FindKernel("GenNoise");
         computeShader.SetTexture(kernel, "Texture", renderTexture);
         computeShader.SetInt("size", (int)size);
         computeShader.SetFloat("scale", scale * 10f);
-        computeShader.SetFloat("seed", seed);
+        computeShader.SetFloat("seed", (float)seed/10000);
         computeShader.SetInt("Type", (int)noiseType);
         computeShader.SetInt("State", (int)generation);
         computeShader.Dispatch(kernel, (int)size / 8, (int)size / 8, 1);
@@ -52,13 +52,13 @@ public class GenNoise : MonoBehaviour
         Init();
         RenderTexture previous = RenderTexture.active;
         RenderTexture.active = renderTexture;
-        texture = new Texture2D(renderTexture.width, renderTexture.height);
+        Texture2D texture = new Texture2D(renderTexture.width, renderTexture.height);
         texture.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
         texture.Apply();
         RenderTexture.active = previous;
 
-        //byte[] bytes = texture.EncodeToTGA();
-        //File.WriteAllBytes(path, bytes);
+        byte[] bytes = texture.EncodeToTGA();
+        File.WriteAllBytes(path, bytes);
     }
 
     private RenderTexture CreateRT(int size)
