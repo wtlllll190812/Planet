@@ -1,0 +1,197 @@
+#pragma kernel GenNoise
+const float PHI = 1.61803398874989484820459 * 0.1f;
+const float PI = 3.14159265358979323846264 * 0.1f;
+const float SQ2 = 1.41421356237309504880169 * 10000.0;
+
+RWTexture2D<float4> Texture;
+float scale;
+float seed;
+int Type = 0;
+int State = 0;
+int size;
+
+float2 hash22(float2 p)
+{
+    p = float2(dot(p, float2(142.1, 311.7)), dot(p, float2(269.5, 183.3)));
+    return -1.0 + 2.0 * frac(sin(p) * (seed/10000 + 43758.5455123));
+}
+			
+float2 hash21(float2 p)
+{
+    float h = dot(p, float2(142.1, 311.7));
+    return -1.0 + 2.0 * frac(1 * 43758.5455123);
+}
+
+float Perlin(float2 p)
+{
+    float2 pi = floor(p);
+    float2 pf = frac(p);
+    
+    //float2 w = pf * pf * (3.0 - 2.0 * pf);
+    float2 w = pf * pf * pf * (6 * pf * pf - 15 * pf + 10);
+     
+    return lerp(lerp(dot(hash22(pi + float2(0.0, 0.0)), pf - float2(0.0, 0.0)),
+                    dot(hash22(pi + float2(1.0, 0.0)), pf - float2(1, 0.0)), w.x),
+                lerp(dot(hash22(pi + float2(0.0, 1.0)), pf - float2(0.0, 1.0)),
+                    dot(hash22(pi + float2(1.0, 1.0)), pf - float2(1.0, 1.0)), w.x), w.y);
+}
+
+float PerlinSum(float2 p)
+{
+    float f = 0;
+    p = p * 8;
+    float2x2 m = float2x2(1.6, 1.2, -1.2, 1.6);
+    
+    f += 1.0 * (State > 0 ? abs(Perlin(p)) : Perlin(p));
+    p = mul(m, p);
+    f += 0.5 * (State > 0 ? abs(Perlin(p)) : Perlin(p));
+    p = mul(m, p);
+    f += 0.25 * (State > 0 ? abs(Perlin(p)) : Perlin(p));
+    p = mul(m, p);
+    f += 0.125 * (State > 0 ? abs(Perlin(p)) : Perlin(p));
+    p = mul(m, p);
+    f += 0.0625 * (State > 0 ? abs(Perlin(p)) : Perlin(p));
+    
+    p = mul(m, p);
+    if (State > 1)
+        f = sin(f + p.x / 32.0);
+    return f;
+}
+
+float ValueNoise(float2 p)
+{
+    float2 pi = floor(p);
+    float2 pf = frac(p);
+    
+    //float2 w = pf * pf * (3.0 - 2.0 * pf);
+    float2 w = pf * pf * pf * (6 * pf * pf - 15 * pf + 10);
+     
+    return lerp(lerp(hash21(pi + float2(0.0, 0.0)), hash21(pi + float2(1.0, 0.0)), w.x),
+                lerp(hash21(pi + float2(0.0, 1.0)), hash21(pi + float2(1.0, 1.0)), w.x), w.y);
+}
+
+float ValueSum(float2 p)
+{
+    float f = 0;
+    p = p * 4;
+    f += State > 0 ? abs(ValueNoise(p)) : ValueNoise(p);
+    p = 2 * p;
+    f += 0.5 * (State > 0 ? abs(ValueNoise(p)) : ValueNoise(p));
+    p = 2 * p;
+    f += 0.25 * (State > 0 ? abs(ValueNoise(p)) : ValueNoise(p));
+    p = 2 * p;
+    f += 0.125 * (State > 0 ? abs(ValueNoise(p)) : ValueNoise(p));
+    p = 2 * p;
+    f += 0.0625 * (State > 0 ? abs(ValueNoise(p)) : ValueNoise(p));
+    
+    p = 2 * p;
+    if (State > 1)
+        f = sin(f + p.x / 32.0);
+    return f;
+}
+
+float SimplexNoise(float2 p)
+{
+    const float K1 = 0.366025404; // (sqrt(3)-1)/2;
+    const float K2 = 0.211324865; // (3-sqrt(3))/6;
+    
+    float2 i = floor(p + (p.x + p.y) * K1);
+    
+    float2 a = p - (i - (i.x + i.y) * K2);
+    float2 o = (a.x < a.y) ? float2(0, 1) : float2(1, 0);
+    float2 b = a - o + K2;
+    float2 c = a - 1 + 2 * K2;
+    
+    float3 h = max(0.5 - float3(dot(a, a), dot(b, b), dot(c, c)), 0);
+    float3 n = pow(h, 4) * float3(dot(a, hash22(i)), dot(b, hash22(i + o)),
+        dot(c, hash22(i + 1)));
+    
+    return dot(float3(70, 70, 70), n);
+}
+
+float SimplexSum(float2 p)
+{
+    float f = 0;
+    p = p * 4;
+    f += State > 0 ? abs(SimplexNoise(p)) : SimplexNoise(p);
+    p = 2 * p;
+    f += 0.5 * (State > 0 ? abs(SimplexNoise(p)) : SimplexNoise(p));
+    p = 2 * p;
+    f += 0.25 * (State > 0 ? abs(SimplexNoise(p)) : SimplexNoise(p));
+    p = 2 * p;
+    f += 0.125 * (State > 0 ? abs(SimplexNoise(p)) : SimplexNoise(p));
+    p = 2 * p;
+    f += 0.0625 * (State > 0 ? abs(SimplexNoise(p)) : SimplexNoise(p));
+    
+    p = 2 * p;
+    if (State > 1)
+        f = sin(f + p.x / 32.0);
+    return f;
+}
+
+float2 random2(float2 p)
+{
+    return frac(sin(float2(dot(p, float2(127.1, 311.7)), dot(p, float2(269.5, 183.3)))) *
+        43758.5453);
+}
+
+float Worley(float2 p)
+{
+    float min_dist = 1000;
+    float2 pi = floor(p);
+    float2 pf = frac(p);
+    
+    
+    float num = scale / 10;
+    
+    for (int m = -1; m <= 1; m++)
+    {
+        for (int n = -1; n <= 1; n++)
+        {
+            float2 sp = (pi + float2(m, n));
+            float2 pos = 0;
+            float factor = num;
+            pos = (sp + factor) % factor;
+         
+            sp += random2(pos);
+            float dist = distance(p, sp);
+            min_dist = min(min_dist, dist);
+        }
+    }
+    return min_dist;
+}
+
+int2 Tiling(int2 pos)
+{
+    pos.x = pos.x % 256;
+    pos.y = pos.y % 256;
+    return pos;
+}
+
+[numthreads(8, 8, 1)]
+void GenNoise(uint3 id : SV_DispatchThreadID)
+{
+    //float r = Perlin(id.xy / scale);
+    float r = 0;
+    if (Type == 0)
+    {
+        //r = PerlinSum(id.xy / scale);
+        r = PerlinSum(Tiling(id.xy) / scale);
+    }
+    else if (Type == 1)
+        r = ValueSum(id.xy / scale);
+    else if (Type == 2)
+        r = SimplexSum(id.xy / scale);
+    r = r * 0.5 + 0.5;
+    
+    if (Type == 3)
+    {
+        float num = scale / 10;
+        num = (float) size / num;
+        r = Worley(id.xy / num);
+        r = 1 - r;
+    }
+    
+    Texture[id.xy] = float4(r, r, r, 1);
+}
+
