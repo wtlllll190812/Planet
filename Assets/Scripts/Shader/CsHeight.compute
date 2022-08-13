@@ -4,6 +4,15 @@
 // Create a RenderTexture with enableRandomWrite flag and set it
 // with cs.SetTexture
 RWTexture2D<float4> Result;
+float4 _MoutainColor;
+float4 _ForestColor;
+float4 _GrassColor;
+float4 _OceanColor;
+float4 _SandColor;
+
+float _ForestThreshold;
+float _oceanThreshold;
+float _MoutainThreshold;
 
 [numthreads(8,8,1)]
 void CSMain (uint3 id : SV_DispatchThreadID)

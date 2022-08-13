@@ -8,9 +8,17 @@ RWTexture2D<float4> Result;
 [numthreads(8,8,1)]
 void CSMain (uint3 id : SV_DispatchThreadID)
 {
-    // TODO: insert actual code here!
-    if (Result[float2(id.x + 1, id.y + 1)].r<0.1f)
-        Result[id.xy] = Result[float2(id.x + 1, id.y + 1)];
+    int res = 0;
+    res += (Result[float2(id.x + 1, id.y + 1)].r > 0.1f);
+    res += (Result[float2(id.x - 1, id.y - 1)].r > 0.1f);
+    res += (Result[float2(id.x - 1, id.y + 1)].r > 0.1f);
+    res += (Result[float2(id.x + 1, id.y - 1)].r > 0.1f);
+    
+    if (res>0)
+    {
+        float4 oriColor = Result[id.xy];
+        Result[id.xy] = float4(0.01,0.01,0.01,0)+oriColor;
+    }
     else
         Result[id.xy] = Result[id.xy];
 }
