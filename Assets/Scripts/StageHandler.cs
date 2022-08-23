@@ -1,24 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System.Xml.Linq;
+﻿using UnityEngine;
 using System.Linq;
+using System.Xml.Linq;
+using System.Collections;
 using Sirenix.OdinInspector;
-
+using System.Collections.Generic;
 
 public class StageHandler
 {
     public string fileName;
     public Transform sceneHandler;
-    public int sectionIndex = 0;
-    public int stageIndex = 0;
+    public string playerName;
+    public int planetIndex = 0;
 
-    public StageHandler(string path, Transform transform, int _sectionIndex, int _stageIndex)
+    public StageHandler(string path, Transform transform, string _playerName, int _planetIndex)
     {
         fileName = path;
         sceneHandler = transform;
-        sectionIndex = _sectionIndex;
-        stageIndex = _stageIndex;
+        playerName = _playerName;
+        planetIndex = _planetIndex;
     }
 
     public StageHandler(string path, Transform transform)
@@ -28,8 +27,8 @@ public class StageHandler
 
         XDocument _doc = XDocument.Load(fileName + ".xml");
         XElement root = _doc.Root;
-        sectionIndex = int.Parse(root.Attribute("SectionIndex").Value);
-        stageIndex = int.Parse(root.Attribute("StageIndex").Value);
+        playerName = root.Attribute("playerName").Value;
+        planetIndex = int.Parse(root.Attribute("planetIndex").Value);
     }
     /// <summary>
     /// 加载场景数据
@@ -42,7 +41,7 @@ public class StageHandler
         sceneHandler.name = "SceneHandler";
         XDocument _doc = XDocument.Load(fileName + ".xml");
         XElement root = _doc.Root;
-        CreateGobjToScene(root, sceneHandler);
+        CreateGobjInScene(root, sceneHandler);
     }
 
     /// <summary>
@@ -54,8 +53,8 @@ public class StageHandler
         //创建根节点
         XDocument xdoc = new XDocument();
         XElement root = new XElement("Stage");
-        root.SetAttributeValue("StageIndex",stageIndex);
-        root.SetAttributeValue("SectionIndex", sectionIndex);
+        root.SetAttributeValue("planetIndex", planetIndex);
+        root.SetAttributeValue("playerName", playerName);
 
         GetGobjFromScene(root,sceneHandler);
         xdoc.Add(root);
@@ -68,7 +67,7 @@ public class StageHandler
     /// </summary>
     /// <param name="root">根节点</param>
     /// <param name="parentTr">父物体</param>
-    private void CreateGobjToScene(XElement root, Transform parentTr)
+    private void CreateGobjInScene(XElement root, Transform parentTr)
     {
         foreach (var item in root.Elements())
         {
@@ -88,12 +87,13 @@ public class StageHandler
                 go = new GameObject("Empty");
             else
             {
+                Debug.Log(path);
                 go = GameObject.Instantiate(Resources.Load<GameObject>(path));
             }
             go.transform.parent = parentTr;
             SetGobjData(item, go);
 
-            CreateGobjToScene(item, go.transform);
+            CreateGobjInScene(item, go.transform);
         }
     }
     

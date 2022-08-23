@@ -9,20 +9,20 @@ public class StageEditor :SerializedMonoBehaviour
 {
     public GameObject sceneHandler;
     public string path="sds";
-    public int sectionIndex=0;
-    public int stageIndex=0;
+    public string playerName;
+    public int planetIndex;
 
     [Button("Save")]
     void Save()
     {
-        StageHandler stage = new StageHandler("Assets/Resources/Scenes/InnerStages/" + path, sceneHandler.transform, sectionIndex, stageIndex);
+        StageHandler stage = new StageHandler("Assets/Resources/Planets/" + path, sceneHandler.transform, playerName, planetIndex);
         stage.Save();
     }
 
     [Button("Load")]
     void Load()
     {
-        StageHandler stage = new StageHandler("Assets/Resources/Scenes/InnerStages/" + path,sceneHandler.transform, sectionIndex, stageIndex);
+        StageHandler stage = new StageHandler("Assets/Resources/Planets/" + path,sceneHandler.transform, playerName, planetIndex);
         stage.Load();
     }
 }
