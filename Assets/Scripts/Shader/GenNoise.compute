@@ -184,8 +184,8 @@ void GenNoise(uint3 id : SV_DispatchThreadID)
         num = (float) size / num;
         r = Worley(id.xy / num);
         r = 1 - r;
-    }
-    
+    } 
+    //r = round(r * 10)/10;
     Texture[id.xy] = float4(r, r, r, 1);
 }
 
