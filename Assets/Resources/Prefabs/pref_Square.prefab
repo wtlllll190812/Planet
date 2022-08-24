@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7578227200014054181}
   - component: {fileID: 7578227200014054179}
   m_Layer: 0
-  m_Name: Square
+  m_Name: pref_Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -97,4 +97,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b2099bd1b87ebb479e92ad016b0e087, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabPath: Assets/Resources/Prefabs/Square.prefab
+  prefabPath: Assets/Resources/Prefabs/pref_Square.prefab
