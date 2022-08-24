@@ -112,3 +112,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   size: 4
+  rotationSpeed: 0
+  revolutionSpeed: 0
+  isSun: 1

@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Stage planetIndex="0" playerName="sdsds">
-  <class Name="pref_Planet" PositionX="10.43" PositionY="-0.75" PositionZ="0" RotationX="-0" RotationY="0" RotationZ="0" ScaleX="2.75964713" ScaleY="2.75964713" ScaleZ="2.75964713" Path="Assets/Resources/Prefabs/pref_Planet.prefab">
-    <class Name="pref_Square" PositionX="10.44" PositionY="0.659999847" PositionZ="0" RotationX="-0" RotationY="0" RotationZ="0" ScaleX="0.362365156" ScaleY="0.7237157" ScaleZ="0.362365156" Path="Assets/Resources/Prefabs/pref_Square.prefab" />
+  <class Name="pref_Planet" PositionX="9.2" PositionY="0" PositionZ="0" RotationX="-0" RotationY="0" RotationZ="0" ScaleX="1" ScaleY="1" ScaleZ="1" Path="Assets/Resources/Prefabs/pref_Planet.prefab">
+    <class Name="Planet" PositionX="9.2" PositionY="-0.36" PositionZ="0" RotationX="-0" RotationY="0" RotationZ="0" ScaleX="2.75964713" ScaleY="2.75964713" ScaleZ="2.75964713" Path="Empty">
+      <class Name="pref_Square" PositionX="9.155846" PositionY="1.67661941" PositionZ="0" RotationX="-0" RotationY="0" RotationZ="0" ScaleX="0.22" ScaleY="0.62" ScaleZ="1" Path="Assets/Resources/Prefabs/pref_Square.prefab" />
+    </class>
   </class>
-  <class Name="pref_Sun" PositionX="-1.70713425" PositionY="-0.5675993" PositionZ="0" RotationX="-0" RotationY="0" RotationZ="0" ScaleX="4.95548" ScaleY="4.95548" ScaleZ="4.95548" Path="Assets/Resources/Prefabs/pref_Sun.prefab" />
+  <class Name="pref_Sun" PositionX="-0.02" PositionY="-0.02" PositionZ="0" RotationX="-0" RotationY="0" RotationZ="0" ScaleX="4.95548" ScaleY="4.95548" ScaleZ="4.95548" Path="Assets/Resources/Prefabs/pref_Sun.prefab" />
 </Stage>
