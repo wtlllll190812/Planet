@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class CameraControl : MonoBehaviour
 {
+    public static CameraControl instance; 
     public CameraData target;
     public float speed;
 
@@ -11,15 +12,20 @@ public class CameraControl : MonoBehaviour
     private float vSize;
     private Camera mainCamera;
 
+    public void Awake()
+    {
+        instance = this;
+    }
+
     public void Start()
     {
         mainCamera = GetComponent<Camera>();
-        target = new CameraData(transform.position,mainCamera.orthographicSize);
+        target = new CameraData(transform,mainCamera.orthographicSize);
     }
 
     public void Update()
     {
-        Vector3 newPos = Vector2.SmoothDamp(transform.position, target.pos, ref vPos, speed);
+        Vector3 newPos = Vector2.SmoothDamp(transform.position, target.pos.position, ref vPos, speed);
         newPos.z = -10;
         transform.position = newPos;
 
@@ -35,9 +41,9 @@ public class CameraControl : MonoBehaviour
 [System.Serializable]
 public struct CameraData
 {
-    public Vector2 pos;
+    public Transform pos;
     public float size;
-    public CameraData(Vector2 pos,float size)
+    public CameraData(Transform pos,float size)
     {
         this.pos = pos;
         this.size = size;

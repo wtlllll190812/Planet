@@ -25,7 +25,7 @@ public class MainMap : SerializedMonoBehaviour
     void Start()
     {
         mainMaterial = GetComponent<SpriteRenderer>().material;
-        mainMaterial.SetTexture("_MapTex",GameManager.instance.mainTexture);
+        mainMaterial.SetTexture("_MapTex",Plan1GameManager.instance.mainTexture);
         foreach (var item in layers)
             item.Init();
         StartCoroutine(OnChange());
@@ -38,9 +38,9 @@ public class MainMap : SerializedMonoBehaviour
         {
             foreach (var item in layers)
             {
-                item.Excute(GameManager.instance.mainTexture, this);
+                item.Excute(Plan1GameManager.instance.mainTexture, this);
             }
-            mainMaterial.SetTexture("_MapTex", GameManager.instance.mainTexture);
+            mainMaterial.SetTexture("_MapTex", Plan1GameManager.instance.mainTexture);
             yield return new WaitForSeconds(updateTime);
         }
     }

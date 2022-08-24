@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 391267311311545743}
   - component: {fileID: 391267311311545728}
   - component: {fileID: 391267311311545742}
+  - component: {fileID: -5166600987793094645}
   m_Layer: 0
   m_Name: pref_Planet
   m_TagString: Untagged
@@ -98,3 +99,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabPath: Assets/Resources/Prefabs/pref_Planet.prefab
+--- !u!114 &-5166600987793094645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 391267311311545729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a694f87e4c220b9459df78e4a2d9ef39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  size: 3

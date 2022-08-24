@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6166949977649328937}
   - component: {fileID: 6166949977649328938}
   - component: {fileID: 6166949977649328939}
+  - component: {fileID: -2544936747252414799}
   m_Layer: 0
   m_Name: pref_Sun
   m_TagString: Untagged
@@ -98,3 +99,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabPath: Assets/Resources/Prefabs/pref_Sun.prefab
+--- !u!114 &-2544936747252414799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6166949977649328940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f289c818b7e111249b737083dcb2ed0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  size: 4

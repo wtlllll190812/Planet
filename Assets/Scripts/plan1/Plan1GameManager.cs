@@ -4,9 +4,9 @@ using UnityEngine.Events;
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
 
-public class GameManager : SerializedMonoBehaviour
+public class Plan1GameManager : SerializedMonoBehaviour
 {
-    public static GameManager instance;
+    public static Plan1GameManager instance;
 
     public GenNoise genNoise;
     public MainMap mainMap;
