@@ -4,14 +4,29 @@ using System.Collections.Generic;
 
 public class InputManager : MonoBehaviour
 {
-    public RaycastHit[] hits=new RaycastHit[0];
     public Camera mainCam;
 
     private IDragable currentObj;
     private Vector2 lastPos;
+    private RaycastHit[] hits = new RaycastHit[0];
 
     public void Update()
     {
+        if(Input.GetMouseButtonDown(0))
+        {
+            Vector2 pos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -mainCam.transform.position.z));
+            Vector3 startPos = new Vector3(pos.x, pos.y, -4);
+            hits = Physics.SphereCastAll(startPos, 0.1f, Vector3.forward);
+            foreach (var item in hits)
+            {
+                IClickable clickable= item.collider.GetComponent<Planet>() as IClickable;
+                if(clickable!=null)
+                {
+                    clickable.OnClick(pos);
+                }
+            }
+        }
+
         if(Input.GetMouseButton(0))
         {
             Vector2 pos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -mainCam.transform.position.z));
@@ -28,7 +43,6 @@ public class InputManager : MonoBehaviour
                         if (newDragObj == currentObj)
                         {
                             newDragObj.OnDrag(pos, pos - lastPos);
-                            lastPos = pos;
                         }
                         else
                         {
@@ -42,15 +56,19 @@ public class InputManager : MonoBehaviour
                         newDragObj.DragStart(pos);
                         currentObj = newDragObj;
                     }
+                    lastPos = pos;
                     return;
                 }
             }
         }
         
-        if(currentObj!=null)
+        if(Input.GetMouseButtonUp(0))
         {
-            currentObj.DragEnd();
-            currentObj = null;
+            if (currentObj != null)
+            {
+                currentObj.DragEnd();
+                currentObj = null;
+            }
         }
     }
 }
@@ -62,7 +80,7 @@ public interface IDragable
     public void DragEnd();
 }
 
-public interface IPoint
+public interface IClickable
 {
-
+    public void OnClick(Vector3 startPos);
 }

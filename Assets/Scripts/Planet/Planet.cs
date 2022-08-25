@@ -3,7 +3,7 @@ using System.Collections;
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
 
-public class Planet : SerializedMonoBehaviour,IDragable
+public class Planet : SerializedMonoBehaviour,IDragable,IClickable
 {
     public GameObject landPref;
     public ELandData[,,] planetData;
@@ -78,12 +78,21 @@ public class Planet : SerializedMonoBehaviour,IDragable
 
     public void OnDrag(Vector3 currentPos, Vector3 deltaPos)
     {
-        Debug.Log("Drag");
+        transform.Rotate(Vector3.up, deltaPos.x*10,Space.World);
+        transform.Rotate(Vector3.right, deltaPos.y*10,Space.World);
     }
 
     public void DragEnd()
     {
         Debug.Log("end");
+    }
+
+    public void OnClick(Vector3 startPos)
+    {
+        if(GameManager.instance.currentState==EGameState.PlanetView)
+            GameManager.instance.SetState(EGameState.Editor,this);
+        else if(GameManager.instance.currentState == EGameState.GlobalView)
+            GameManager.instance.SetState(EGameState.PlanetView, this);
     }
 }
 public enum ELandData
