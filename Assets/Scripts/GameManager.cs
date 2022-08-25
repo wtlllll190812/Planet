@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
                 planet.CameraFollow();
                 break;
             case GameState.Editor:
-                planet.SetEditorView();
+                planet.CameraFollow();
                 break;
             default:
                 break;

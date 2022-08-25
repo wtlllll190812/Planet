@@ -23,7 +23,7 @@ public class CameraControl : MonoBehaviour
         target = new CameraData(transform,mainCamera.orthographicSize);
     }
 
-    public void Update()
+    public void FixedUpdate()
     {
         Vector3 newPos = Vector2.SmoothDamp(transform.position, target.pos.position, ref vPos, speed);
         newPos.z = -10;
