@@ -12,7 +12,7 @@ public class Planet : SerializedMonoBehaviour
     public float rotationSpeed;
     public float revolutionSpeed;
 
-    public void Awake()
+    public virtual void Awake()
     {
         
         GenPlanet();
@@ -37,7 +37,7 @@ public class Planet : SerializedMonoBehaviour
         }
     }
 
-    public void GenPlanet()
+    public virtual void GenPlanet()
     {
         for (int x = 0; x < 16; x++)
         {
@@ -64,11 +64,16 @@ public class Planet : SerializedMonoBehaviour
 
     public void FixedUpdate()
     {
-        if(GameManager.instance.currentState!=GameState.Editor)
+        if(GameManager.instance.currentState!=EGameState.Editor)
         {
             transform.RotateAround(Sun.instance.transform.position, Vector3.forward, Time.deltaTime * revolutionSpeed);
             transform.Rotate(transform.up, Time.deltaTime * rotationSpeed,Space.Self);
         }
+    }
+
+    public void OnMouseDown()
+    {
+        GameManager.instance.SetState(EGameState.PlanetView,this);
     }
 }
 public enum ELandData

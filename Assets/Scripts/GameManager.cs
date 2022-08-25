@@ -7,7 +7,7 @@ using System.Collections.Generic;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    public GameState currentState;
+    public EGameState currentState;
     public List<Planet> planetList;
     public Planet currentPlanet;
 
@@ -16,27 +16,33 @@ public class GameManager : MonoBehaviour
         instance = this;
     }
 
+    public void Start()
+    {
+        SetState(EGameState.GlobalView,null);
+    }
+
     [Button("SetState")]
-    public void SetState(GameState state,Planet planet)
+    public void SetState(EGameState state,Planet planet)
     {
         switch (state)
         {
-            case GameState.GlobalView:
-                CameraControl.instance.SetTarget(new CameraData(Sun.instance.transform,10));
+            case EGameState.GlobalView:
+                CameraControl.instance.SetTarget(new CameraData(Sun.instance.transform,-24));
                 break;
-            case GameState.PlanetView:
+            case EGameState.PlanetView:
                 planet.CameraFollow();
                 break;
-            case GameState.Editor:
+            case EGameState.Editor:
                 planet.CameraFollow();
                 break;
             default:
                 break;
         }
         currentState = state;
+        currentPlanet = planet;
     }
 }
-public enum GameState
+public enum EGameState
 {
     GlobalView,
     PlanetView,

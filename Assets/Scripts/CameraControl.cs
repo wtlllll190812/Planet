@@ -9,7 +9,7 @@ public class CameraControl : MonoBehaviour
     public float speed;
 
     private Vector2 vPos;
-    private float vSize;
+    private float vZpos;
     private Camera mainCamera;
 
     public void Awake()
@@ -20,16 +20,14 @@ public class CameraControl : MonoBehaviour
     public void Start()
     {
         mainCamera = GetComponent<Camera>();
-        target = new CameraData(transform,mainCamera.orthographicSize);
     }
 
     public void FixedUpdate()
     {
         Vector3 newPos = Vector2.SmoothDamp(transform.position, target.pos.position, ref vPos, speed);
-        newPos.z = -10;
+        newPos.z = Mathf.SmoothDamp(transform.position.z, target.zPos, ref vZpos, speed);
         transform.position = newPos;
-
-        mainCamera.orthographicSize = Mathf.SmoothDamp(mainCamera.orthographicSize, target.size, ref vSize, speed);
+        //mainCamera.fieldOfView = ;
     }
 
     public void SetTarget(CameraData newTarget)
@@ -42,10 +40,10 @@ public class CameraControl : MonoBehaviour
 public struct CameraData
 {
     public Transform pos;
-    public float size;
+    public float zPos;
     public CameraData(Transform pos,float size)
     {
         this.pos = pos;
-        this.size = size;
+        this.zPos = size;
     }
 }

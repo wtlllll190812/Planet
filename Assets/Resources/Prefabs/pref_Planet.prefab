@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3481137532494060465}
   - component: {fileID: 3372099133872137598}
   - component: {fileID: 5339622334229277177}
+  - component: {fileID: 8313743219573243281}
   m_Layer: 0
   m_Name: pref_Planet
   m_TagString: Untagged
@@ -12371,6 +12372,19 @@ MonoBehaviour:
       Entry: 8
       Data: 
   landPref: {fileID: 7660322167204507321, guid: 3a4043cf4af124b4da7660d3e048ca17, type: 3}
-  cameraSize: 3
+  cameraSize: -6
   rotationSpeed: 5
   revolutionSpeed: 10
+--- !u!65 &8313743219573243281
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3481137532494060464}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3, y: 3, z: 3}
+  m_Center: {x: 0, y: 0, z: 0}

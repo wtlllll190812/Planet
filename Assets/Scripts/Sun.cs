@@ -4,16 +4,17 @@ using System.Collections.Generic;
 
 public class Sun : Planet
 {
-    public static Sun instance { get; private set; }
-    // Start is called before the first frame update
-    void Start()
+    public static Sun instance;
+
+    public override void Awake()
     {
-        instance = this;
+        if(instance==null)
+            instance = this;
+        else
+            Destroy(this);
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void GenPlanet()
     {
-        
     }
 }

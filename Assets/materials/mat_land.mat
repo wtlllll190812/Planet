@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Custom_planet
+  m_Name: mat_land
   m_Shader: {fileID: 4800000, guid: 1f355705eaddf63478d0abe554ea78af, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
