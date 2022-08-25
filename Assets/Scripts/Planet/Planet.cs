@@ -64,7 +64,7 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable
 
     public void FixedUpdate()
     {
-        if(GameManager.instance.currentState!=EGameState.Editor)
+        if(!GameManager.instance.CompareState(EGameState.Editor))
         {
             transform.RotateAround(Sun.instance.transform.position, Vector3.forward, Time.deltaTime * revolutionSpeed);
             transform.Rotate(transform.up, Time.deltaTime * rotationSpeed,Space.Self);
@@ -78,7 +78,7 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable
 
     public void OnDrag(Vector3 currentPos, Vector3 deltaPos)
     {
-        transform.Rotate(Vector3.up, deltaPos.x*10,Space.World);
+        transform.Rotate(Vector3.down, deltaPos.x*10,Space.World);
         transform.Rotate(Vector3.right, deltaPos.y*10,Space.World);
     }
 
@@ -89,9 +89,9 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable
 
     public void OnClick(Vector3 startPos)
     {
-        if(GameManager.instance.currentState==EGameState.PlanetView)
+        if(GameManager.instance.CompareState(EGameState.PlanetView))
             GameManager.instance.SetState(EGameState.Editor,this);
-        else if(GameManager.instance.currentState == EGameState.GlobalView)
+        else if(GameManager.instance.CompareState(EGameState.GlobalView))
             GameManager.instance.SetState(EGameState.PlanetView, this);
     }
 }

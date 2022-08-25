@@ -7,9 +7,10 @@ using System.Collections.Generic;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    public EGameState currentState;
     public List<Planet> planetList;
     public Planet currentPlanet;
+
+    private EGameState currentState;
 
     public void Awake()
     {
@@ -19,6 +20,11 @@ public class GameManager : MonoBehaviour
     public void Start()
     {
         SetState(EGameState.GlobalView,null);
+    }
+
+    public bool CompareState(EGameState state)
+    {
+        return currentState == state;
     }
 
     [Button("SetState")]

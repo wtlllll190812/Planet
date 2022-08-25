@@ -12,7 +12,7 @@ public class InputManager : MonoBehaviour
 
     public void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        if(Input.GetMouseButtonDown(0)&& !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
         {
             Vector2 pos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -mainCam.transform.position.z));
             Vector3 startPos = new Vector3(pos.x, pos.y, -4);
@@ -23,8 +23,10 @@ public class InputManager : MonoBehaviour
                 if(clickable!=null)
                 {
                     clickable.OnClick(pos);
+                    return;
                 }
             }
+            GameManager.instance.SetState(EGameState.GlobalView,null);
         }
 
         if(Input.GetMouseButton(0))
