@@ -16,7 +16,12 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable
         Init();
         GenPlanet();
     }
-
+    
+    public void FixedUpdate()
+    {
+        Move();
+    }
+    
     [Button("Init")]
     public void Init()
     {
@@ -25,11 +30,11 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable
 
     public virtual void GenPlanet()
     {
-        foreach (ELandData item in data)
+        foreach (EKindData item in data)
         {
-            if (item != ELandData.underground && item != ELandData.empty)
+            if (item != EKindData.underground && item != EKindData.empty)
             {
-                var land = LandPool.Instance.GetLand(data.currentPos,transform);
+                LandPool.Instance.GetLand(data.currentPos,this);
             }
         }
     }
@@ -40,15 +45,19 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable
         CameraControl.instance.SetTarget(new CameraData(transform, cameraSize));
     }
 
-    public void FixedUpdate()
+    /// <summary>
+    /// 星球公转和自转
+    /// </summary>
+    public void Move()
     {
-        if(!GameManager.instance.CompareState(EGameState.Editor))
+        if (!GameManager.instance.CompareState(EGameState.Editor))
         {
             transform.RotateAround(Sun.instance.transform.position, Vector3.forward, Time.deltaTime * revolutionSpeed);
-            transform.Rotate(transform.up, Time.deltaTime * rotationSpeed,Space.Self);
+            transform.Rotate(transform.up, Time.deltaTime * rotationSpeed, Space.Self);
         }
     }
-
+    
+    //实现拖动接口
     public void DragStart(Vector3 startPos)
     {
         Debug.Log("start");
@@ -76,20 +85,46 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable
     }
 }
 
+/// <summary>
+/// 星球数据类
+/// </summary>
 [System.Serializable]
 public class PlanetData: IEnumerator,IEnumerable
 {
-    [SerializeField]private ELandData[,,] data;
+    public Vector3Int currentPos;
+    public static Vector3 center;
+    public object Current => data[currentPos.x, currentPos.y, currentPos.z];
+
+    [SerializeField]private EKindData[,,] data;
     private int totalSize=16;
     private int planetSize=6;
 
-    public Vector3Int currentPos;
-    public static Vector3 center;
-    public object Current => data[currentPos.x,currentPos.y,currentPos.z];
+    public static Vector3Int[] direction =
+            {Vector3Int.up,Vector3Int.down
+            ,Vector3Int.left,Vector3Int.right
+            ,Vector3Int.forward,Vector3Int.back};
 
+    /// <summary>
+    /// 索引器
+    /// </summary>
+    public EKindData this[Vector3Int index]
+    {
+        get
+        {
+            return data[index.x,index.y,index.z];
+        }
+        set
+        {
+            data[index.x, index.y, index.z] = value;
+        }
+    }
+    
+    /// <summary>
+    /// 初始化数据
+    /// </summary>
     public void Init()
     {
-        data = new ELandData[totalSize, totalSize, totalSize];
+        data = new EKindData[totalSize, totalSize, totalSize];
         center = new Vector3((totalSize - 1) / 2, (totalSize - 1) / 2, (totalSize - 1) / 2);
         //计算星球范围
         for (int x = 0; x < totalSize; x++)
@@ -99,9 +134,9 @@ public class PlanetData: IEnumerator,IEnumerable
                 for (int z = 0; z < totalSize; z++)
                 {
                     if (Vector3.Distance(new Vector3(x, y, z), center) > planetSize)
-                        data[x, y, z] = ELandData.empty;
+                        data[x, y, z] = EKindData.empty;
                     else
-                        data[x, y, z] = ELandData.underground;
+                        data[x, y, z] = EKindData.underground;
                 }
             }
         }
@@ -113,26 +148,70 @@ public class PlanetData: IEnumerator,IEnumerable
                 for (int z = 0; z < totalSize; z++)
                 {
                     if (IsBoundary(new Vector3Int(x, y, z)))
-                        data[x, y, z] = ELandData.grass;
+                        data[x, y, z] = EKindData.grass;
                 }
             }
         }
     }
 
-    public bool IsBoundary(Vector3Int pos)
+    /// <summary>
+    /// 是否在范围内
+    /// </summary>
+    public bool InRange(Vector3Int pos)
     {
-        if (data[pos.x, pos.y, pos.z] == ELandData.empty)
-            return false;
-        bool res = false;
-        res |= (pos.x + 1 > totalSize-1 || data[pos.x + 1, pos.y, pos.z] == ELandData.empty);
-        res |= (pos.x - 1 < 0 || data[pos.x - 1, pos.y, pos.z] == ELandData.empty);
-        res |= (pos.y + 1 > totalSize-1 || data[pos.x, pos.y + 1, pos.z] == ELandData.empty);
-        res |= (pos.y - 1 < 0 || data[pos.x, pos.y - 1, pos.z] == ELandData.empty);
-        res |= (pos.z + 1 > totalSize-1 || data[pos.x, pos.y, pos.z + 1] == ELandData.empty);
-        res |= (pos.z - 1 < 0 || data[pos.x, pos.y, pos.z - 1] == ELandData.empty);
+        bool res=true;
+        res &= pos.x < totalSize;
+        res &= pos.x > 0;
+        res &= pos.y < totalSize;
+        res &= pos.y > 0;
+        res &= pos.z < totalSize;
+        res &= pos.z > 0;
         return res;
     }
 
+    /// <summary>
+    /// 是否在星球边界(是否可见)
+    /// </summary>
+    public bool IsBoundary(Vector3Int pos)
+    {
+        if (data[pos.x, pos.y, pos.z] == EKindData.empty)
+            return false;
+        bool res = false;
+        res |= (pos.x + 1 > totalSize-1 || data[pos.x + 1, pos.y, pos.z] == EKindData.empty);
+        res |= (pos.x - 1 < 0 || data[pos.x - 1, pos.y, pos.z] == EKindData.empty);
+        res |= (pos.y + 1 > totalSize-1 || data[pos.x, pos.y + 1, pos.z] == EKindData.empty);
+        res |= (pos.y - 1 < 0 || data[pos.x, pos.y - 1, pos.z] == EKindData.empty);
+        res |= (pos.z + 1 > totalSize-1 || data[pos.x, pos.y, pos.z + 1] == EKindData.empty);
+        res |= (pos.z - 1 < 0 || data[pos.x, pos.y, pos.z - 1] == EKindData.empty);
+        return res;
+    }
+    
+    /// <summary>
+    /// 更新周边地块数据
+    /// </summary>
+    public void Update(Land land)
+    {
+        foreach (var item in direction)
+        {
+            var kind = this[item + land.pos];
+            if (kind == EKindData.underground && this[land.pos] == EKindData.empty)
+            {
+                this[item + land.pos] = EKindData.grass;
+                LandPool.Instance.GetLand(item + land.pos, land.planet);
+                Debug.Log(item + land.pos);
+            }
+        }
+    }
+    
+    /// <summary>
+    /// 设定地块类型
+    /// </summary>
+    public void SetLandKind(Land land, EKindData kind)
+    {
+        this[land.pos] = kind;
+    }
+
+    //实现IEnumerator,IEnumerable接口
     public bool MoveNext()
     {
         if (currentPos.x == 15)
@@ -157,11 +236,6 @@ public class PlanetData: IEnumerator,IEnumerable
     public void Reset()
     {
         currentPos = Vector3Int.zero;
-    }
-
-    public void Update(Land land)
-    {
-
     }
 
     public IEnumerator GetEnumerator()

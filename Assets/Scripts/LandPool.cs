@@ -3,29 +3,56 @@ using System.Collections;
 using DesignMode.Singleton;
 using System.Collections.Generic;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+/// <summary>
+/// 地块对象池
+/// </summary>
 public class LandPool:Singleton<LandPool>
 {
     public GameObject landPref;
-    public List<Land> landEnabled = new List<Land>();
-    public List<Land> landDisEnbled = new List<Land>();
+    private List<Land> landEnabled = new List<Land>();
+    private List<Land> landDisEnbled = new List<Land>();
 
-    public Land GetLand(Vector3Int pos,Transform tr)
+    /// <summary>
+    /// 从对象池中获取地块
+    /// </summary>
+    /// <param name="pos">地块位置</param>
+    /// <param name="planet">地块所属星球</param>
+    public Land GetLand(Vector3Int pos,Planet planet)
     {
         if (landDisEnbled.Count==0)
             landDisEnbled.Add(Instantiate(landPref).GetComponent<Land>());
         var land = landDisEnbled[0];
+        land.gameObject.SetActive(true);
         landDisEnbled.Remove(land);
         landEnabled.Add(land);
 
-        land.pos = pos;
-        Vector3 newPos = tr.position + (pos - PlanetData.center) * landPref.transform.localScale.x;
+        Vector3 newPos = planet.transform.TransformPoint((pos - PlanetData.center) * landPref.transform.localScale.x);
         land.gameObject.transform.position = newPos;
-        land.transform.parent = tr;
+        land.transform.rotation = planet.transform.rotation;
+        land.transform.parent = planet.transform;
+        land.planet = planet;
+        land.pos = pos;
 
         return land;
     }
 
-    public void DisenbleLand(Land land)
+    /// <summary>
+    /// 销毁地块
+    /// </summary>
+    public void DestoryLand(Land land)
     {
         land.gameObject.SetActive(false);
         landDisEnbled.Add(land);

@@ -1012,8 +1012,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   landPref: {fileID: 7660322167204507321, guid: 3a4043cf4af124b4da7660d3e048ca17, type: 3}
-  landEnabled: []
-  landDisEnbled: []
 --- !u!1 &1242935711
 GameObject:
   m_ObjectHideFlags: 0

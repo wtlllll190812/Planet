@@ -8,20 +8,21 @@ public class InputManager : MonoBehaviour
 
     private IDragable currentObj;
     private Vector2 lastPos;
-    private List<RaycastHit> hits = new List<RaycastHit>();
+    private List<RaycastHit> hitObjs = new List<RaycastHit>();
 
     public void Update()
     {
+        //鼠标按下判断
         if(Input.GetMouseButtonDown(0)&& !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
         {
             Vector2 pos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -mainCam.transform.position.z));
             Vector3 startPos = new Vector3(pos.x, pos.y, -4);
-            hits=new List<RaycastHit>(Physics.RaycastAll(startPos, Vector3.forward));
+            hitObjs=new List<RaycastHit>(Physics.RaycastAll(startPos, Vector3.forward));
             Debug.DrawLine(startPos, Vector3.forward);
-            hits.Sort((x,y)=>x.distance>y.distance? 1:-1);
+            hitObjs.Sort((x,y)=>x.distance>y.distance? 1:-1);
 
             bool hitSth=false;
-            foreach (var item in hits)
+            foreach (var item in hitObjs)
             {
                 IClickable clickable= item.collider.GetComponent<MonoBehaviour>() as IClickable;
                 if(clickable!=null)
@@ -35,14 +36,15 @@ public class InputManager : MonoBehaviour
                 GameManager.instance.SetState(EGameState.GlobalView,null);
         }
 
+        //鼠标持续按下
         if(Input.GetMouseButton(0))
         {
             Vector2 pos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -mainCam.transform.position.z));
             Vector3 startPos = new Vector3(pos.x, pos.y, -4);
-            hits = new List<RaycastHit>(Physics.SphereCastAll(startPos, 1f, Vector3.forward));
-            hits.Sort((x, y) => x.distance > y.distance ? 1 : -1);
+            hitObjs = new List<RaycastHit>(Physics.SphereCastAll(startPos, 1f, Vector3.forward));
+            hitObjs.Sort((x, y) => x.distance > y.distance ? 1 : -1);
 
-            foreach (var item in hits)
+            foreach (var item in hitObjs)
             {
                 IDragable newDragObj = item.collider.GetComponent<MonoBehaviour>() as IDragable;
                 if (newDragObj != null)
@@ -71,6 +73,7 @@ public class InputManager : MonoBehaviour
             }
         }
         
+        //鼠标抬起
         if(Input.GetMouseButtonUp(0))
         {
             if (currentObj != null)
@@ -82,6 +85,9 @@ public class InputManager : MonoBehaviour
     }
 }
 
+/// <summary>
+/// 可拖拽对象接口
+/// </summary>
 public interface IDragable
 {
     public void DragStart(Vector3 startPos);
@@ -89,6 +95,9 @@ public interface IDragable
     public void DragEnd();
 }
 
+/// <summary>
+/// 可点击对象接口
+/// </summary>
 public interface IClickable
 {
     public bool OnClick(Vector3 startPos);

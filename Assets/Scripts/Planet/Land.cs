@@ -3,24 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Land : MonoBehaviour, IClickable
+//地块类
 {
     public Vector3Int pos;
     public Planet planet;
 
-    //public void OnMouseDown()
-    //{
-    //    Debug.Log("SDSD");
-    //    Destroy(gameObject);
-    //}
     public bool OnClick(Vector3 startPos)
     {
-        Debug.Log("SDSD");
-        Destroy(gameObject);
+        planet.data.SetLandKind(this,EKindData.empty);
         planet.data.Update(this);
+        LandPool.Instance.DestoryLand(this);
         return false;
     }
 }
-public enum ELandData
+/// <summary>
+/// 地块类型
+/// </summary>
+public enum EKindData
 {
     empty,
     underground,

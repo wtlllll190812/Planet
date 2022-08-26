@@ -27,15 +27,21 @@ public class CameraControl : MonoBehaviour
         Vector3 newPos = Vector2.SmoothDamp(transform.position, target.pos.position, ref vPos, speed);
         newPos.z = Mathf.SmoothDamp(transform.position.z, target.zPos, ref vZpos, speed);
         transform.position = newPos;
-        //mainCamera.fieldOfView = ;
     }
 
+    /// <summary>
+    /// 设置摄像机目标
+    /// </summary>
+    /// <param name="newTarget"></param>
     public void SetTarget(CameraData newTarget)
     {
         target = newTarget;
     }
 }
 
+/// <summary>
+/// 摄像机目标数据
+/// </summary>
 [System.Serializable]
 public struct CameraData
 {
