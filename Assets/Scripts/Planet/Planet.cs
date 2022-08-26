@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class Planet : SerializedMonoBehaviour,IDragable,IClickable
 {
     public GameObject landPref;
-    public ELandData[,,] planetData;
+    public PlanetData data;
 
     public float cameraSize;
     public float rotationSpeed;
@@ -14,44 +14,25 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable
 
     public virtual void Awake()
     {
-        
+        Init();
         GenPlanet();
     }
 
     [Button("Init")]
     public void Init()
     {
-        planetData = new ELandData[16, 16, 16];
-        for (int x = 0; x < 16; x++)
-        {
-            for (int y = 0; y < 16; y++)
-            {
-                for (int z = 0; z < 16; z++)
-                {
-                    if (Mathf.Pow(x - 7.5f, 2) + Mathf.Pow(y - 7.5f, 2) + Mathf.Pow(z - 7.5f, 2) > 6 * 6)
-                        planetData[x, y, z] = ELandData.empty;
-                    else
-                        planetData[x, y, z] = ELandData.grass;
-                }
-            }
-        }
+        data.Init();
     }
 
     public virtual void GenPlanet()
     {
-        for (int x = 0; x < 16; x++)
+        foreach (ELandData item in data)
         {
-            for (int y = 0; y < 16; y++)
+            if (item != ELandData.underground && item != ELandData.empty)
             {
-                for (int z = 0; z < 16; z++)
-                {
-                    if (planetData[x, y, z]!=ELandData.underground&&planetData[x,y,z]!=ELandData.empty)
-                    {
-                        Vector3 pos = transform.position + new Vector3(x - 7.5f, y - 7.5f, z - 7.5f) * landPref.transform.localScale.x;
-                        var land= Instantiate(landPref, pos, transform.rotation);
-                        land.transform.parent = transform;
-                    }
-                }
+                Vector3 pos = transform.position + new Vector3(data.currentPos.x - 7.5f, data.currentPos.y - 7.5f, data.currentPos.z - 7.5f) * landPref.transform.localScale.x;
+                var land = Instantiate(landPref, pos, transform.rotation);
+                land.transform.parent = transform;
             }
         }
     }
@@ -95,9 +76,91 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable
             GameManager.instance.SetState(EGameState.PlanetView, this);
     }
 }
-public enum ELandData
+
+[System.Serializable]
+public class PlanetData: IEnumerator,IEnumerable
 {
-    empty,
-    underground,
-    grass
+    [SerializeField]private ELandData[,,] data;
+    private int totalSize=16;
+    private int planetSize=6;
+
+    public Vector3Int currentPos;
+    public object Current => data[currentPos.x,currentPos.y,currentPos.z];
+
+    public void Init()
+    {
+        data = new ELandData[totalSize, totalSize, totalSize];
+        Vector3 center = new Vector3((totalSize - 1) / 2, (totalSize - 1) / 2, (totalSize - 1) / 2);
+        //计算星球范围
+        for (int x = 0; x < totalSize; x++)
+        {
+            for (int y = 0; y < totalSize; y++)
+            {
+                for (int z = 0; z < totalSize; z++)
+                {
+                    if (Vector3.Distance(new Vector3(x, y, z), center) > planetSize)
+                        data[x, y, z] = ELandData.empty;
+                    else
+                        data[x, y, z] = ELandData.underground;
+                }
+            }
+        }
+        //查找边界
+        for (int x = 0; x < totalSize; x++)
+        {
+            for (int y = 0; y < totalSize; y++)
+            {
+                for (int z = 0; z < totalSize; z++)
+                {
+                    if (IsBoundary(new Vector3Int(x, y, z)))
+                        data[x, y, z] = ELandData.grass;
+                }
+            }
+        }
+    }
+
+    public bool IsBoundary(Vector3Int pos)
+    {
+        if (data[pos.x, pos.y, pos.z] == ELandData.empty)
+            return false;
+        bool res = false;
+        res |= (pos.x + 1 > totalSize-1 || data[pos.x + 1, pos.y, pos.z] == ELandData.empty);
+        res |= (pos.x - 1 < 0 || data[pos.x - 1, pos.y, pos.z] == ELandData.empty);
+        res |= (pos.y + 1 > totalSize-1 || data[pos.x, pos.y + 1, pos.z] == ELandData.empty);
+        res |= (pos.y - 1 < 0 || data[pos.x, pos.y - 1, pos.z] == ELandData.empty);
+        res |= (pos.z + 1 > totalSize-1 || data[pos.x, pos.y, pos.z + 1] == ELandData.empty);
+        res |= (pos.z - 1 < 0 || data[pos.x, pos.y, pos.z - 1] == ELandData.empty);
+        return res;
+    }
+
+    public bool MoveNext()
+    {
+        if (currentPos.x == 15)
+        {
+            if (currentPos.y == 15)
+            {
+                if (currentPos.z == 15)
+                    return false;
+                else
+                    currentPos.z++;
+                currentPos.y = 0;
+            }
+            else
+                currentPos.y++;
+            currentPos.x = 0;
+        }
+        else
+            currentPos.x++;
+        return true;
+    }
+
+    public void Reset()
+    {
+        currentPos = Vector3Int.zero;
+    }
+
+    public IEnumerator GetEnumerator()
+    {
+        return this;
+    }
 }
