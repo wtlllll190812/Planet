@@ -92,8 +92,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6166949977649328937}
-  - component: {fileID: 6166949977649328939}
   - component: {fileID: -2544936747252414799}
+  - component: {fileID: 6166949977649328939}
   - component: {fileID: 8358612067396577823}
   m_Layer: 0
   m_Name: pref_Sun
@@ -118,19 +118,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 45, y: 45, z: 0}
---- !u!114 &6166949977649328939
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6166949977649328940}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b2099bd1b87ebb479e92ad016b0e087, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefabPath: Assets/Resources/Prefabs/pref_Sun.prefab
 --- !u!114 &-2544936747252414799
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -151,32 +138,26 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: data
-      Entry: 7
-      Data: 0|PlanetData, Assembly-CSharp
-    - Name: currentPos
-      Entry: 7
-      Data: UnityEngine.Vector3Int, UnityEngine.CoreModule
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
   landPref: {fileID: 7660322167204507321, guid: 3a4043cf4af124b4da7660d3e048ca17, type: 3}
+  data:
+    currentPos: {x: 0, y: 0, z: 0}
   cameraSize: -5
   rotationSpeed: 3
   revolutionSpeed: 0
+--- !u!114 &6166949977649328939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6166949977649328940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b2099bd1b87ebb479e92ad016b0e087, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabPath: Assets/Resources/Prefabs/pref_Sun.prefab
 --- !u!65 &8358612067396577823
 BoxCollider:
   m_ObjectHideFlags: 0

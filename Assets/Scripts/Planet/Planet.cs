@@ -68,12 +68,14 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable
         Debug.Log("end");
     }
 
-    public void OnClick(Vector3 startPos)
+    public bool OnClick(Vector3 startPos)
     {
         if(GameManager.instance.CompareState(EGameState.PlanetView))
             GameManager.instance.SetState(EGameState.Editor,this);
         else if(GameManager.instance.CompareState(EGameState.GlobalView))
             GameManager.instance.SetState(EGameState.PlanetView, this);
+
+        return GameManager.instance.CompareState(EGameState.Editor);
     }
 }
 

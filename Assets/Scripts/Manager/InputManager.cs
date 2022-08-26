@@ -8,7 +8,7 @@ public class InputManager : MonoBehaviour
 
     private IDragable currentObj;
     private Vector2 lastPos;
-    private RaycastHit[] hits = new RaycastHit[0];
+    private List<RaycastHit> hits = new List<RaycastHit>();
 
     public void Update()
     {
@@ -16,28 +16,35 @@ public class InputManager : MonoBehaviour
         {
             Vector2 pos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -mainCam.transform.position.z));
             Vector3 startPos = new Vector3(pos.x, pos.y, -4);
-            hits = Physics.SphereCastAll(startPos, 0.1f, Vector3.forward);
+            hits=new List<RaycastHit>(Physics.RaycastAll(startPos, Vector3.forward));
+            Debug.DrawLine(startPos, Vector3.forward);
+            hits.Sort((x,y)=>x.distance>y.distance? 1:-1);
+
+            bool hitSth=false;
             foreach (var item in hits)
             {
-                IClickable clickable= item.collider.GetComponent<Planet>() as IClickable;
+                IClickable clickable= item.collider.GetComponent<MonoBehaviour>() as IClickable;
                 if(clickable!=null)
                 {
-                    clickable.OnClick(pos);
-                    return;
+                    hitSth = true;
+                    if (!clickable.OnClick(pos))
+                        return;
                 }
             }
-            GameManager.instance.SetState(EGameState.GlobalView,null);
+            if(!hitSth)
+                GameManager.instance.SetState(EGameState.GlobalView,null);
         }
 
         if(Input.GetMouseButton(0))
         {
             Vector2 pos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -mainCam.transform.position.z));
             Vector3 startPos = new Vector3(pos.x, pos.y, -4);
-            hits = Physics.SphereCastAll(startPos, 1f, Vector3.forward);
+            hits = new List<RaycastHit>(Physics.SphereCastAll(startPos, 1f, Vector3.forward));
+            hits.Sort((x, y) => x.distance > y.distance ? 1 : -1);
 
             foreach (var item in hits)
             {
-                IDragable newDragObj = item.collider.GetComponent<Planet>() as IDragable;
+                IDragable newDragObj = item.collider.GetComponent<MonoBehaviour>() as IDragable;
                 if (newDragObj != null)
                 {
                     if (currentObj != null)
@@ -84,5 +91,5 @@ public interface IDragable
 
 public interface IClickable
 {
-    public void OnClick(Vector3 startPos);
+    public bool OnClick(Vector3 startPos);
 }
