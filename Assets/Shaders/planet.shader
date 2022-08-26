@@ -61,7 +61,7 @@ Shader "Custom/planet"
                 
                 half3 lightDir=normalize(_MainLightPosition.xyz);
                 half3 worldNormal=normalize(i.worldNormal);
-                half lambert=saturate(dot(worldNormal,lightDir)*0.5+0.5);
+                half lambert=saturate(dot(worldNormal,lightDir)*0.5+0.5)*shadow;
 
                 return _BaseColor*lambert+half4(ambient,1);
             }

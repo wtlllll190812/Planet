@@ -3,7 +3,7 @@ using System.Collections;
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
 
-public class Planet : SerializedMonoBehaviour,IDragable,IClickable
+public class Planet : SerializedMonoBehaviour,IDragable,IClickable,IScalable
 {
     public PlanetData data;
 
@@ -11,10 +11,13 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable
     public float rotationSpeed;
     public float revolutionSpeed;
 
+    public CameraData cameraData ;
+
     public virtual void Awake()
     {
         Init();
         GenPlanet();
+        cameraData = new CameraData(transform,cameraSize);
     }
     
     public void FixedUpdate()
@@ -42,7 +45,7 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable
     [Button("MoveCamera")]
     public void CameraFollow()
     {
-        CameraControl.instance.SetTarget(new CameraData(transform, cameraSize));
+        CameraControl.instance.SetTarget(cameraData);
     }
 
     /// <summary>
@@ -82,6 +85,12 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable
             GameManager.instance.SetState(EGameState.PlanetView, this);
 
         return GameManager.instance.CompareState(EGameState.Editor);
+    }
+
+    public void OnScaling(Vector2 scale)
+    {
+        Debug.Log(scale);
+        cameraData.zPos += scale.y;
     }
 }
 
@@ -198,7 +207,6 @@ public class PlanetData: IEnumerator,IEnumerable
             {
                 this[item + land.pos] = EKindData.grass;
                 LandPool.Instance.GetLand(item + land.pos, land.planet);
-                Debug.Log(item + land.pos);
             }
         }
     }

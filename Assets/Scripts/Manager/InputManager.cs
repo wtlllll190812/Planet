@@ -82,7 +82,17 @@ public class InputManager : MonoBehaviour
                 currentObj = null;
             }
         }
+
+        GameManager.instance.currentPlanet?.OnScaling(Input.mouseScrollDelta);
     }
+}
+
+/// <summary>
+/// 缩放接口
+/// </summary>
+public interface IScalable
+{
+    public void OnScaling(Vector2 scale);
 }
 
 /// <summary>

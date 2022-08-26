@@ -43,7 +43,7 @@ public class CameraControl : MonoBehaviour
 /// 摄像机目标数据
 /// </summary>
 [System.Serializable]
-public struct CameraData
+public class CameraData
 {
     public Transform pos;
     public float zPos;
