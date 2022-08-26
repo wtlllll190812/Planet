@@ -5,7 +5,6 @@ using System.Collections.Generic;
 
 public class Planet : SerializedMonoBehaviour,IDragable,IClickable
 {
-    public GameObject landPref;
     public PlanetData data;
 
     public float cameraSize;
@@ -30,9 +29,7 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable
         {
             if (item != ELandData.underground && item != ELandData.empty)
             {
-                Vector3 pos = transform.position + new Vector3(data.currentPos.x - 7.5f, data.currentPos.y - 7.5f, data.currentPos.z - 7.5f) * landPref.transform.localScale.x;
-                var land = Instantiate(landPref, pos, transform.rotation);
-                land.transform.parent = transform;
+                var land = LandPool.Instance.GetLand(data.currentPos,transform);
             }
         }
     }
@@ -87,12 +84,13 @@ public class PlanetData: IEnumerator,IEnumerable
     private int planetSize=6;
 
     public Vector3Int currentPos;
+    public static Vector3 center;
     public object Current => data[currentPos.x,currentPos.y,currentPos.z];
 
     public void Init()
     {
         data = new ELandData[totalSize, totalSize, totalSize];
-        Vector3 center = new Vector3((totalSize - 1) / 2, (totalSize - 1) / 2, (totalSize - 1) / 2);
+        center = new Vector3((totalSize - 1) / 2, (totalSize - 1) / 2, (totalSize - 1) / 2);
         //计算星球范围
         for (int x = 0; x < totalSize; x++)
         {
@@ -159,6 +157,11 @@ public class PlanetData: IEnumerator,IEnumerable
     public void Reset()
     {
         currentPos = Vector3Int.zero;
+    }
+
+    public void Update(Land land)
+    {
+
     }
 
     public IEnumerator GetEnumerator()
