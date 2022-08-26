@@ -12,8 +12,7 @@ public class GameManager : MonoBehaviour
     public Planet currentPlanet;
     private EGameState currentState;
 
-    public void Awake()
-    {
+    public void Awake() {
         instance = this;
     }
 
