@@ -7,11 +7,12 @@ using WalletConnectSharp.Unity;
 using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
+using MoralisUnity.Platform.Objects;
+using MoralisUnity.Web3Api.Models;
 using UnityEngine.Events;
 using MoralisUnity.Sdk.Exceptions;
 
-namespace MoralisUnity.Kits.AuthenticationKit
-{
+namespace MoralisUnity.Kits.AuthenticationKit {
     /// <summary>
     /// See <see cref="AuthenticationKit"/> comments for a feature overview.
     ///
@@ -19,46 +20,30 @@ namespace MoralisUnity.Kits.AuthenticationKit
     /// 
     /// </summary>
     [Serializable]
-    public class AuthenticationKitView : MonoBehaviour
-    {
+    public class AuthenticationKitView : MonoBehaviour {
         //  Properties ------------------------------------
 
         //  Fields ----------------------------------------
-        [Header("Kit")]
-        [SerializeField] 
-        private AuthenticationKit _authenticationKit = null;
-        
-        [Header("Platforms")]
-        [SerializeField] 
-        private GameObject _iosPlatform = null;
-        
-        [SerializeField] 
-        private GameObject _walletConnectPlatform = null;
+        [Header("Kit")] [SerializeField] private AuthenticationKit _authenticationKit = null;
 
-        [Header("Buttons")]
-        [SerializeField] 
-        private Button _connectButton = null;
+        [Header("Platforms")] [SerializeField] private GameObject _iosPlatform = null;
 
-        [SerializeField] 
-        private Button _disconnectButton = null;
-        
-        [SerializeField] 
-        private Button _retryButton = null;
-        
-        [Header("Other")]
-        [SerializeField] 
-        private Text _statusText = null;
-        
-        [SerializeField] 
-        private Image _backgroundImage = null;
-        
-        [Header("Styling")] 
-        [SerializeField] 
-        private Color _backgroundImageColor = new Color(0, 0, 0, 0.5f);
+        [SerializeField] private GameObject _walletConnectPlatform = null;
+
+        [Header("Buttons")] [SerializeField] private Button _connectButton = null;
+
+        [SerializeField] private Button _disconnectButton = null;
+
+        [SerializeField] private Button _retryButton = null;
+
+        [Header("Other")] [SerializeField] private Text _statusText = null;
+
+        [SerializeField] private Image _backgroundImage = null;
+
+        [Header("Styling")] [SerializeField] private Color _backgroundImageColor = new Color(0, 0, 0, 0.5f);
 
         //  Unity Methods ---------------------------------
-        protected void Start()
-        {
+        protected void Start() {
             _authenticationKit.OnStateChanged.AddListener(AuthenticationKit_OnStateChanged);
 
             // Local scope is 'late', so rebroadcast the state
@@ -69,54 +54,46 @@ namespace MoralisUnity.Kits.AuthenticationKit
             _retryButton.onClick.AddListener(RetryButton_OnClicked);
         }
 
-        protected void OnValidate()
-        {
+        protected void OnValidate() {
             // This works at edit time and thus at runtime
             // Note: At edit time the image may be NOT active (to unclutter UI). That is ok.
-            if (_backgroundImageColor != null && _backgroundImage != null)
-            {
+            if (_backgroundImageColor != null && _backgroundImage != null) {
                 _backgroundImage.color = _backgroundImageColor;
             }
         }
 
-        private void OnApplicationPause(bool pauseStatus)
-        {
-            if (!pauseStatus)
-            {
+        private void OnApplicationPause(bool pauseStatus) {
+            if (!pauseStatus) {
                 return;
             }
 
-            switch (_authenticationKit.AuthenticationKitPlatform)
-            {
+            switch (_authenticationKit.AuthenticationKitPlatform) {
                 case AuthenticationKitPlatform.Android:
                 case AuthenticationKitPlatform.iOS:
 
-                    switch (_authenticationKit.State)
-                    {
+                    switch (_authenticationKit.State) {
                         case AuthenticationKitState.WalletConnecting:
                         case AuthenticationKitState.WalletSigning:
                             // Show Button "Retry" after 2 seconds
                             StartCoroutine(EnableAfterSeconds(_retryButton, true, 1));
                             break;
                     }
+
                     break;
             }
         }
 
-        private void SetActiveUIJustPlatforms(bool isActive)
-        {
+        private void SetActiveUIJustPlatforms(bool isActive) {
             // 1. Hide everything...
             _iosPlatform.SetActive(false);
             _walletConnectPlatform.SetActive(false);
 
-            if (!isActive)
-            {
+            if (!isActive) {
                 return;
             }
 
             // 2. Show something...
-            switch (_authenticationKit.AuthenticationKitPlatform)
-            {
+            switch (_authenticationKit.AuthenticationKitPlatform) {
                 case AuthenticationKitPlatform.Android:
                     break;
                 case AuthenticationKitPlatform.iOS:
@@ -134,8 +111,7 @@ namespace MoralisUnity.Kits.AuthenticationKit
         }
 
 
-        private void SetActiveUIAllParts(bool isActive)
-        {
+        private void SetActiveUIAllParts(bool isActive) {
             // Platforms
             SetActiveUIJustPlatforms(isActive);
 
@@ -153,30 +129,73 @@ namespace MoralisUnity.Kits.AuthenticationKit
 
 
         //  Event Handlers --------------------------------
-        private void ConnectButton_OnClicked()
-        {
+        private void ConnectButton_OnClicked() {
             _authenticationKit.Connect();
         }
 
 
-        private void DisconnectButton_OnClicked()
-        {
+        private void DisconnectButton_OnClicked() {
             _authenticationKit.Disconnect();
         }
 
 
-        private void RetryButton_OnClicked()
-        {
+        private void RetryButton_OnClicked() {
             // Disable the button to prevent multiple retries
             _retryButton.interactable = false;
             _authenticationKit.Retry();
         }
 
+        private string FormatUserAddressForDisplay(string addr) {
+            string resp = addr;
 
-        private void AuthenticationKit_OnStateChanged(AuthenticationKitState authenticationKitState)
-        {
-            switch (authenticationKitState)
-            {
+            if (resp.Length > 13) {
+                resp = string.Format("{0}...{1}", resp.Substring(0, 6), resp.Substring(resp.Length - 4, 4));
+            }
+
+            return resp;
+        }
+
+        /// <summary>
+        /// Log information of the connected wallet.
+        /// </summary>
+        private async void LogWalletInfo() {
+            if (MoralisState.Initialized.Equals(Moralis.State)) {
+                MoralisUser user = await Moralis.GetUserAsync();
+
+                if (user == null) {
+                    // User is null so go back to the authentication scene.
+                    SceneManager.LoadScene(0);
+                }
+
+                // Display User's wallet address.
+                string addressText = FormatUserAddressForDisplay(user.ethAddress);
+
+                // Retrienve the user's native balance;
+                NativeBalance balanceResponse =
+                    await Moralis.Web3Api.Account.GetNativeBalance(user.ethAddress, Moralis.CurrentChain.EnumValue);
+
+                double balance = 0.0;
+                float decimals = Moralis.CurrentChain.Decimals * 1.0f;
+                string sym = Moralis.CurrentChain.Symbol;
+
+                // Make sure a response to the balanace request weas received. The 
+                // IsNullOrWhitespace check may not be necessary ...
+                if (balanceResponse != null && !string.IsNullOrWhiteSpace(balanceResponse.Balance)) {
+                    double.TryParse(balanceResponse.Balance, out balance);
+                }
+
+                // Display native token amount token in fractions of token.
+                // NOTE: May be better to link this to chain since some tokens may have
+                // more than 18 sigjnificant figures.
+                string balanceText =
+                    string.Format("{0:0.####} {1}", (balance / (double)Mathf.Pow(10.0f, decimals)), sym);
+                
+                Debug.Log($"Address:{addressText}, Balance:{balanceText}");
+            }
+        }
+
+        private void AuthenticationKit_OnStateChanged(AuthenticationKitState authenticationKitState) {
+            switch (authenticationKitState) {
                 case AuthenticationKitState.None:
                     break;
                 case AuthenticationKitState.PreInitialized:
@@ -201,8 +220,7 @@ namespace MoralisUnity.Kits.AuthenticationKit
                     SetActiveUIJustPlatforms(true);
 
                     // Show custom more text for SOME platform(s)
-                    switch (_authenticationKit.AuthenticationKitPlatform)
-                    {
+                    switch (_authenticationKit.AuthenticationKitPlatform) {
                         case AuthenticationKitPlatform.iOS:
                             // Hide statusText first will be turned on by WalletConnect when a user click on a wallet
                             _statusText.gameObject.SetActive(false);
@@ -218,12 +236,10 @@ namespace MoralisUnity.Kits.AuthenticationKit
                             break;
                         case AuthenticationKitPlatform.WebGL:
                             _statusText.gameObject.SetActive(true);
-                            if (!Application.isEditor)
-                            {
+                            if (!Application.isEditor) {
                                 _statusText.text = "Connecting With Your Wallet";
                             }
-                            else
-                            {
+                            else {
                                 // TODO Add WalletConnect option for easy play testing when developing for WebGL
                                 _statusText.text = "Please build your WebGL project to connect";
                             }
@@ -256,7 +272,9 @@ namespace MoralisUnity.Kits.AuthenticationKit
                 case AuthenticationKitState.MoralisLoggedIn:
                     // Show Button "Disconnect"
                     SetActiveUIAllParts(false);
-                    _disconnectButton.gameObject.SetActive(true);
+                    _backgroundImage.gameObject.SetActive(false);
+                    LogWalletInfo();
+                    // _disconnectButton.gameObject.SetActive(true);
                     break;
                 case AuthenticationKitState.Disconnecting:
                     // No UI changes here
@@ -270,16 +288,14 @@ namespace MoralisUnity.Kits.AuthenticationKit
             }
         }
 
-        IEnumerator EnableAfterSeconds(Button button, bool isActive = false, int seconds = 0)
-        {
+        IEnumerator EnableAfterSeconds(Button button, bool isActive = false, int seconds = 0) {
             AuthenticationKitState rememberState = _authenticationKit.State;
 
             // yield on a new YieldInstruction that waits for X seconds.
             yield return new WaitForSeconds(seconds);
 
             // Only change if the state hasn't changed
-            if (rememberState == _authenticationKit.State)
-            {
+            if (rememberState == _authenticationKit.State) {
                 button.interactable = true;
                 button.gameObject.SetActive(isActive);
             }
