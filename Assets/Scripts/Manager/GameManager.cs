@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
 
     public void Start()
     {
-        SetState(EGameState.GlobalView,null);
+        SetState(EGameState.GlobalView,Sun.instance);
     }
 
     /// <summary>

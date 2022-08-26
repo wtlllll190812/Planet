@@ -31,6 +31,9 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable,IScalable
         data.Init();
     }
 
+    /// <summary>
+    /// 生成星球
+    /// </summary>
     public virtual void GenPlanet()
     {
         foreach (EKindData item in data)
@@ -42,6 +45,9 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable,IScalable
         }
     }
 
+    /// <summary>
+    /// 设置摄像机跟随
+    /// </summary>
     [Button("MoveCamera")]
     public void CameraFollow()
     {
