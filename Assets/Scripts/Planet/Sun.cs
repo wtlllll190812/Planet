@@ -14,6 +14,11 @@ public class Sun : Planet
             Destroy(this);
     }
 
+    public override void Start()
+    {
+
+    }
+
     public override void GenPlanet()
     {
     }

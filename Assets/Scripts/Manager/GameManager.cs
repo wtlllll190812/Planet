@@ -1,9 +1,13 @@
+using System.IO;
 using UnityEngine;
 using System.Linq;
+using Newtonsoft.Json;
 using System.Collections;
 using UnityEngine.Events;
+using Newtonsoft.Json.Linq;
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
+using System.Runtime.Serialization.Formatters.Binary;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,7 +19,9 @@ public class GameManager : MonoBehaviour
 
     private EGameState currentState;
 
-    public void Awake() {
+    public void Awake() 
+    {
+        Load();
         instance = this;
     }
 
@@ -74,6 +80,36 @@ public class GameManager : MonoBehaviour
                 land.planet.data.Update(land);
                 LandPool.Instance.DestoryLand(land);
                 break;
+        }
+    }
+
+    [Button("Save")]
+    public void Save()
+    {
+        using (FileStream file = new FileStream("planet2.txt", FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read))
+        {
+            JObject output = new JObject();
+            BinaryFormatter formatter = new BinaryFormatter();
+            foreach (var item in planetList)
+            {
+                output[item.name] = item.data.Serialize();
+            }
+            formatter.Serialize(file, output.ToString());
+        }
+    }
+
+    [Button("Load")]
+    public void Load()
+    {
+        using (FileStream file = new FileStream("planet2.txt", FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read))
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            JObject output = JObject.Parse(formatter.Deserialize(file) as string);
+            foreach (var item in planetList)
+            {
+                var data = output[item.name] as JObject;
+                item.data.Deserialize(data);
+            }
         }
     }
 }

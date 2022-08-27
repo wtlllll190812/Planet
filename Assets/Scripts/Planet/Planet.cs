@@ -1,6 +1,8 @@
 using System.IO;
 using UnityEngine;
+using Newtonsoft.Json;
 using System.Collections;
+using Newtonsoft.Json.Linq;
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
 
@@ -16,9 +18,14 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable,IScalable
 
     public virtual void Awake()
     {
-        Init();
+        cameraData = new CameraData(transform, cameraSize);
+    }
+
+    public virtual void Start()
+    {
+        //Init();
         GenPlanet();
-        cameraData = new CameraData(transform,cameraSize);
+        GameManager.instance.planetList.Add(this);
     }
     
     public void FixedUpdate()
@@ -236,7 +243,9 @@ public class PlanetData: IEnumerator,IEnumerable
             if (currentPos.y == 15)
             {
                 if (currentPos.z == 15)
+                {
                     return false;
+                }
                 else
                     currentPos.z++;
                 currentPos.y = 0;
@@ -260,20 +269,48 @@ public class PlanetData: IEnumerator,IEnumerable
         return this;
     }
 
-    public void Save()
+    public JObject Serialize()
     {
-        using (FileStream stream= new FileStream())
-        {
+        JObject planet = new JObject();
+        JArray planetData = new JArray();
 
-        }
-        foreach (var item in this)
+        for (int x = 0; x < totalSize; x++)
         {
-
+            JArray jarX = new JArray();
+            for (int y = 0; y < totalSize; y++)
+            {
+                JArray jarY = new JArray();
+                for (int z = 0; z < totalSize; z++)
+                {
+                    jarY.Add(data[x, y, z]);
+                }
+                jarX.Add(jarY);
+            }
+            planetData.Add(jarX);
         }
+
+        planet["data"] = planetData;
+        return planet;
     }
 
-    public void Load()
+    public void Deserialize(JObject jobj)
     {
+        data = new EKindData[totalSize, totalSize, totalSize];
+        center = new Vector3((totalSize - 1) / 2, (totalSize - 1) / 2, (totalSize - 1) / 2);
 
+        JArray planetData = jobj["data"] as JArray;
+        
+        for (int x = 0; x < planetData.Count; x++)
+        {
+            JArray jarX = planetData[x] as JArray;
+            for (int y = 0; y < jarX.Count; y++)
+            {
+                JArray jarY = jarX[x] as JArray;
+                for (int z = 0; z < jarY.Count; z++)
+                {
+                    data[x, y, z] = (EKindData)int.Parse(jarY[z].ToString());
+                }
+            }
+        }
     }
 }
