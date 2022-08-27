@@ -62,18 +62,17 @@ Shader "Custom/planet"
 
             half4 frag(v2f i) :SV_TARGET
             {
-                half4 color=SAMPLE_TEXTURE2D(_MainTex,sampler_MainTex,i.uv)*_BaseColor;
-
                 half3 ambient = half3(unity_SHAr.w, unity_SHAg.w, unity_SHAb.w);
                 float4 SHADOW_COORDS = TransformWorldToShadowCoord(i.worldPos);
                 Light mainLight = GetMainLight(SHADOW_COORDS);
                 half shadow = mainLight.shadowAttenuation;
+                half3 color=SAMPLE_TEXTURE2D(_MainTex,sampler_MainTex,i.uv).rgb*_BaseColor.rgb*mainLight.color;
                 
                 half3 lightDir=normalize(_MainLightPosition.xyz);
                 half3 worldNormal=normalize(i.worldNormal);
                 half lambert=saturate(dot(worldNormal,lightDir)*0.5+0.5)*shadow;
 
-                return color*lambert+half4(ambient,1);
+                return half4(color*lambert+ambient,1);
             }
             ENDHLSL
         }

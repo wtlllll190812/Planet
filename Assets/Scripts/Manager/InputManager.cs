@@ -18,7 +18,7 @@ public class InputManager : MonoBehaviour
             Vector2 pos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -mainCam.transform.position.z));
             Vector3 startPos = new Vector3(pos.x, pos.y, -4);
             hitObjs=new List<RaycastHit>(Physics.RaycastAll(startPos, Vector3.forward));
-            Debug.DrawLine(startPos, Vector3.forward);
+
             hitObjs.Sort((x,y)=>x.distance>y.distance? 1:-1);
 
             bool hitSth=false;
