@@ -231,7 +231,68 @@ public class PlanetData: IEnumerator,IEnumerable
     {
         this[land.pos] = kind;
     }
+    
+    /// <summary>
+    /// 星球数据序列化
+    /// </summary>
+    public JObject Serialize()
+    {
+        JObject planet = new JObject();
+        JArray planetData = new JArray();
+        planet["trackRadius"] = trackRadius;
+        planet["cameraRadius"] = cameraRadius;
+        planet["rotationSpeed"] = rotationSpeed;
+        planet["revolutionSpeed"] = revolutionSpeed;
 
+        for (int x = 0; x < totalSize; x++)
+        {
+            JArray jarX = new JArray();
+            for (int y = 0; y < totalSize; y++)
+            {
+                JArray jarY = new JArray();
+                for (int z = 0; z < totalSize; z++)
+                {
+                    jarY.Add(data[x, y, z]);
+                }
+                jarX.Add(jarY);
+            }
+            planetData.Add(jarX);
+        }
+
+        planet["data"] = planetData;
+        return planet;
+    }
+
+    /// <summary>
+    /// 星球数据反序列化
+    /// </summary>
+    /// <param name="jobj"></param>
+    public void Deserialize(JObject jobj)
+    {
+        data = new EKindData[totalSize, totalSize, totalSize];
+        center = new Vector3((totalSize - 1) / 2, (totalSize - 1) / 2, (totalSize - 1) / 2);
+
+        JArray planetData = jobj["data"] as JArray;
+
+        trackRadius = float.Parse(jobj["trackRadius"].ToString());
+        cameraRadius = float.Parse(jobj["cameraRadius"].ToString());
+        rotationSpeed = float.Parse(jobj["rotationSpeed"].ToString());
+        revolutionSpeed = float.Parse(jobj["revolutionSpeed"].ToString());
+
+        for (int x = 0; x < planetData.Count; x++)
+        {
+            JArray jarX = planetData[x] as JArray;
+            for (int y = 0; y < jarX.Count; y++)
+            {
+                JArray jarY = jarX[y] as JArray;
+                for (int z = 0; z < jarY.Count; z++)
+                {
+                    data[x, y, z] = (EKindData)int.Parse(jarY[z].ToString());
+                }
+            }
+        }
+    }
+    
     //实现IEnumerator,IEnumerable接口
     public bool MoveNext()
     {
@@ -266,57 +327,5 @@ public class PlanetData: IEnumerator,IEnumerable
         return this;
     }
 
-    public JObject Serialize()
-    {
-        JObject planet = new JObject();
-        JArray planetData = new JArray();
-        planet["trackRadius"] = trackRadius;
-        planet["cameraRadius"] = cameraRadius;
-        planet["rotationSpeed"] = rotationSpeed;
-        planet["revolutionSpeed"] = revolutionSpeed;
 
-        for (int x = 0; x < totalSize; x++)
-        {
-            JArray jarX = new JArray();
-            for (int y = 0; y < totalSize; y++)
-            {
-                JArray jarY = new JArray();
-                for (int z = 0; z < totalSize; z++)
-                {
-                    jarY.Add(data[x, y, z]);
-                }
-                jarX.Add(jarY);
-            }
-            planetData.Add(jarX);
-        }
-
-        planet["data"] = planetData;
-        return planet;
-    }
-
-    public void Deserialize(JObject jobj)
-    {
-        data = new EKindData[totalSize, totalSize, totalSize];
-        center = new Vector3((totalSize - 1) / 2, (totalSize - 1) / 2, (totalSize - 1) / 2);
-
-        JArray planetData = jobj["data"] as JArray;
-        
-        trackRadius= float.Parse(jobj["trackRadius"].ToString());
-        cameraRadius = float.Parse(jobj["cameraRadius"].ToString());
-        rotationSpeed = float.Parse(jobj["rotationSpeed"].ToString());
-        revolutionSpeed = float.Parse(jobj["revolutionSpeed"].ToString());
-
-        for (int x = 0; x < planetData.Count; x++)
-        {
-            JArray jarX = planetData[x] as JArray;
-            for (int y = 0; y < jarX.Count; y++)
-            {
-                JArray jarY = jarX[y] as JArray;
-                for (int z = 0; z < jarY.Count; z++)
-                {
-                    data[x, y, z] = (EKindData)int.Parse(jarY[z].ToString());
-                }
-            }
-        }
-    }
 }
