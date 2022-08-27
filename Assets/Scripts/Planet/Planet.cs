@@ -212,13 +212,14 @@ public class PlanetData: IEnumerator,IEnumerable
     {
         foreach (var item in direction)
         {
+            if (!InRange(item + land.pos))
+                continue;
             var kind = this[item + land.pos];
             if (kind == EKindData.underground && this[land.pos] == EKindData.empty)
             {
                 this[item + land.pos] = EKindData.grass;
                 LandPool.Instance.GetLand(item + land.pos, land.planet);
             }
-
             //if(kind==EKindData.grass&&this[land.pos]==EKindData.grass)
         }
     }

@@ -71,6 +71,8 @@ public class GameManager : MonoBehaviour
         switch (UIManager.Instance.editorPanel.currentState)
         {
             case EditorState.add:
+                if (!land.planet.data.InRange(land.GetPos(activeDir)))
+                    break;
                 var newLand=LandPool.Instance.GetLand(land.GetPos(activeDir), land.planet);
                 newLand.planet.data.SetLandKind(land, EKindData.grass);
                 newLand.planet.data.Update(land);
@@ -79,6 +81,8 @@ public class GameManager : MonoBehaviour
                 land.planet.data.SetLandKind(land, EKindData.empty);
                 land.planet.data.Update(land);
                 LandPool.Instance.DestoryLand(land);
+                break;
+            default :
                 break;
         }
     }
