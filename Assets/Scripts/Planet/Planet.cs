@@ -1,3 +1,4 @@
+using System.IO;
 using UnityEngine;
 using System.Collections;
 using Sirenix.OdinInspector;
@@ -83,7 +84,7 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable,IScalable
         Debug.Log("end");
     }
 
-    public bool OnClick(Vector3 startPos)
+    public bool OnClick(Vector3 startPos,Vector3 activeDir)
     {
         if(GameManager.instance.CompareState(EGameState.PlanetView))
             GameManager.instance.SetState(EGameState.Editor,this);
@@ -214,6 +215,8 @@ public class PlanetData: IEnumerator,IEnumerable
                 this[item + land.pos] = EKindData.grass;
                 LandPool.Instance.GetLand(item + land.pos, land.planet);
             }
+
+            //if(kind==EKindData.grass&&this[land.pos]==EKindData.grass)
         }
     }
     
@@ -255,5 +258,22 @@ public class PlanetData: IEnumerator,IEnumerable
     public IEnumerator GetEnumerator()
     {
         return this;
+    }
+
+    public void Save()
+    {
+        using (FileStream stream= new FileStream())
+        {
+
+        }
+        foreach (var item in this)
+        {
+
+        }
+    }
+
+    public void Load()
+    {
+
     }
 }

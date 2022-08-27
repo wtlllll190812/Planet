@@ -8,12 +8,17 @@ public class Land : MonoBehaviour, IClickable
     public Vector3Int pos;
     public Planet planet;
 
-    public bool OnClick(Vector3 startPos)
+    public bool OnClick(Vector3 startPos,Vector3 activeData)
     {
-        planet.data.SetLandKind(this,EKindData.empty);
-        planet.data.Update(this);
-        LandPool.Instance.DestoryLand(this);
+        GameManager.instance.EditPlanet(this,activeData);
         return false;
+    }
+
+    public Vector3Int GetPos(Vector3 dir)
+    {
+        Vector3 nextPos = transform.InverseTransformDirection(dir);
+        Debug.Log(nextPos);
+        return new Vector3Int(pos.x + (int)nextPos.x, pos.y + (int)nextPos.y, pos.z + (int)nextPos.z);
     }
 }
 /// <summary>

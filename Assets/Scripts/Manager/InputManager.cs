@@ -28,7 +28,7 @@ public class InputManager : MonoBehaviour
                 if(clickable!=null)
                 {
                     hitSth = true;
-                    if (!clickable.OnClick(pos))
+                    if (!clickable.OnClick(item.point,item.normal))
                         return;
                 }
             }
@@ -110,5 +110,5 @@ public interface IDragable
 /// </summary>
 public interface IClickable
 {
-    public bool OnClick(Vector3 startPos);
+    public bool OnClick(Vector3 startPos,Vector3 activeDir);
 }

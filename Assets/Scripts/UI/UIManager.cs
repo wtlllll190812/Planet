@@ -1,12 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections;
 using DesignMode.Singleton;
+using System.Collections.Generic;
 
 public class UIManager : Singleton<UIManager>
-{
-    [SerializeField]private Stack<Windows> windows;
-    [SerializeField]private Windows currentWindows;
+{    
+    [SerializeField] public EditorPanel editorPanel;
+    [SerializeField] private Stack<Windows> windows;
+    [SerializeField] private Windows currentWindows;
 
     /// <summary>
     /// 向栈中添加窗口

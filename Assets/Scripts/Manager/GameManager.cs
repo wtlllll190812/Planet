@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Linq;
 using System.Collections;
+using UnityEngine.Events;
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
 
@@ -10,6 +11,8 @@ public class GameManager : MonoBehaviour
 
     public List<Planet> planetList;
     public Planet currentPlanet;
+    public UnityEvent<EGameState> onStateChange;
+
     private EGameState currentState;
 
     public void Awake() {
@@ -35,6 +38,7 @@ public class GameManager : MonoBehaviour
     [Button("SetState")]
     public void SetState(EGameState state,Planet planet)
     {
+        onStateChange?.Invoke(state);
         switch (state)
         {
             case EGameState.GlobalView:
@@ -51,6 +55,26 @@ public class GameManager : MonoBehaviour
         }
         currentState = state;
         currentPlanet = planet;
+    }
+
+    /// <summary>
+    /// 编辑星球
+    /// </summary>
+    public void EditPlanet(Land land,Vector3 activeDir)
+    {
+        switch (UIManager.Instance.editorPanel.currentState)
+        {
+            case EditorState.add:
+                var newLand=LandPool.Instance.GetLand(land.GetPos(activeDir), land.planet);
+                newLand.planet.data.SetLandKind(land, EKindData.grass);
+                newLand.planet.data.Update(land);
+                break;
+            case EditorState.remove:
+                land.planet.data.SetLandKind(land, EKindData.empty);
+                land.planet.data.Update(land);
+                LandPool.Instance.DestoryLand(land);
+                break;
+        }
     }
 }
 
