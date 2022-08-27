@@ -9,25 +9,16 @@ using System.Collections.Generic;
 public class Planet : SerializedMonoBehaviour,IDragable,IClickable,IScalable
 {
     public PlanetData data;
-
-    public float cameraSize;
-    public float rotationSpeed;
-    public float revolutionSpeed;
-
-    public CameraData cameraData ;
-
-    public virtual void Awake()
-    {
-        cameraData = new CameraData(transform, cameraSize);
-    }
+    protected CameraData cameraData;
 
     public virtual void Start()
     {
         //Init();
         GenPlanet();
         GameManager.instance.planetList.Add(this);
+        cameraData = new CameraData(transform,data.cameraRadius);
     }
-    
+
     public void FixedUpdate()
     {
         Move();
@@ -69,8 +60,8 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable,IScalable
     {
         if (!GameManager.instance.CompareState(EGameState.Editor))
         {
-            transform.RotateAround(Sun.instance.transform.position, Vector3.forward, Time.deltaTime * revolutionSpeed);
-            transform.Rotate(transform.up, Time.deltaTime * rotationSpeed, Space.Self);
+            transform.RotateAround(Sun.instance.transform.position, Vector3.forward, Time.deltaTime * data.revolutionSpeed);
+            transform.Rotate(transform.up, Time.deltaTime * data.rotationSpeed, Space.Self);
         }
     }
     
@@ -103,7 +94,6 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable,IScalable
 
     public void OnScaling(Vector2 scale)
     {
-        Debug.Log(scale);
         cameraData.zPos += scale.y;
     }
 }
@@ -114,13 +104,19 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable,IScalable
 [System.Serializable]
 public class PlanetData: IEnumerator,IEnumerable
 {
+    [SerializeField]private EKindData[,,] data;
+
     public Vector3Int currentPos;
     public static Vector3 center;
     public object Current => data[currentPos.x, currentPos.y, currentPos.z];
 
-    [SerializeField]private EKindData[,,] data;
-    private int totalSize=16;
-    private int planetSize=6;
+    public float trackRadius;
+    public float cameraRadius;
+    public float rotationSpeed;
+    public float revolutionSpeed;
+
+    private readonly int totalSize=16;
+    private readonly int planetSize =6;
 
     public static Vector3Int[] direction =
             {Vector3Int.up,Vector3Int.down
@@ -273,6 +269,10 @@ public class PlanetData: IEnumerator,IEnumerable
     {
         JObject planet = new JObject();
         JArray planetData = new JArray();
+        planet["trackRadius"] = trackRadius;
+        planet["cameraRadius"] = cameraRadius;
+        planet["rotationSpeed"] = rotationSpeed;
+        planet["revolutionSpeed"] = revolutionSpeed;
 
         for (int x = 0; x < totalSize; x++)
         {
@@ -300,12 +300,17 @@ public class PlanetData: IEnumerator,IEnumerable
 
         JArray planetData = jobj["data"] as JArray;
         
+        trackRadius= float.Parse(jobj["trackRadius"].ToString());
+        cameraRadius = float.Parse(jobj["cameraRadius"].ToString());
+        rotationSpeed = float.Parse(jobj["rotationSpeed"].ToString());
+        revolutionSpeed = float.Parse(jobj["revolutionSpeed"].ToString());
+
         for (int x = 0; x < planetData.Count; x++)
         {
             JArray jarX = planetData[x] as JArray;
             for (int y = 0; y < jarX.Count; y++)
             {
-                JArray jarY = jarX[x] as JArray;
+                JArray jarY = jarX[y] as JArray;
                 for (int z = 0; z < jarY.Count; z++)
                 {
                     data[x, y, z] = (EKindData)int.Parse(jarY[z].ToString());

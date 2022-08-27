@@ -6,12 +6,13 @@ public class Sun : Planet
 {
     public static Sun instance;
 
-    public override void Awake()
+    public void Awake()
     {
-        if(instance==null)
+        if(instance == null)
             instance = this;
         else
             Destroy(this);
+        cameraData = new CameraData(transform,data.cameraRadius);
     }
 
     public override void Start()

@@ -17,7 +17,6 @@ public class Land : MonoBehaviour, IClickable
     public Vector3Int GetPos(Vector3 dir)
     {
         Vector3 nextPos = transform.InverseTransformDirection(dir);
-        Debug.Log(nextPos);
         return new Vector3Int(pos.x + (int)nextPos.x, pos.y + (int)nextPos.y, pos.z + (int)nextPos.z);
     }
 }

@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     public List<Planet> planetList;
     public Planet currentPlanet;
     public UnityEvent<EGameState> onStateChange;
-
+    public GameObject planetPref;
     private EGameState currentState;
 
     public void Awake() 
@@ -86,7 +86,7 @@ public class GameManager : MonoBehaviour
     [Button("Save")]
     public void Save()
     {
-        using (FileStream file = new FileStream("planet2.txt", FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read))
+        using (FileStream file = new FileStream("planet2.json", FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read))
         {
             JObject output = new JObject();
             BinaryFormatter formatter = new BinaryFormatter();
@@ -96,21 +96,25 @@ public class GameManager : MonoBehaviour
             }
             formatter.Serialize(file, output.ToString());
         }
+        Debug.Log("Save Success");
     }
 
     [Button("Load")]
     public void Load()
     {
-        using (FileStream file = new FileStream("planet2.txt", FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read))
+        using (FileStream file = new FileStream("planet2.json", FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read))
         {
             BinaryFormatter formatter = new BinaryFormatter();
             JObject output = JObject.Parse(formatter.Deserialize(file) as string);
-            foreach (var item in planetList)
+            foreach (var item in output)
             {
-                var data = output[item.name] as JObject;
-                item.data.Deserialize(data);
+                var planet = Instantiate(planetPref).GetComponent<Planet>();
+                planet.name = item.Key;
+                planet.data.Deserialize(item.Value as JObject);
+                planet.transform.position = Sun.instance.transform.position + Vector3.right * planet.data.trackRadius;
             }
         }
+        Debug.Log("Load Success");
     }
 }
 

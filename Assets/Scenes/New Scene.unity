@@ -123,95 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &151298810
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 151298811}
-  - component: {fileID: 151298814}
-  - component: {fileID: 151298813}
-  - component: {fileID: 151298812}
-  m_Layer: 0
-  m_Name: pref_Planet
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &151298811
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 151298810}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9.2, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 562294266}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &151298812
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 151298810}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 3, y: 3, z: 3}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &151298813
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 151298810}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b2099bd1b87ebb479e92ad016b0e087, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefabPath: Assets/Resources/Prefabs/pref_Planet.prefab
---- !u!114 &151298814
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 151298810}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a694f87e4c220b9459df78e4a2d9ef39, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes: []
-  data:
-    currentPos: {x: 0, y: 0, z: 0}
-  cameraSize: -6
-  rotationSpeed: 5
-  revolutionSpeed: 10
-  cameraData:
-    pos: {fileID: 0}
-    zPos: 0
 --- !u!1 &162109164
 GameObject:
   m_ObjectHideFlags: 0
@@ -438,12 +349,12 @@ Transform:
   m_GameObject: {fileID: 461305046}
   m_LocalRotation: {x: 0.35355338, y: 0.35355344, z: -0.14644666, w: 0.85355335}
   m_LocalPosition: {x: -0.02, y: -0.02, z: 0}
-  m_LocalScale: {x: 4.95548, y: 4.95548, z: 4.95548}
+  m_LocalScale: {x: 4.9554796, y: 4.95548, z: 4.95548}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 162109165}
-  m_Father: {fileID: 562294266}
-  m_RootOrder: 1
+  m_Father: {fileID: 0}
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 45, y: 45, z: 0}
 --- !u!65 &461305048
 BoxCollider:
@@ -494,45 +405,10 @@ MonoBehaviour:
     SerializationNodes: []
   data:
     currentPos: {x: 0, y: 0, z: 0}
-  cameraSize: -5
-  rotationSpeed: 3
-  revolutionSpeed: 0
-  cameraData:
-    pos: {fileID: 0}
-    zPos: 0
---- !u!1 &562294265
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 562294266}
-  m_Layer: 0
-  m_Name: SceneHandler
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &562294266
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 562294265}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 151298811}
-  - {fileID: 461305047}
-  m_Father: {fileID: 0}
-  m_RootOrder: 13
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+    trackRadius: 0
+    cameraRadius: -5
+    rotationSpeed: 3
+    revolutionSpeed: 0
 --- !u!1 &566934054
 GameObject:
   m_ObjectHideFlags: 0
@@ -609,7 +485,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   planetList: []
-  currentPlanet: {fileID: 0}
+  currentPlanet: {fileID: 5339622334229277177, guid: e891dce9147375347bd84e7bfaf80659, type: 3}
   onStateChange:
     m_PersistentCalls:
       m_Calls:
@@ -625,6 +501,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+  planetPref: {fileID: 3481137532494060464, guid: e891dce9147375347bd84e7bfaf80659, type: 3}
 --- !u!1 &737059622
 GameObject:
   m_ObjectHideFlags: 0
@@ -930,10 +807,10 @@ RectTransform:
   m_Father: {fileID: 1673866956}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -373, y: 0}
-  m_SizeDelta: {x: -790.4854, y: -225.5104}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 67.42432, y: -10.521393}
+  m_SizeDelta: {x: 90.36322, y: 199.5324}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &909985176
 MonoBehaviour:
@@ -1491,7 +1368,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
