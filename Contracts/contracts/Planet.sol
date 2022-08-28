@@ -3,11 +3,22 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155URIStorage.sol";
+import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
-contract Planet is ERC1155URIStorage {
+contract Planet is ERC1155URIStorage, ERC1155Holder {
+    // Intend to satisfy multiple derivation and ERC165
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        override(ERC1155, ERC1155Receiver)
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
+    }
+
     using Counters for Counters.Counter;
     using EnumerableMap for EnumerableMap.UintToUintMap;
     using EnumerableSet for EnumerableSet.UintSet;
@@ -34,6 +45,8 @@ contract Planet is ERC1155URIStorage {
 
     constructor(string memory uri_) ERC1155(uri_) {
         Owner = payable(msg.sender);
+        // set BaseURI
+        _setBaseURI(uri_);
     }
 
     modifier onlyOwner() {
@@ -50,6 +63,7 @@ contract Planet is ERC1155URIStorage {
             "ERC1155: tokenURIs and amounts length mismatch"
         );
         for (uint256 i = 0; i < tokenURIs.length; i++) {
+            require(amounts[i] >= 1, "Amount must be at least 1");
             _tokenIds.increment();
             uint256 newTokenId = _tokenIds.current();
             _mint(Owner, newTokenId, amounts[i], bytes(tokenURIs[i]));
@@ -61,17 +75,23 @@ contract Planet is ERC1155URIStorage {
     function GetNFT(address owner)
         public
         view
-        returns (uint256[] memory, uint256[] memory)
+        returns (
+            uint256[] memory,
+            string[] memory,
+            uint256[] memory
+        )
     {
         uint256 length = userOwnedTokens[owner].length();
         uint256[] memory tokenIds = new uint[](length);
+        string[] memory tokenURIs = new string[](length);
         uint256[] memory amounts = new uint[](length);
 
         for (uint256 i = 0; i < length; i++) {
             (tokenIds[i], amounts[i]) = userOwnedTokens[owner].at(i);
+            tokenURIs[i] = uri(tokenIds[i]);
         }
 
-        return (tokenIds, amounts);
+        return (tokenIds, tokenURIs, amounts);
     }
 
     function TransferNFT(
@@ -82,14 +102,22 @@ contract Planet is ERC1155URIStorage {
     ) public {
         require(amount >= 1, "Amount must be at least 1");
         safeTransferFrom(from, to, tokenId, amount, bytes(uri(tokenId)));
-        userOwnedTokens[from].set(
-            tokenId,
-            userOwnedTokens[from].get(tokenId) - amount
-        );
-        userOwnedTokens[to].set(
-            tokenId,
-            userOwnedTokens[to].get(tokenId) + amount
-        );
+        // Check whether `from' has tokenId left
+        uint256 fromAmount = userOwnedTokens[from].get(tokenId);
+        if (fromAmount > amount) {
+            userOwnedTokens[from].set(tokenId, fromAmount - amount);
+        } else {
+            userOwnedTokens[from].remove(tokenId);
+        }
+        // Check whether `to' initially has tokenId
+        if (userOwnedTokens[to].contains(tokenId)) {
+            userOwnedTokens[to].set(
+                tokenId,
+                userOwnedTokens[to].get(tokenId) + amount
+            );
+        } else {
+            userOwnedTokens[to].set(tokenId, amount);
+        }
     }
 
     function AddItemToMarket(
@@ -142,7 +170,7 @@ contract Planet is ERC1155URIStorage {
         );
     }
 
-    function SellItemAndTransferOwnership(uint256 itemId, uint256 amount)
+    function BuyItemAndTransferOwnership(uint256 itemId, uint256 amount)
         public
         payable
     {
@@ -184,7 +212,7 @@ contract Planet is ERC1155URIStorage {
         } else {
             userOwnedTokens[address(this)].remove(tokenId);
         }
-        safeTransferFrom(
+        _safeTransferFrom(
             address(this),
             msg.sender,
             tokenId,
@@ -232,7 +260,7 @@ contract Planet is ERC1155URIStorage {
         } else {
             userOwnedTokens[address(this)].remove(tokenId);
         }
-        safeTransferFrom(
+        _safeTransferFrom(
             address(this),
             msg.sender,
             tokenId,
@@ -248,13 +276,5 @@ contract Planet is ERC1155URIStorage {
             commodities[i] = idToCommodity[commodityIds.at(i)];
         }
         return commodities;
-    }
-
-    function getBalance() public view onlyOwner returns (uint256) {
-        return address(this).balance;
-    }
-
-    function withdraw(uint256 _amount) public onlyOwner {
-        Owner.transfer(_amount);
     }
 }
