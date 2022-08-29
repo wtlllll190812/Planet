@@ -43,6 +43,14 @@ contract Planet is ERC1155URIStorage, ERC1155Holder {
     // Set: commodityIds
     EnumerableSet.UintSet private commodityIds;
 
+    // Mapping: address => lastTime
+    mapping(address => uint256) private addressToLastTime;
+
+    // sum of all products
+    /// attention: hasn't change the variable
+    uint256 private sumWeight = 0;
+    uint256 public fee = 1;
+
     constructor(string memory uri_) ERC1155(uri_) {
         Owner = payable(msg.sender);
         // set BaseURI
@@ -66,9 +74,10 @@ contract Planet is ERC1155URIStorage, ERC1155Holder {
             require(amounts[i] >= 1, "Amount must be at least 1");
             _tokenIds.increment();
             uint256 newTokenId = _tokenIds.current();
-            _mint(Owner, newTokenId, amounts[i], bytes(tokenURIs[i]));
+            _mint(address(this), newTokenId, amounts[i], bytes(tokenURIs[i]));
             _setURI(newTokenId, tokenURIs[i]);
-            userOwnedTokens[Owner].set(newTokenId, amounts[i]);
+            userOwnedTokens[address(this)].set(newTokenId, amounts[i]);
+            sumWeight += amounts[i];
         }
     }
 
@@ -118,6 +127,10 @@ contract Planet is ERC1155URIStorage, ERC1155Holder {
         } else {
             userOwnedTokens[to].set(tokenId, amount);
         }
+        // return to this address
+        if (to == address(this)) {
+            sumWeight += amount;
+        }
     }
 
     function AddItemToMarket(
@@ -150,15 +163,6 @@ contract Planet is ERC1155URIStorage, ERC1155Holder {
             );
         } else {
             userOwnedTokens[msg.sender].remove(tokenId);
-        }
-        // contract receive the token
-        if (userOwnedTokens[address(this)].contains(tokenId)) {
-            userOwnedTokens[address(this)].set(
-                tokenId,
-                userOwnedTokens[address(this)].get(tokenId) + amount
-            );
-        } else {
-            userOwnedTokens[address(this)].set(tokenId, amount);
         }
         // transfer
         safeTransferFrom(
@@ -204,14 +208,6 @@ contract Planet is ERC1155URIStorage, ERC1155Holder {
         } else {
             userOwnedTokens[msg.sender].set(tokenId, amount);
         }
-        if (userOwnedTokens[address(this)].get(tokenId) > amount) {
-            userOwnedTokens[address(this)].set(
-                tokenId,
-                userOwnedTokens[address(this)].get(tokenId) - amount
-            );
-        } else {
-            userOwnedTokens[address(this)].remove(tokenId);
-        }
         _safeTransferFrom(
             address(this),
             msg.sender,
@@ -252,14 +248,6 @@ contract Planet is ERC1155URIStorage, ERC1155Holder {
         } else {
             userOwnedTokens[msg.sender].set(tokenId, amount);
         }
-        if (userOwnedTokens[address(this)].get(tokenId) > amount) {
-            userOwnedTokens[address(this)].set(
-                tokenId,
-                userOwnedTokens[address(this)].get(tokenId) - amount
-            );
-        } else {
-            userOwnedTokens[address(this)].remove(tokenId);
-        }
         _safeTransferFrom(
             address(this),
             msg.sender,
@@ -276,5 +264,90 @@ contract Planet is ERC1155URIStorage, ERC1155Holder {
             commodities[i] = idToCommodity[commodityIds.at(i)];
         }
         return commodities;
+    }
+
+    function GetRandomKItems()
+        public
+        payable
+        returns (
+            uint256[] memory,
+            string[] memory
+        )
+    {
+        uint256 K = 5; // amount of random material
+        require(sumWeight >= K, "Insufficient NFT Pool");
+        require(
+            msg.sender == Owner ||
+                msg.value == 1 * (10**fee) ||
+                addressToLastTime[msg.sender] == 0 ||
+                block.timestamp - addressToLastTime[msg.sender] > 1 days,
+            "Not owner or incorrect money or not enough time"
+        );
+        uint256[] memory tokenIds = new uint[](K);
+        string[] memory tokenURIs = new string[](K);
+
+        for (uint256 i = 0; i < K; i++) {
+            uint256 randNumber = (uint256(
+                keccak256(abi.encodePacked(block.timestamp, i))
+            ) % sumWeight) + 1;
+            for (
+                uint256 j = 0;
+                j < userOwnedTokens[address(this)].length();
+                j++
+            ) {
+                uint256 amount;
+                uint256 tokenId;
+                (tokenId, amount) = userOwnedTokens[address(this)].at(j);
+                if (randNumber <= amount) {
+                    // transfer token
+                    if (userOwnedTokens[msg.sender].contains(tokenId)) {
+                        userOwnedTokens[msg.sender].set(
+                            tokenId,
+                            userOwnedTokens[msg.sender].get(tokenId) + 1
+                        );
+                    } else {
+                        userOwnedTokens[msg.sender].set(tokenId, 1);
+                    }
+                    if (userOwnedTokens[address(this)].get(tokenId) > 1) {
+                        userOwnedTokens[address(this)].set(
+                            tokenId,
+                            userOwnedTokens[address(this)].get(tokenId) - 1
+                        );
+                    } else {
+                        userOwnedTokens[address(this)].remove(tokenId);
+                    }
+                    _safeTransferFrom(
+                        address(this),
+                        msg.sender,
+                        tokenId,
+                        1,
+                        bytes(uri(tokenId))
+                    );
+                    // record return values
+                    tokenIds[i] = tokenId;
+                    tokenURIs[i] = uri(tokenId);
+                    // decrease sumWeight
+                    sumWeight -= 1;
+                    break;
+                } else {
+                    randNumber -= amount;
+                }
+            }
+        }
+        addressToLastTime[msg.sender] = block.timestamp;
+        return (tokenIds, tokenURIs);
+    }
+
+    function changeFee(uint256 _fee) public onlyOwner returns (uint256) {
+        fee = _fee;
+        return fee;
+    }
+
+    function getBalance() public view returns (uint256) {
+        return address(this).balance;
+    }
+
+    function withdraw(uint256 _amount) public onlyOwner {
+        Owner.transfer(_amount);
     }
 }

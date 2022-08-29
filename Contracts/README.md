@@ -1,13 +1,6 @@
-# Sample Hardhat Project
+# Planet
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+TX: 0x66e7eab05415846122138ae0423b8ecacaa6b99b765cab811a2c6bf9db2260a7
 
-Try running some of the following tasks:
-
-```shell
-npx hardhat help
-npx hardhat test
-GAS_REPORT=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.js
-```
+Contract:
+0x5fd5B120CbA1DB17b23f5220f7297d58F69AD01c
