@@ -94,7 +94,8 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable,IScalable
 
     public void OnScaling(Vector2 scale)
     {
-        cameraData.zPos += scale.y;
+        if (cameraData.zPos + scale.y < data.nearDis && cameraData.zPos + scale.y > data.farDis)
+            cameraData.zPos += scale.y;
     }
 }
 
@@ -110,6 +111,8 @@ public class PlanetData: IEnumerator,IEnumerable
     public static Vector3 center;
     public object Current => data[currentPos.x, currentPos.y, currentPos.z];
 
+    public float nearDis;
+    public float farDis;
     public float trackRadius;
     public float cameraRadius;
     public float rotationSpeed;
@@ -239,10 +242,13 @@ public class PlanetData: IEnumerator,IEnumerable
     {
         JObject planet = new JObject();
         JArray planetData = new JArray();
+        planet["nearDis"] = nearDis;
+        planet["farDis"] = farDis;
         planet["trackRadius"] = trackRadius;
         planet["cameraRadius"] = cameraRadius;
         planet["rotationSpeed"] = rotationSpeed;
         planet["revolutionSpeed"] = revolutionSpeed;
+
 
         for (int x = 0; x < totalSize; x++)
         {
@@ -274,6 +280,8 @@ public class PlanetData: IEnumerator,IEnumerable
 
         JArray planetData = jobj["data"] as JArray;
 
+        nearDis = float.Parse(jobj["nearDis"].ToString());
+        farDis = float.Parse(jobj["farDis"].ToString());
         trackRadius = float.Parse(jobj["trackRadius"].ToString());
         cameraRadius = float.Parse(jobj["cameraRadius"].ToString());
         rotationSpeed = float.Parse(jobj["rotationSpeed"].ToString());
@@ -326,6 +334,4 @@ public class PlanetData: IEnumerator,IEnumerable
     {
         return this;
     }
-
-
 }

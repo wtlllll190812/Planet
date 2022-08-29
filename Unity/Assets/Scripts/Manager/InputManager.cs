@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class InputManager : MonoBehaviour
 {
     public Camera mainCam;
+    //public GameObject point;
 
     private IDragable currentObj;
     private Vector2 lastPos;
@@ -16,13 +17,13 @@ public class InputManager : MonoBehaviour
         if(Input.GetMouseButtonDown(0)&& !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
         {
             Vector2 pos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -mainCam.transform.position.z));
-            Vector3 startPos = new Vector3(pos.x, pos.y, -4);
-            hitObjs=new List<RaycastHit>(Physics.RaycastAll(startPos, Vector3.forward));
+            Vector3 startPos = new Vector3(pos.x, pos.y, -10);
+            hitObjs=new List<RaycastHit>(Physics.RaycastAll(startPos, Vector3.forward,Mathf.Infinity));
 
             hitObjs.Sort((x,y)=>x.distance>y.distance? 1:-1);
 
             bool hitSth=false;
-            foreach (var item in hitObjs)
+            foreach (var item in hitObjs)   
             {
                 IClickable clickable= item.collider.GetComponent<MonoBehaviour>() as IClickable;
                 if(clickable!=null)

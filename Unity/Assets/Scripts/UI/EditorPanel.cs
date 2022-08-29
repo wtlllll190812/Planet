@@ -6,6 +6,7 @@ using System.Collections.Generic;
 public class EditorPanel : MonoBehaviour
 {
     public EditorState currentState;
+    public NftObject selectedObj;
 
     public Button noneButton;
     public Button addButton;
