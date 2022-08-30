@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using Cysharp.Threading.Tasks;
 using MoralisUnity.Web3Api.Core;
 using MoralisUnity.Web3Api.Core.Models;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 using Object = System.Object;
 
@@ -273,7 +274,7 @@ namespace MoralisUnity.Web3Api.Client
                 throw new ApiException(500, e.Message);
             }
         }
-    
+
         /// <summary>
         /// Serialize an object into JSON string.
         /// </summary>

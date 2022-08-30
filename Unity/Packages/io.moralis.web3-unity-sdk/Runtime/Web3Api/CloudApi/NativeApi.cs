@@ -38,6 +38,7 @@ using MoralisUnity.Web3Api.Core;
 using MoralisUnity.Web3Api.Core.Models;
 using MoralisUnity.Web3Api.Interfaces;
 using MoralisUnity.Web3Api.Models;
+using Newtonsoft.Json.Linq;
 
 namespace MoralisUnity.Web3Api.CloudApi
 {
@@ -459,6 +460,49 @@ namespace MoralisUnity.Web3Api.CloudApi
 				throw new ApiException((int)response.Item1, "Error calling RunContractFunction: " + response.Item3, response.Item3);
 
 			return ((CloudFunctionResult<string>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<string>), response.Item2)).Result;
+		}
+		
+		public async UniTask<JToken> RunContractFunctionOrigin (string address, string functionName, RunContractDto abi, ChainList chain, string subdomain=null, string providerUrl=null)
+		{
+
+			// Verify the required parameter 'address' is set
+			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling RunContractFunction");
+
+			// Verify the required parameter 'functionName' is set
+			if (functionName == null) throw new ApiException(400, "Missing required parameter 'functionName' when calling RunContractFunction");
+
+			// Verify the required parameter 'abi' is set
+			if (abi == null) throw new ApiException(400, "Missing required parameter 'abi' when calling RunContractFunction");
+
+			var postBody = new Dictionary<String, object>();
+			var queryParams = new Dictionary<String, String>();
+			var headerParams = new Dictionary<String, String>();
+			var formParams = new Dictionary<String, String>();
+			var fileParams = new Dictionary<String, FileParameter>();
+
+			var path = "/functions/runContractFunction";
+			if (address != null) postBody.Add("address", ApiClient.ParameterToString(address));
+			if (functionName != null) postBody.Add("function_name", ApiClient.ParameterToString(functionName));
+			if (abi != null) postBody.Add("abi", abi.Abi);
+			if (abi != null) postBody.Add("params", abi.Params);
+			if (subdomain != null) postBody.Add("subdomain", ApiClient.ParameterToString(subdomain));
+			if (providerUrl != null) postBody.Add("providerUrl", ApiClient.ParameterToString(providerUrl));
+			postBody.Add("chain", ApiClient.ParameterToHex((long)chain));
+
+			// Authentication setting, if any
+			String[] authSettings = new String[] { "ApiKeyAuth" };
+
+			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
+
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+				await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+
+			if (((int)response.Item1) >= 400)
+				throw new ApiException((int)response.Item1, "Error calling RunContractFunction: " + response.Item3, response.Item3);
+			else if (((int)response.Item1) == 0)
+				throw new ApiException((int)response.Item1, "Error calling RunContractFunction: " + response.Item3, response.Item3);
+
+			return ((JObject)JsonConvert.DeserializeObject(response.Item3))?["result"];
 		}
 	}
 }
