@@ -29,9 +29,11 @@ contract Planet is ERC1155URIStorage, ERC1155Holder {
     // Mapping: address => tokenId => amount
     mapping(address => EnumerableMap.UintToUintMap) private userOwnedTokens;
 
+    // Struct: Commodity
     struct Commodity {
         uint256 itemId;
         uint256 tokenId;
+        string tokenURI;
         address payable owner;
         uint256 price;
         uint256 amount;
@@ -46,10 +48,15 @@ contract Planet is ERC1155URIStorage, ERC1155Holder {
     // Mapping: address => lastTime
     mapping(address => uint256) private addressToLastTime;
 
-    // sum of all products
-    /// attention: hasn't change the variable
+    // sum of weight of all products
     uint256 private sumWeight = 0;
-    uint256 public fee = 1;
+    
+    // price to pay for a single speed-up: 1*(10**fee) Wei
+    // initial: 1 ETH for ropsten
+    uint256 public fee = 18;
+
+    // amount of random material to get
+    uint256 public K = 5;
 
     // events
     event GetRandomKItemsEvent(uint256[] tokenIds, string[] tokenURIs);
@@ -66,15 +73,15 @@ contract Planet is ERC1155URIStorage, ERC1155Holder {
     }
 
     function MintNFT(string[] memory tokenURIs, uint256[] memory amounts)
-        public
+        external
         onlyOwner
     {
         require(
             tokenURIs.length == amounts.length,
-            "ERC1155: tokenURIs and amounts length mismatch"
+            "Length Mismatch"
         );
         for (uint256 i = 0; i < tokenURIs.length; i++) {
-            require(amounts[i] >= 1, "Amount must be at least 1");
+            require(amounts[i] >= 1, "Zero Amount");
             _tokenIds.increment();
             uint256 newTokenId = _tokenIds.current();
             _mint(address(this), newTokenId, amounts[i], bytes(tokenURIs[i]));
@@ -85,7 +92,7 @@ contract Planet is ERC1155URIStorage, ERC1155Holder {
     }
 
     function GetNFT(address owner)
-        public
+        external
         view
         returns (
             uint256[] memory,
@@ -111,25 +118,13 @@ contract Planet is ERC1155URIStorage, ERC1155Holder {
         address to,
         uint256 tokenId,
         uint256 amount
-    ) public {
-        require(amount >= 1, "Amount must be at least 1");
+    ) external {
+        require(amount >= 1, "Zero Amount");
         safeTransferFrom(from, to, tokenId, amount, bytes(uri(tokenId)));
         // Check whether `from' has tokenId left
-        uint256 fromAmount = userOwnedTokens[from].get(tokenId);
-        if (fromAmount > amount) {
-            userOwnedTokens[from].set(tokenId, fromAmount - amount);
-        } else {
-            userOwnedTokens[from].remove(tokenId);
-        }
+        LoseToken(from, tokenId, amount);
         // Check whether `to' initially has tokenId
-        if (userOwnedTokens[to].contains(tokenId)) {
-            userOwnedTokens[to].set(
-                tokenId,
-                userOwnedTokens[to].get(tokenId) + amount
-            );
-        } else {
-            userOwnedTokens[to].set(tokenId, amount);
-        }
+        GetToken(to, tokenId, amount);
         // return to this address
         if (to == address(this)) {
             sumWeight += amount;
@@ -140,11 +135,11 @@ contract Planet is ERC1155URIStorage, ERC1155Holder {
         uint256 tokenId,
         uint256 amount,
         uint256 price
-    ) public {
-        require(amount >= 1, "Amount must be at least 1");
+    ) external {
+        require(amount >= 1, "Zero Amount");
         require(
             balanceOf(msg.sender, tokenId) >= amount,
-            "Insufficient balance"
+            "Insufficient Balance"
         );
         // add token to the market
         _itemIds.increment();
@@ -152,21 +147,14 @@ contract Planet is ERC1155URIStorage, ERC1155Holder {
         idToCommodity[itemId] = Commodity(
             itemId,
             tokenId,
+            uri(tokenId),
             payable(msg.sender),
             price,
             amount
         );
         commodityIds.add(itemId);
         // msg.sender lose the token
-        uint256 newAmount = userOwnedTokens[msg.sender].get(tokenId) - amount;
-        if (newAmount != 0) {
-            userOwnedTokens[msg.sender].set(
-                tokenId,
-                userOwnedTokens[msg.sender].get(tokenId) - amount
-            );
-        } else {
-            userOwnedTokens[msg.sender].remove(tokenId);
-        }
+        LoseToken(msg.sender, tokenId, amount);
         // transfer
         safeTransferFrom(
             msg.sender,
@@ -178,39 +166,28 @@ contract Planet is ERC1155URIStorage, ERC1155Holder {
     }
 
     function BuyItemAndTransferOwnership(uint256 itemId, uint256 amount)
-        public
+        external
         payable
     {
         require(
             commodityIds.contains(itemId),
-            "The item doesn't exist in market"
+            "No Exist"
         );
         require(
             msg.sender != idToCommodity[itemId].owner,
-            "Unable to buy one's own items"
+            "Buy Oneself"
         );
-        require(amount >= 1, "Amount must be at least 1");
+        require(amount >= 1, "Zero Amount");
         uint256 tokenId = idToCommodity[itemId].tokenId; // commodity tokenId
         uint256 price = idToCommodity[itemId].price; // commodity price
         uint256 tokenAmount = idToCommodity[itemId].amount; // commodity amount
-        require(tokenAmount >= amount, "Requested amount exceeds the supply");
+        require(tokenAmount >= amount, "Exceed Supply");
         require(msg.value == price * amount, "Incorrect money");
 
         // market decrease supply
-        if (tokenAmount > amount) {
-            idToCommodity[itemId].amount = tokenAmount - amount;
-        } else {
-            commodityIds.remove(itemId);
-        }
+        DecreaseSupply(tokenAmount, amount, itemId);
         // transfer token
-        if (userOwnedTokens[msg.sender].contains(tokenId)) {
-            userOwnedTokens[msg.sender].set(
-                tokenId,
-                userOwnedTokens[msg.sender].get(tokenId) + amount
-            );
-        } else {
-            userOwnedTokens[msg.sender].set(tokenId, amount);
-        }
+        GetToken(msg.sender, tokenId, amount);
         _safeTransferFrom(
             address(this),
             msg.sender,
@@ -222,35 +199,24 @@ contract Planet is ERC1155URIStorage, ERC1155Holder {
         idToCommodity[itemId].owner.transfer(msg.value);
     }
 
-    function RedeemItems(uint256 itemId, uint256 amount) public {
-        require(amount >= 1, "Amount must be at least 1");
+    function RedeemItems(uint256 itemId, uint256 amount) external {
+        require(amount >= 1, "Zero Amount");
         require(
             commodityIds.contains(itemId),
-            "The item doesn't exist in market"
+            "No Exist"
         );
         require(
             msg.sender == idToCommodity[itemId].owner,
-            "Must redeem one's own items"
+            "Redeem Yourself"
         );
         uint256 tokenId = idToCommodity[itemId].tokenId; // commodity tokenId
         uint256 tokenAmount = idToCommodity[itemId].amount; // commodity amount
-        require(tokenAmount >= amount, "Requested amount exceeds the supply");
+        require(tokenAmount >= amount, "Exceed Supply");
 
         // market decrease supply
-        if (tokenAmount > amount) {
-            idToCommodity[itemId].amount = tokenAmount - amount;
-        } else {
-            commodityIds.remove(itemId);
-        }
+        DecreaseSupply(tokenAmount, amount, itemId);
         // transfer token
-        if (userOwnedTokens[msg.sender].contains(tokenId)) {
-            userOwnedTokens[msg.sender].set(
-                tokenId,
-                userOwnedTokens[msg.sender].get(tokenId) + amount
-            );
-        } else {
-            userOwnedTokens[msg.sender].set(tokenId, amount);
-        }
+        GetToken(msg.sender, tokenId, amount);
         _safeTransferFrom(
             address(this),
             msg.sender,
@@ -260,7 +226,7 @@ contract Planet is ERC1155URIStorage, ERC1155Holder {
         );
     }
 
-    function GetUnsoldItems() public view returns (Commodity[] memory) {
+    function GetUnsoldItems() external view returns (Commodity[] memory) {
         uint256 length = commodityIds.length();
         Commodity[] memory commodities = new Commodity[](length);
         for (uint256 i = 0; i < length; i++) {
@@ -269,15 +235,34 @@ contract Planet is ERC1155URIStorage, ERC1155Holder {
         return commodities;
     }
 
-    function GetRandomKItems() public payable {
-        uint256 K = 5; // amount of random material
-        require(sumWeight >= K, "Insufficient NFT Pool");
+    function GetCommoditiesByAddress(address owner)
+        external
+        view
+        returns (Commodity[] memory)
+    {
+        uint256 num = 0;
+        uint256 length = commodityIds.length();
+        uint256[] memory indexes = new uint256[](length);
+        for (uint256 i = 0; i < length; i++) {
+            if (idToCommodity[commodityIds.at(i)].owner == owner) {
+                indexes[num++] = i;
+            }
+        }
+        Commodity[] memory commodities = new Commodity[](num);
+        for (uint256 i = 0; i < num; i++) {
+            commodities[i] = idToCommodity[commodityIds.at(indexes[i])];
+        }
+        return commodities;
+    }
+
+    function GetRandomKItems() external payable {
+        require(sumWeight >= K, "Insufficient Pool");
         require(
             msg.sender == Owner ||
                 msg.value == 1 * (10**fee) ||
                 addressToLastTime[msg.sender] == 0 ||
                 block.timestamp - addressToLastTime[msg.sender] > 1 days,
-            "Not owner or incorrect money or not enough time"
+            "No Owner No Money No Time"
         );
         uint256[] memory tokenIds = new uint[](K);
         string[] memory tokenURIs = new string[](K);
@@ -296,22 +281,8 @@ contract Planet is ERC1155URIStorage, ERC1155Holder {
                 (tokenId, amount) = userOwnedTokens[address(this)].at(j);
                 if (randNumber <= amount) {
                     // transfer token
-                    if (userOwnedTokens[msg.sender].contains(tokenId)) {
-                        userOwnedTokens[msg.sender].set(
-                            tokenId,
-                            userOwnedTokens[msg.sender].get(tokenId) + 1
-                        );
-                    } else {
-                        userOwnedTokens[msg.sender].set(tokenId, 1);
-                    }
-                    if (userOwnedTokens[address(this)].get(tokenId) > 1) {
-                        userOwnedTokens[address(this)].set(
-                            tokenId,
-                            userOwnedTokens[address(this)].get(tokenId) - 1
-                        );
-                    } else {
-                        userOwnedTokens[address(this)].remove(tokenId);
-                    }
+                    GetToken(msg.sender, tokenId, 1);
+                    LoseToken(address(this), tokenId, 1);
                     _safeTransferFrom(
                         address(this),
                         msg.sender,
@@ -334,15 +305,50 @@ contract Planet is ERC1155URIStorage, ERC1155Holder {
         emit GetRandomKItemsEvent(tokenIds, tokenURIs);
     }
 
-    function changeFee(uint256 _fee) public onlyOwner {
-        fee = _fee;
+    function changeFee(uint256 f) external onlyOwner {
+        fee = f;
     }
 
-    function getBalance() public view returns (uint256) {
+    function changeK(uint256 k) external onlyOwner {
+        K = k;
+    }
+
+    function getBalance() external view returns (uint256) {
         return address(this).balance;
     }
 
-    function withdraw(uint256 _amount) public onlyOwner {
+    function withdraw(uint256 _amount) external onlyOwner {
         Owner.transfer(_amount);
+    }
+
+    function LoseToken(address owner, uint256 tokenId, uint256 amount) internal {
+        uint256 newAmount = userOwnedTokens[owner].get(tokenId) - amount;
+        if (newAmount != 0) {
+            userOwnedTokens[owner].set(
+                tokenId,
+                userOwnedTokens[owner].get(tokenId) - amount
+            );
+        } else {
+            userOwnedTokens[owner].remove(tokenId);
+        }
+    }
+
+    function GetToken(address owner, uint256 tokenId, uint256 amount) internal {
+        if (userOwnedTokens[owner].contains(tokenId)) {
+            userOwnedTokens[owner].set(
+                tokenId,
+                userOwnedTokens[owner].get(tokenId) + amount
+            );
+        } else {
+            userOwnedTokens[owner].set(tokenId, amount);
+        }
+    }
+
+    function DecreaseSupply(uint256 tokenAmount, uint256 amount, uint256 itemId) internal {
+        if (tokenAmount > amount) {
+            idToCommodity[itemId].amount = tokenAmount - amount;
+        } else {
+            commodityIds.remove(itemId);
+        }
     }
 }
