@@ -13,6 +13,7 @@ describe("Planet", function() {
             ["T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10"], 
             [10, 100, 10, 100, 10, 100, 10, 100, 10, 100]
         );
+        console.log(tx);
         // await planet.connect(owner).MintNFT(
         //     ["1", "2"], [0, 100]
         // );
@@ -24,17 +25,18 @@ describe("Planet", function() {
         // Test GetRandomKItems
         await planet.connect(addr1).GetRandomKItems();
         let overrides = {value: 10};
-        await planet.connect(addr1).GetRandomKItems(overrides);
+        let tx2 = await planet.connect(addr1).GetRandomKItems(overrides);
+        console.log(tx2);
         // await planet.connect(owner).GetRandomKItems();
-        console.log(await planet.GetNFT(planet.address));
-        console.log(await planet.GetNFT(addr1.address));
+        // console.log(await planet.GetNFT(planet.address));
+        // console.log(await planet.GetNFT(addr1.address));
 
         /// Test TransferNFT
         await planet.connect(addr1).TransferNFT(
             addr1.address, planet.address, 2, 1
         );
-        console.log(await planet.GetNFT(planet.address));
-        console.log(await planet.GetNFT(addr1.address));
+        // console.log(await planet.GetNFT(planet.address));
+        // console.log(await planet.GetNFT(addr1.address));
         // await planet.connect(owner).TransferNFT(
         //     owner.address, addr1.address, 1, 1
         // );

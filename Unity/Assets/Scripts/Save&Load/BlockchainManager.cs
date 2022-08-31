@@ -16,6 +16,7 @@ using MoralisUnity.Web3Api.Models;
 using Nethereum.Hex.HexTypes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Org.BouncyCastle.Utilities.Encoders;
 using UnityEngine.SceneManagement;
 using Sirenix.OdinInspector;
 
@@ -43,6 +44,9 @@ public class BlockchainManager : MonoBehaviour {
 
     public string addressStr = null;
     public string balanceStr = null;
+    
+    // event callback
+    
 
     // Start is called before the first frame update
     void Start() { }
@@ -116,6 +120,7 @@ public class BlockchainManager : MonoBehaviour {
     [Button("GetNFT")]
     public async Task<List<Token>> GetNFT() {
         try {
+            MoralisUser user = await Moralis.GetUserAsync();
             // Function ABI input parameters
             object[] inputParams = new object[1];
             inputParams[0] = new { internalType = "address", name = "owner", type = "address" };
@@ -133,7 +138,7 @@ public class BlockchainManager : MonoBehaviour {
             // Define request object
             RunContractDto rcd = new RunContractDto() {
                 Abi = abi,
-                Params = new { owner = "0xd754a613C08cA611AF1408fBed1FB793aF733b07" }
+                Params = new { owner = user.ethAddress }
             };
             // resp: unparsed json {"result":{"0":["4","6","2"],"1":["T4","T6","T2"],"2":["2","1","2"]}}
             JToken resp =
@@ -243,5 +248,212 @@ public class BlockchainManager : MonoBehaviour {
         }
 
         return commodities;
+    }
+
+    [Button("MintNFT")]
+    public async void MintNFT(List<string> tokenURIs, List<BigInteger> amounts) {
+        object[] args = {
+            tokenURIs, amounts
+        };
+
+        string res = await ExecuteContractFunction("MintNFT", args, new HexBigInteger("0x0"));
+
+        if (res == null) {
+            Debug.LogError("Transaction Fail!");
+        }
+        else {
+            Debug.Log($"Transaction Success! Transaction: {res}");
+        }
+    }
+
+    [Button("TransferNFT")]
+    public async void TransferNFT(string from, string to, BigInteger tokenId, BigInteger amount) {
+        object[] args = {
+            from, to, tokenId, amount
+        };
+
+        string res = await ExecuteContractFunction("TransferNFT", args, new HexBigInteger("0x0"));
+
+        if (res == null) {
+            Debug.LogError("Transaction Fail!");
+        }
+        else {
+            Debug.Log($"Transaction Success! Transaction: {res}");
+        }
+    }
+
+    [Button("AddItemToMarket")]
+    public async void AddItemToMarket(BigInteger tokenId, BigInteger amount, BigInteger price) {
+        object[] args = {
+            tokenId, amount, price
+        };
+
+        string res = await ExecuteContractFunction("AddItemToMarket", args, new HexBigInteger("0x0"));
+
+        if (res == null) {
+            Debug.LogError("Transaction Fail!");
+        }
+        else {
+            Debug.Log($"Transaction Success! Transaction: {res}");
+        }
+    }
+
+    [Button("BuyItemAndTransferOwnership")]
+    public async void BuyItemAndTransferOwnership(BigInteger itemId, BigInteger amount, BigInteger value) {
+        object[] args = {
+            itemId, amount
+        };
+
+        string res =
+            await ExecuteContractFunction("BuyItemAndTransferOwnership", args, new HexBigInteger(value));
+
+        if (res == null) {
+            Debug.LogError("Transaction Fail!");
+        }
+        else {
+            Debug.Log($"Transaction Success! Transaction: {res}");
+        }
+    }
+
+    [Button("RedeemItems")]
+    public async void RedeemItems(BigInteger tokenId, BigInteger amount) {
+        object[] args = {
+            tokenId, amount
+        };
+
+        string res = await ExecuteContractFunction("RedeemItems", args, new HexBigInteger("0x0"));
+
+        if (res == null) {
+            Debug.LogError("Transaction Fail!");
+        }
+        else {
+            Debug.Log($"Transaction Success! Transaction: {res}");
+        }
+    }
+
+    [Button("changeFee")]
+    public async void changeFee(BigInteger _fee) {
+        object[] args = {
+            _fee
+        };
+
+        string res = await ExecuteContractFunction("changeFee", args, new HexBigInteger("0x0"));
+
+        if (res == null) {
+            Debug.LogError("Transaction Fail!");
+        }
+        else {
+            Debug.Log($"Transaction Success! Transaction: {res}");
+        }
+    }
+
+    [Button("withdraw")]
+    public async void withdraw(BigInteger _amount) {
+        object[] args = {
+            _amount
+        };
+
+        string res = await ExecuteContractFunction("withdraw", args, new HexBigInteger("0x0"));
+
+        if (res == null) {
+            Debug.LogError("Transaction Fail!");
+        }
+        else {
+            Debug.Log($"Transaction Success! Transaction: {res}");
+        }
+    }
+
+    [Button("GetRandomKItems")]
+    public async Task<List<Token>> GetRandomKItems(BigInteger value) {
+        object[] args = { };
+
+        string res =
+            await ExecuteContractFunction("GetRandomKItems", args, new HexBigInteger(value));
+
+        if (res == null) {
+            Debug.LogError("Transaction Fail!");
+        }
+
+        Debug.Log($"Transaction Success! Transaction: {res}");
+        await Task.Delay(10000);
+        int time = 10;
+        // Get Transaction
+        BlockTransaction txn = await Moralis.Web3Api.Native.GetTransaction(res, ChainList.ropsten);
+        while (txn == null) {
+            await Task.Delay(10000);
+            time += 10;
+            txn = await Moralis.Web3Api.Native.GetTransaction(res, ChainList.ropsten);
+            Debug.Log(time);
+            if (time >= 90) {
+                Debug.LogError("Update to blockchain fail!");
+                return null;
+            }
+        }
+        int blockNumber = Int32.Parse(txn.BlockNumber);
+        string txnHash = txn.Logs.Last().TransactionHash;
+        // Get Contract Event
+        object abi = new {
+            anonymous = false, name = "GetRandomKItemEvent", type = "event",
+            inputs = new[] {
+                new {
+                    indexed = false, internalType = "uint256[]", name = "tokenIds", type = "uint256[]"
+                },
+                new { indexed = false, internalType = "string[]", name = "tokenURIs", type = "string[]" }
+            }
+        };
+        List<LogEvent> eventList = await Moralis.Web3Api.Native.GetContractEvents(contractAddress,
+            "0x7c416904aa25bb5bcade5e79dc30bae7916ce773ef5e89c2e2145542933d3a96",
+            abi, ChainList.ropsten, null, null, blockNumber, blockNumber);
+        // Get Tokens
+        JObject data = new JObject();
+        foreach (var e in eventList) {
+            if (e.TransactionHash == txnHash) {
+                data = (JObject)e.Data;
+                break;
+            }
+        }
+
+        // Parse Token
+        List<Token> tokens = new List<Token>();
+        JArray tokenIDsJ = data?["tokenIds"] as JArray;
+        JArray tokenURIsJ = data?["tokenURIs"] as JArray;
+        List<BigInteger> tokenIDs = JsonConvert.DeserializeObject<List<BigInteger>>(tokenIDsJ.ToString());
+        List<string> tokenURIs = JsonConvert.DeserializeObject<List<string>>(tokenURIsJ.ToString());
+        int count = tokenIDs.Count;
+        for (int i = 0; i < count; i++) {
+            int existIndex = -1;
+            for (int j = 0; j < tokens.Count; j++) {
+                if (tokens[j].tokenId == tokenIDs[i]) {
+                    existIndex = j;
+                    break;
+                }
+            }
+
+            if (existIndex == -1) {
+                Token t = new Token();
+                t.tokenId = tokenIDs[i];
+                t.tokenURI = tokenURIs[i];
+                t.amount = 1;
+                tokens.Add(t);
+            }
+            else {
+                tokens[existIndex].amount += 1;
+            }
+        }
+
+        return tokens;
+    }
+
+    private async Task<string> ExecuteContractFunction(string functionName, object[] args,
+        HexBigInteger value) {
+        // Set gas estimate
+        HexBigInteger gas = new HexBigInteger(0);
+        HexBigInteger gasPrice = new HexBigInteger("0x0");
+
+        string res =
+            await Moralis.ExecuteContractFunction(contractAddress, abi, functionName, args, value, gas,
+                gasPrice);
+
+        return res;
     }
 }

@@ -51,6 +51,9 @@ contract Planet is ERC1155URIStorage, ERC1155Holder {
     uint256 private sumWeight = 0;
     uint256 public fee = 1;
 
+    // events
+    event GetRandomKItemsEvent(uint256[] tokenIds, string[] tokenURIs);
+
     constructor(string memory uri_) ERC1155(uri_) {
         Owner = payable(msg.sender);
         // set BaseURI
@@ -266,14 +269,7 @@ contract Planet is ERC1155URIStorage, ERC1155Holder {
         return commodities;
     }
 
-    function GetRandomKItems()
-        public
-        payable
-        returns (
-            uint256[] memory,
-            string[] memory
-        )
-    {
+    function GetRandomKItems() public payable {
         uint256 K = 5; // amount of random material
         require(sumWeight >= K, "Insufficient NFT Pool");
         require(
@@ -335,12 +331,11 @@ contract Planet is ERC1155URIStorage, ERC1155Holder {
             }
         }
         addressToLastTime[msg.sender] = block.timestamp;
-        return (tokenIds, tokenURIs);
+        emit GetRandomKItemsEvent(tokenIds, tokenURIs);
     }
 
-    function changeFee(uint256 _fee) public onlyOwner returns (uint256) {
+    function changeFee(uint256 _fee) public onlyOwner {
         fee = _fee;
-        return fee;
     }
 
     function getBalance() public view returns (uint256) {
