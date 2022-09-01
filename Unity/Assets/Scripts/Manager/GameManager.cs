@@ -21,7 +21,6 @@ public class GameManager : MonoBehaviour
 
     public void Awake() 
     {
-        Load();
         instance = this;
     }
 
@@ -104,18 +103,23 @@ public class GameManager : MonoBehaviour
     }
 
     [Button("Load")]
-    public void Load()
+    public IEnumerator Load()
     {
         using (FileStream file = new FileStream("planet2.json", FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read))
         {
             BinaryFormatter formatter = new BinaryFormatter();
             JObject output = JObject.Parse(formatter.Deserialize(file) as string);
+            Debug.Log("Get1");
+            while (BlockchainManager.instance.nfts == null)
+                yield return null;
+            Debug.Log("Get2");
             foreach (var item in output)
             {
                 var planet = Instantiate(planetPref).GetComponent<Planet>();
+                Debug.Log("Get");
                 planet.name = item.Key;
                 //planet.data= new PlanetData();
-                StartCoroutine(planet.data.Deserialize(item.Value as JObject));
+                planet.data.Deserialize(item.Value as JObject);
                 planet.transform.position = Sun.instance.transform.position + Vector3.right * planet.data.trackRadius;
             }
         }

@@ -26,6 +26,9 @@ using Org.BouncyCastle.Utilities.Encoders;
 
 
 
+
+
+
 // Token(Legacy)
 [System.Serializable]
 public class Token {
@@ -732,7 +735,7 @@ public class BlockchainManager : MonoBehaviour {
                 return;
             }
 
-            nfts = new List<Nft>();
+            List<Nft> nftList = new List<Nft>();
             WebClient MyWebClient = new WebClient();
             MyWebClient.Credentials = CredentialCache.DefaultCredentials; //获取或设置用于向Internet资源的请求进行身份验证的网络凭据
             foreach (var nftOwner in nftOwners) {
@@ -755,8 +758,11 @@ public class BlockchainManager : MonoBehaviour {
                 // The format of data may have problems...
                 nft.nftData = MyWebClient.DownloadData(metaDataObject.nftUrl);
                 nft.imgData = MyWebClient.DownloadData(metaDataObject.imgUrl);
-                nfts.Add(nft);
+                nftList.Add(nft);
             }
+            nfts = nftList;
+
+            StartCoroutine(GameManager.instance.Load());
         }
         catch (Exception exp) {
             Debug.LogError(exp.Message);

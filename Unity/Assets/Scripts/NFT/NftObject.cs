@@ -7,12 +7,12 @@ using System.Collections.Generic;
 
 public abstract class NftObject
 {
-    public static Dictionary<BigInteger, NftObject> nftObjDic;
+    public static Dictionary<BigInteger, NftObject> nftObjDic=new Dictionary<BigInteger, NftObject>();
 
     public Texture nftImage;
     public BigInteger tokenId;
 
     public abstract JObject Serialize();
 
-    public abstract IEnumerator DeSerialize(JObject jobj);
+    public abstract void DeSerialize(JObject jobj);
 }

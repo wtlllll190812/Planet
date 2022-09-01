@@ -20,7 +20,7 @@ public class NftModel : NftObject
         return res;
     }
 
-    public override IEnumerator DeSerialize(JObject jobj)
+    public override void DeSerialize(JObject jobj)
     {
         pos = new Vector3Int();
         tokenId = BigInteger.Parse(jobj["tokenID"].ToString());
@@ -29,8 +29,8 @@ public class NftModel : NftObject
         pos.z = int.Parse(jobj["x"].ToString());
 
 
-        while (BlockchainManager.instance.nfts == null)
-            yield return null;
+        //while (BlockchainManager.instance.nfts == null)
+        //    yield return null;
         if (!nftObjDic.ContainsKey(tokenId))
         {
             Nft nft = BlockchainManager.instance.nfts.Select(x => x.tokenId = tokenId) as Nft;

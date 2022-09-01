@@ -275,9 +275,8 @@ public class PlanetData: IEnumerator,IEnumerable
     /// 星球数据反序列化
     /// </summary>
     /// <param name="jobj"></param>
-    public IEnumerator Deserialize(JObject jobj)
+    public void Deserialize(JObject jobj)
     {
-        yield return null;
         data = new LandData[totalSize, totalSize, totalSize];
         center = new Vector3((totalSize - 1) / 2, (totalSize - 1) / 2, (totalSize - 1) / 2);
 
@@ -298,7 +297,7 @@ public class PlanetData: IEnumerator,IEnumerable
                 for (int z = 0; z < jarY.Count; z++)
                 {
                     LandData newLand=new LandData();
-                    yield return newLand.DeSerialize(jobj);
+                    newLand.DeSerialize(jarY[z] as JObject);
                     //newLand.landKind= jarY[z].ToString();
                     //data[x, y, z] = newLand;
                 }

@@ -44,21 +44,23 @@ public class LandData: NftObject
         return res;
     }
 
-    public override IEnumerator DeSerialize(JObject jobj)
+    public override void DeSerialize(JObject jobj)
     {
+        Debug.Log(jobj);
         tokenId = BigInteger.Parse(jobj["tokenID"].ToString());
         landKind = jobj["landKind"].ToString();
-
-        while (BlockchainManager.instance.nfts == null)
-            yield return null;
+        if (landKind == "empty")
+            return;
+        //while (BlockchainManager.instance.nfts?.Count<=0)
+        //    await
         if (!nftObjDic.ContainsKey(tokenId))
         {
             Nft nft = BlockchainManager.instance.nfts[0];//.Select(x => x.tokenId = tokenId) as Nft;
             Debug.Log(nft.tokenId);
-            AssetBundle nftBundle = AssetBundle.LoadFromMemory(nft.imgData);
+            AssetBundle nftBundle = AssetBundle.LoadFromMemory(nft.nftData);
             nftImage = nftBundle.LoadAllAssets<Texture>()[0];
-            nftBundle = AssetBundle.LoadFromMemory(nft.nftData);
-            landTexture = nftBundle.LoadAllAssets<Texture>()[0];
+            //AssetBundle nftBundle2 = AssetBundle.LoadFromMemory(nft.nftData);
+            //landTexture = nftBundle2.LoadAllAssets<Texture>()[0];
             nftObjDic.Add(tokenId, this);
         }
         else
