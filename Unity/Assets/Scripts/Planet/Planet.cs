@@ -1,5 +1,6 @@
 using System.IO;
 using UnityEngine;
+using System.Linq;
 using Newtonsoft.Json;
 using System.Collections;
 using Newtonsoft.Json.Linq;
@@ -279,7 +280,6 @@ public class PlanetData: IEnumerator,IEnumerable
         center = new Vector3((totalSize - 1) / 2, (totalSize - 1) / 2, (totalSize - 1) / 2);
 
         JArray planetData = jobj["data"] as JArray;
-
         nearDis = float.Parse(jobj["nearDis"].ToString());
         farDis = float.Parse(jobj["farDis"].ToString());
         trackRadius = float.Parse(jobj["trackRadius"].ToString());
