@@ -1,7 +1,10 @@
 ManifestFileVersion: 0
-CRC: 1695097241
+CRC: 1864205250
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
       Name: planet.asset
+      Dependencies: {}
+    Info_1:
+      Name: rock.asset
       Dependencies: {}

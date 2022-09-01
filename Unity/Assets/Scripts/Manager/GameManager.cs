@@ -114,7 +114,8 @@ public class GameManager : MonoBehaviour
             {
                 var planet = Instantiate(planetPref).GetComponent<Planet>();
                 planet.name = item.Key;
-                planet.data.Deserialize(item.Value as JObject);
+                //planet.data= new PlanetData();
+                StartCoroutine(planet.data.Deserialize(item.Value as JObject));
                 planet.transform.position = Sun.instance.transform.position + Vector3.right * planet.data.trackRadius;
             }
         }

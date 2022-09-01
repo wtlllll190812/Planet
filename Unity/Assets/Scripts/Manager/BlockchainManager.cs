@@ -25,6 +25,7 @@ using MoralisUnity.Web3Api.Core.Models;
 using Org.BouncyCastle.Utilities.Encoders;
 
 
+
 // Token(Legacy)
 [System.Serializable]
 public class Token {
@@ -717,6 +718,7 @@ public class BlockchainManager : MonoBehaviour {
 
     public async void GetNFT(string address) {
         try {
+
             NftOwnerCollection noc =
                 await Moralis.GetClient().Web3Api.Account.GetNFTsForContract(address.ToLower(),
                     contractAddress,
@@ -761,8 +763,9 @@ public class BlockchainManager : MonoBehaviour {
         }
     }
 
-    public void GetMyNFT() {
-        GetNFT(addressStr);
+    public async void GetMyNFT() {
+        MoralisUser user=await Moralis.GetUserAsync();
+        GetNFT(user.ethAddress);
     }
 
     #endregion

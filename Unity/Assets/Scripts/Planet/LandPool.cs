@@ -3,23 +3,10 @@ using System.Collections;
 using DesignMode.Singleton;
 using System.Collections.Generic;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+public class LandPool:Singleton<LandPool>
 /// <summary>
 /// 地块对象池
 /// </summary>
-public class LandPool:Singleton<LandPool>
 {
     public GameObject landPref;
     private List<Land> landEnabled = new List<Land>();

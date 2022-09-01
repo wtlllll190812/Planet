@@ -15,7 +15,7 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable,IScalable
     public virtual void Start()
     {
         //Init();
-        GenPlanet();
+        //GenPlanet();
         GameManager.instance.planetList.Add(this);
         cameraData = new CameraData(transform,data.cameraRadius);
     }
@@ -252,7 +252,6 @@ public class PlanetData: IEnumerator,IEnumerable
         planet["rotationSpeed"] = rotationSpeed;
         planet["revolutionSpeed"] = revolutionSpeed;
 
-
         for (int x = 0; x < totalSize; x++)
         {
             JArray jarX = new JArray();
@@ -261,7 +260,7 @@ public class PlanetData: IEnumerator,IEnumerable
                 JArray jarY = new JArray();
                 for (int z = 0; z < totalSize; z++)
                 {
-                    jarY.Add(data[x, y, z].landKind);
+                    jarY.Add(data[x, y, z].Serialize());
                 }
                 jarX.Add(jarY);
             }
@@ -276,8 +275,9 @@ public class PlanetData: IEnumerator,IEnumerable
     /// 星球数据反序列化
     /// </summary>
     /// <param name="jobj"></param>
-    public void Deserialize(JObject jobj)
+    public IEnumerator Deserialize(JObject jobj)
     {
+        yield return null;
         data = new LandData[totalSize, totalSize, totalSize];
         center = new Vector3((totalSize - 1) / 2, (totalSize - 1) / 2, (totalSize - 1) / 2);
 
@@ -298,8 +298,9 @@ public class PlanetData: IEnumerator,IEnumerable
                 for (int z = 0; z < jarY.Count; z++)
                 {
                     LandData newLand=new LandData();
-                    newLand.landKind= jarY[z].ToString();
-                    data[x, y, z] = newLand;
+                    yield return newLand.DeSerialize(jobj);
+                    //newLand.landKind= jarY[z].ToString();
+                    //data[x, y, z] = newLand;
                 }
             }
         }

@@ -53,8 +53,8 @@ public class LandData: NftObject
             yield return null;
         if (!nftObjDic.ContainsKey(tokenId))
         {
-            Nft nft = BlockchainManager.instance.nfts.Select(x => x.tokenId = tokenId) as Nft;
-
+            Nft nft = BlockchainManager.instance.nfts[0];//.Select(x => x.tokenId = tokenId) as Nft;
+            Debug.Log(nft.tokenId);
             AssetBundle nftBundle = AssetBundle.LoadFromMemory(nft.imgData);
             nftImage = nftBundle.LoadAllAssets<Texture>()[0];
             nftBundle = AssetBundle.LoadFromMemory(nft.nftData);
