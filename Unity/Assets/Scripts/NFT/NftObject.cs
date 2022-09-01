@@ -1,18 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
+using System.Numerics;
+using System.Collections;
+using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 
-public class NftObject : MonoBehaviour
+public abstract class NftObject
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public static Dictionary<BigInteger, NftObject> nftObjDic;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public Texture nftImage;
+    public BigInteger tokenId;
+
+    public abstract JObject Serialize();
+
+    public abstract IEnumerator DeSerialize(JObject jobj);
 }

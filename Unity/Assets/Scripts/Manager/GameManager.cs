@@ -74,11 +74,11 @@ public class GameManager : MonoBehaviour
                 if (!land.planet.data.InRange(land.GetPos(activeDir)))
                     break;
                 var newLand=LandPool.Instance.GetLand(land.GetPos(activeDir), land.planet);
-                newLand.planet.data.SetLandKind(land, EKindData.grass);
+                newLand.planet.data.SetLandKind(land, "surface");
                 newLand.planet.data.Update(land);
                 break;
             case EditorState.remove:
-                land.planet.data.SetLandKind(land, EKindData.empty);
+                land.planet.data.SetLandKind(land, "empty");
                 land.planet.data.Update(land);
                 LandPool.Instance.DestoryLand(land);
                 break;

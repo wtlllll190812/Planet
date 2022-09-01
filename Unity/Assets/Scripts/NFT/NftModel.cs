@@ -4,50 +4,30 @@ using System.Numerics;
 using System.Collections;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
-using Vector3 = UnityEngine.Vector3;
 
-public class Land :MonoBehaviour, IClickable
-//地块类
+public class NftModel : NftObject
 {
     public Vector3Int pos;
-    public Planet planet;
-    public bool OnClick(Vector3 startPos,Vector3 activeData)
-    {
-        GameManager.instance.EditPlanet(this,activeData);
-        return false;
-    }
-    public Vector3Int GetPos(Vector3 dir)
-    {
-        Vector3 nextPos = transform.InverseTransformDirection(dir);
-        return new Vector3Int(pos.x + Mathf.RoundToInt(nextPos.x), pos.y + Mathf.RoundToInt(nextPos.y), pos.z + Mathf.RoundToInt(nextPos.z));
-    }
-}
-
-/// <summary>
-/// 地块类型
-/// </summary>
-public class LandData: NftObject
-{
-    public string landKind;
-    public Texture landTexture;
-
-    public bool IsSurface()
-    {
-        return !(landKind == "empty" || landKind == "underground");
-    }
+    public GameObject nftGameObject;
 
     public override JObject Serialize()
     {
         JObject res = new JObject();
         res["tokenID"] = tokenId.ToString();
-        res["landKind"] = landKind;
+        res["x"] = pos.x;
+        res["y"] = pos.y;
+        res["z"] = pos.z;
         return res;
     }
 
     public override IEnumerator DeSerialize(JObject jobj)
     {
+        pos = new Vector3Int();
         tokenId = BigInteger.Parse(jobj["tokenID"].ToString());
-        landKind = jobj["landKind"].ToString();
+        pos.x = int.Parse(jobj["x"].ToString());
+        pos.y = int.Parse(jobj["x"].ToString());
+        pos.z = int.Parse(jobj["x"].ToString());
+
 
         while (BlockchainManager.instance.nfts == null)
             yield return null;
@@ -58,14 +38,14 @@ public class LandData: NftObject
             AssetBundle nftBundle = AssetBundle.LoadFromMemory(nft.imgData);
             nftImage = nftBundle.LoadAllAssets<Texture>()[0];
             nftBundle = AssetBundle.LoadFromMemory(nft.nftData);
-            landTexture = nftBundle.LoadAllAssets<Texture>()[0];
+            nftGameObject = GameObject.Instantiate(nftBundle.LoadAllAssets<GameObject>()[0]);
             nftObjDic.Add(tokenId, this);
         }
         else
         {
-            var obj = nftObjDic[tokenId] as LandData;
+            var obj = nftObjDic[tokenId] as NftModel;
             nftImage = obj.nftImage;
-            landTexture = obj.landTexture;
+            nftGameObject = GameObject.Instantiate(obj.nftGameObject);
             nftObjDic[tokenId].nftImage = null;
         }
     }

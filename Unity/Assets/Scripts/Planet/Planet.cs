@@ -36,9 +36,9 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable,IScalable
     /// </summary>
     public virtual void GenPlanet()
     {
-        foreach (EKindData item in data)
+        foreach (LandData item in data)
         {
-            if (item != EKindData.underground && item != EKindData.empty)
+            if (item.IsSurface())
             {
                 LandPool.Instance.GetLand(data.currentPos,this);
             }
@@ -106,7 +106,7 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable,IScalable
 [System.Serializable]
 public class PlanetData: IEnumerator,IEnumerable
 {
-    [SerializeField]private EKindData[,,] data;
+    [SerializeField]private LandData[,,] data;
 
     public Vector3Int currentPos;
     public static Vector3 center;
@@ -130,7 +130,7 @@ public class PlanetData: IEnumerator,IEnumerable
     /// <summary>
     /// 索引器
     /// </summary>
-    public EKindData this[Vector3Int index]
+    public LandData this[Vector3Int index]
     {
         get
         {
@@ -147,7 +147,7 @@ public class PlanetData: IEnumerator,IEnumerable
     /// </summary>
     public void Init()
     {
-        data = new EKindData[totalSize, totalSize, totalSize];
+        data = new LandData[totalSize, totalSize, totalSize];
         center = new Vector3((totalSize - 1) / 2, (totalSize - 1) / 2, (totalSize - 1) / 2);
         //计算星球范围
         for (int x = 0; x < totalSize; x++)
@@ -156,10 +156,12 @@ public class PlanetData: IEnumerator,IEnumerable
             {
                 for (int z = 0; z < totalSize; z++)
                 {
+                    LandData newLand = new LandData();
                     if (Vector3.Distance(new Vector3(x, y, z), center) > planetSize)
-                        data[x, y, z] = EKindData.empty;
+                        newLand.landKind = "empty";
                     else
-                        data[x, y, z] = EKindData.underground;
+                        newLand.landKind = "underground";
+                    data[x, y, z]=newLand;
                 }
             }
         }
@@ -171,7 +173,7 @@ public class PlanetData: IEnumerator,IEnumerable
                 for (int z = 0; z < totalSize; z++)
                 {
                     if (IsBoundary(new Vector3Int(x, y, z)))
-                        data[x, y, z] = EKindData.grass;
+                        data[x, y, z].landKind= "surface";
                 }
             }
         }
@@ -197,15 +199,15 @@ public class PlanetData: IEnumerator,IEnumerable
     /// </summary>
     public bool IsBoundary(Vector3Int pos)
     {
-        if (data[pos.x, pos.y, pos.z] == EKindData.empty)
+        if (data[pos.x, pos.y, pos.z].landKind=="empty")
             return false;
         bool res = false;
-        res |= (pos.x + 1 > totalSize-1 || data[pos.x + 1, pos.y, pos.z] == EKindData.empty);
-        res |= (pos.x - 1 < 0 || data[pos.x - 1, pos.y, pos.z] == EKindData.empty);
-        res |= (pos.y + 1 > totalSize-1 || data[pos.x, pos.y + 1, pos.z] == EKindData.empty);
-        res |= (pos.y - 1 < 0 || data[pos.x, pos.y - 1, pos.z] == EKindData.empty);
-        res |= (pos.z + 1 > totalSize-1 || data[pos.x, pos.y, pos.z + 1] == EKindData.empty);
-        res |= (pos.z - 1 < 0 || data[pos.x, pos.y, pos.z - 1] == EKindData.empty);
+        res |= (pos.x + 1 > totalSize-1 || data[pos.x + 1, pos.y, pos.z].landKind=="empty");
+        res |= (pos.x - 1 < 0 || data[pos.x - 1, pos.y, pos.z].landKind=="empty");
+        res |= (pos.y + 1 > totalSize-1 || data[pos.x, pos.y + 1, pos.z].landKind=="empty");
+        res |= (pos.y - 1 < 0 || data[pos.x, pos.y - 1, pos.z].landKind=="empty");
+        res |= (pos.z + 1 > totalSize-1 || data[pos.x, pos.y, pos.z + 1].landKind=="empty");
+        res |= (pos.z - 1 < 0 || data[pos.x, pos.y, pos.z - 1].landKind=="empty");
         return res;
     }
     
@@ -219,9 +221,9 @@ public class PlanetData: IEnumerator,IEnumerable
             if (!InRange(item + land.pos))
                 continue;
             var kind = this[item + land.pos];
-            if (kind == EKindData.underground && this[land.pos] == EKindData.empty)
+            if (kind.landKind=="underground" && this[land.pos].landKind=="empty")
             {
-                this[item + land.pos] = EKindData.grass;
+                this[item + land.pos].landKind = "surface";
                 LandPool.Instance.GetLand(item + land.pos, land.planet);
             }
             //if(kind==EKindData.grass&&this[land.pos]==EKindData.grass)
@@ -231,9 +233,9 @@ public class PlanetData: IEnumerator,IEnumerable
     /// <summary>
     /// 设定地块类型
     /// </summary>
-    public void SetLandKind(Land land, EKindData kind)
+    public void SetLandKind(Land land, string kind)
     {
-        this[land.pos] = kind;
+        this[land.pos].landKind = kind;
     }
     
     /// <summary>
@@ -259,7 +261,7 @@ public class PlanetData: IEnumerator,IEnumerable
                 JArray jarY = new JArray();
                 for (int z = 0; z < totalSize; z++)
                 {
-                    jarY.Add(data[x, y, z]);
+                    jarY.Add(data[x, y, z].landKind);
                 }
                 jarX.Add(jarY);
             }
@@ -276,7 +278,7 @@ public class PlanetData: IEnumerator,IEnumerable
     /// <param name="jobj"></param>
     public void Deserialize(JObject jobj)
     {
-        data = new EKindData[totalSize, totalSize, totalSize];
+        data = new LandData[totalSize, totalSize, totalSize];
         center = new Vector3((totalSize - 1) / 2, (totalSize - 1) / 2, (totalSize - 1) / 2);
 
         JArray planetData = jobj["data"] as JArray;
@@ -295,7 +297,9 @@ public class PlanetData: IEnumerator,IEnumerable
                 JArray jarY = jarX[y] as JArray;
                 for (int z = 0; z < jarY.Count; z++)
                 {
-                    data[x, y, z] = (EKindData)int.Parse(jarY[z].ToString());
+                    LandData newLand=new LandData();
+                    newLand.landKind= jarY[z].ToString();
+                    data[x, y, z] = newLand;
                 }
             }
         }
