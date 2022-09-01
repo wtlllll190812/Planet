@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Cysharp.Threading.Tasks;
 using MoralisUnity.Web3Api.Models;
+using Newtonsoft.Json.Linq;
 
 namespace MoralisUnity.Web3Api.Interfaces
 {
@@ -125,6 +126,7 @@ namespace MoralisUnity.Web3Api.Interfaces
 		/// <param name="providerUrl">web3 provider url to user when using local dev chain</param>
 		/// <returns>Returns response of the function executed</returns>
 		UniTask<string> RunContractFunction (string address, string functionName, RunContractDto abi, ChainList chain, string subdomain=null, string providerUrl=null);
-
+		
+		UniTask<JToken> RunContractFunctionOrigin (string address, string functionName, RunContractDto abi, ChainList chain, string subdomain=null, string providerUrl=null);
 	}
 }
