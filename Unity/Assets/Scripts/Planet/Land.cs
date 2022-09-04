@@ -26,15 +26,15 @@ public class Land :MonoBehaviour, IClickable
 /// <summary>
 /// 地块类型
 /// </summary>
-public class LandData: NftObject
+public class NftLandData: NftObject
 {
-    public static Dictionary<string, LandData> landDataDic=new Dictionary<string, LandData>();
+    public static Dictionary<string, NftLandData> landDataDic=new Dictionary<string, NftLandData>();
     public string landKind;
     public Texture landTexture;
 
-    public LandData() { }
+    public NftLandData() { }
 
-    public LandData(string _landKind)
+    public NftLandData(string _landKind)
     {
         landKind = _landKind;
         landDataDic.Add(landKind,this);
@@ -69,7 +69,7 @@ public class LandData: NftObject
         }
         else
         {
-            var obj = nftObjDic[tokenId] as LandData;
+            var obj = nftObjDic[tokenId] as NftLandData;
             nftImage = obj.nftImage;
             landTexture = obj.landTexture;
             nftObjDic[tokenId].nftImage = null;

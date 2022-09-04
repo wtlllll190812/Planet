@@ -37,7 +37,7 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable,IScalable
     [Button("GenPlanet")]
     public virtual void GenPlanet()
     {
-        foreach (LandData item in data)
+        foreach (NftLandData item in data)
         {
             if (item.IsSurface())
             {
@@ -99,6 +99,11 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable,IScalable
         if (cameraData.zPos + scale.y < data.nearDis && cameraData.zPos + scale.y > data.farDis)
             cameraData.zPos += scale.y;
     }
+
+    public void AddNftObject(string objName)
+    {
+        
+    }
 }
 
 /// <summary>
@@ -107,11 +112,12 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable,IScalable
 [System.Serializable]
 public class PlanetData: IEnumerator,IEnumerable
 {
-    [SerializeField]private LandData[,,] data;
+    [SerializeField]private NftLandData[,,] data;
 
     public Vector3Int currentPos;
     public static Vector3 center;
     public object Current => data[currentPos.x, currentPos.y, currentPos.z];
+    public List<GameObject> nftGobj = new List<GameObject>();
 
     public float nearDis;
     public float farDis;
@@ -131,7 +137,7 @@ public class PlanetData: IEnumerator,IEnumerable
     /// <summary>
     /// 索引器
     /// </summary>
-    public LandData this[Vector3Int index]
+    public NftLandData this[Vector3Int index]
     {
         get
         {
@@ -148,7 +154,7 @@ public class PlanetData: IEnumerator,IEnumerable
     /// </summary>
     public void Init()
     {
-        data = new LandData[totalSize, totalSize, totalSize];
+        data = new NftLandData[totalSize, totalSize, totalSize];
         center = new Vector3((totalSize - 1) / 2, (totalSize - 1) / 2, (totalSize - 1) / 2);
         //计算星球范围
         for (int x = 0; x < totalSize; x++)
@@ -157,7 +163,7 @@ public class PlanetData: IEnumerator,IEnumerable
             {
                 for (int z = 0; z < totalSize; z++)
                 {
-                    LandData newLand = new LandData();
+                    NftLandData newLand = new NftLandData();
                     if (Vector3.Distance(new Vector3(x, y, z), center) > planetSize)
                         newLand.landKind = "empty";
                     else
@@ -278,7 +284,7 @@ public class PlanetData: IEnumerator,IEnumerable
     /// <param name="jobj"></param>
     public void Deserialize(JObject jobj)
     {
-        data = new LandData[totalSize, totalSize, totalSize];
+        data = new NftLandData[totalSize, totalSize, totalSize];
         center = new Vector3((totalSize - 1) / 2, (totalSize - 1) / 2, (totalSize - 1) / 2);
 
         JArray planetData = jobj["data"] as JArray;
@@ -298,10 +304,10 @@ public class PlanetData: IEnumerator,IEnumerable
                 for (int z = 0; z < jarY.Count; z++)
                 {
                     string kind = jarY[z]["landKind"].ToString();
-                    if (LandData.landDataDic.ContainsKey(kind))
-                        data[x, y, z] = LandData.landDataDic[kind];
+                    if (NftLandData.landDataDic.ContainsKey(kind))
+                        data[x, y, z] = NftLandData.landDataDic[kind];
                     else
-                        data[x, y, z] = new LandData(kind);
+                        data[x, y, z] = new NftLandData(kind);
                 }
             }
         }
