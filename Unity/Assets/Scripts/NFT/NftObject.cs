@@ -14,5 +14,5 @@ public abstract class NftObject
 
     public abstract JObject Serialize();
 
-    public abstract void DeSerialize(JObject jobj);
+    public abstract void DeSerialize(Nft nft);
 }

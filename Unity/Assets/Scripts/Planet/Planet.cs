@@ -34,6 +34,7 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable,IScalable
     /// <summary>
     /// 生成星球
     /// </summary>
+    [Button("GenPlanet")]
     public virtual void GenPlanet()
     {
         foreach (LandData item in data)
@@ -296,10 +297,11 @@ public class PlanetData: IEnumerator,IEnumerable
                 JArray jarY = jarX[y] as JArray;
                 for (int z = 0; z < jarY.Count; z++)
                 {
-                    LandData newLand=new LandData();
-                    newLand.DeSerialize(jarY[z] as JObject);
-                    //newLand.landKind= jarY[z].ToString();
-                    //data[x, y, z] = newLand;
+                    string kind = jarY[z]["landKind"].ToString();
+                    if (LandData.landDataDic.ContainsKey(kind))
+                        data[x, y, z] = LandData.landDataDic[kind];
+                    else
+                        data[x, y, z] = new LandData(kind);
                 }
             }
         }

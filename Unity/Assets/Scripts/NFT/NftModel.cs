@@ -20,33 +20,33 @@ public class NftModel : NftObject
         return res;
     }
 
-    public override void DeSerialize(JObject jobj)
+    public override void DeSerialize(Nft nft)
     {
-        pos = new Vector3Int();
-        tokenId = BigInteger.Parse(jobj["tokenID"].ToString());
-        pos.x = int.Parse(jobj["x"].ToString());
-        pos.y = int.Parse(jobj["x"].ToString());
-        pos.z = int.Parse(jobj["x"].ToString());
+        //pos = new Vector3Int();
+        //tokenId = BigInteger.Parse(jobj["tokenID"].ToString());
+        //pos.x = int.Parse(jobj["x"].ToString());
+        //pos.y = int.Parse(jobj["x"].ToString());
+        //pos.z = int.Parse(jobj["x"].ToString());
 
 
-        //while (BlockchainManager.instance.nfts == null)
-        //    yield return null;
-        if (!nftObjDic.ContainsKey(tokenId))
-        {
-            Nft nft = BlockchainManager.instance.nfts.Select(x => x.tokenId = tokenId) as Nft;
+        ////while (BlockchainManager.instance.nfts == null)
+        ////    yield return null;
+        //if (!nftObjDic.ContainsKey(tokenId))
+        //{
+        //    Nft nft = BlockchainManager.instance.nfts.Select(x => x.tokenId = tokenId) as Nft;
 
-            AssetBundle nftBundle = AssetBundle.LoadFromMemory(nft.imgData);
-            nftImage = nftBundle.LoadAllAssets<Texture>()[0];
-            nftBundle = AssetBundle.LoadFromMemory(nft.nftData);
-            nftGameObject = GameObject.Instantiate(nftBundle.LoadAllAssets<GameObject>()[0]);
-            nftObjDic.Add(tokenId, this);
-        }
-        else
-        {
-            var obj = nftObjDic[tokenId] as NftModel;
-            nftImage = obj.nftImage;
-            nftGameObject = GameObject.Instantiate(obj.nftGameObject);
-            nftObjDic[tokenId].nftImage = null;
-        }
+        //    AssetBundle nftBundle = AssetBundle.LoadFromMemory(nft.imgData);
+        //    nftImage = nftBundle.LoadAllAssets<Texture>()[0];
+        //    nftBundle = AssetBundle.LoadFromMemory(nft.nftData);
+        //    nftGameObject = GameObject.Instantiate(nftBundle.LoadAllAssets<GameObject>()[0]);
+        //    nftObjDic.Add(tokenId, this);
+        //}
+        //else
+        //{
+        //    var obj = nftObjDic[tokenId] as NftModel;
+        //    nftImage = obj.nftImage;
+        //    nftGameObject = GameObject.Instantiate(obj.nftGameObject);
+        //    nftObjDic[tokenId].nftImage = null;
+        //}
     }
 }

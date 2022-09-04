@@ -29,6 +29,10 @@ using Org.BouncyCastle.Utilities.Encoders;
 
 
 
+
+
+
+
 // Token(Legacy)
 [System.Serializable]
 public class Token {
@@ -591,14 +595,14 @@ public class BlockchainManager : MonoBehaviour {
                 nft.amount = 1;
                 string tokenURI = tokenURIs[i];
                 WebClient MyWebClient = new WebClient();
-                byte[] metaData = MyWebClient.DownloadData(tokenURI);
+                byte[] metaData =await MyWebClient.DownloadDataTaskAsync(tokenURI);
                 string metaDataString = Encoding.UTF8.GetString(metaData);
                 NftMetaData metaDataObject = JsonConvert.DeserializeObject<NftMetaData>(metaDataString);
                 nft.name = metaDataObject.name;
                 nft.description = metaDataObject.description;
                 // The format of data may have problems...
-                nft.nftData = MyWebClient.DownloadData(metaDataObject.nftUrl);
-                nft.imgData = MyWebClient.DownloadData(metaDataObject.imgUrl);
+                nft.nftData =await MyWebClient.DownloadDataTaskAsync(metaDataObject.nftUrl);
+                nft.imgData =await MyWebClient.DownloadDataTaskAsync(metaDataObject.imgUrl);
                 tokens.Add(nft);
             }
             else {
@@ -744,7 +748,7 @@ public class BlockchainManager : MonoBehaviour {
                 nft.amount = BigInteger.Parse(nftOwner.Amount);
                 byte[] metaData;
                 try {
-                    metaData = MyWebClient.DownloadData(nftOwner.TokenUri);
+                    metaData = await MyWebClient.DownloadDataTaskAsync(nftOwner.TokenUri);
                 }
                 catch (Exception) {
                     continue;
@@ -756,13 +760,13 @@ public class BlockchainManager : MonoBehaviour {
                 nft.name = metaDataObject.name;
                 nft.description = metaDataObject.description;
                 // The format of data may have problems...
-                nft.nftData = MyWebClient.DownloadData(metaDataObject.nftUrl);
-                nft.imgData = MyWebClient.DownloadData(metaDataObject.imgUrl);
+                nft.nftData = await MyWebClient.DownloadDataTaskAsync(metaDataObject.nftUrl);
+                nft.imgData = await MyWebClient.DownloadDataTaskAsync(metaDataObject.imgUrl);
                 nftList.Add(nft);
             }
             nfts = nftList;
 
-            StartCoroutine(GameManager.instance.Load());
+            //StartCoroutine(GameManager.instance.Load());
         }
         catch (Exception exp) {
             Debug.LogError(exp.Message);
@@ -791,7 +795,7 @@ public class BlockchainManager : MonoBehaviour {
         }
     }
 
-    void ReceiveToken(BigInteger tokenId, string tokenURI, BigInteger amount) {
+    async void ReceiveToken(BigInteger tokenId, string tokenURI, BigInteger amount) {
         for (int i = 0; i < nfts.Count; i++) {
             if (nfts[i].tokenId == tokenId) {
                 nfts[i].amount += amount;
@@ -804,14 +808,14 @@ public class BlockchainManager : MonoBehaviour {
         Nft nft = new Nft();
         nft.tokenId = tokenId;
         nft.amount = amount;
-        byte[] metaData = MyWebClient.DownloadData(tokenURI);
+        byte[] metaData =await MyWebClient.DownloadDataTaskAsync(tokenURI);
         string metaDataString = Encoding.UTF8.GetString(metaData);
         NftMetaData metaDataObject = JsonConvert.DeserializeObject<NftMetaData>(metaDataString);
         nft.name = metaDataObject.name;
         nft.description = metaDataObject.description;
         // The format of data may have problems...
-        nft.nftData = MyWebClient.DownloadData(metaDataObject.nftUrl);
-        nft.imgData = MyWebClient.DownloadData(metaDataObject.imgUrl);
+        nft.nftData =await MyWebClient.DownloadDataTaskAsync(metaDataObject.nftUrl);
+        nft.imgData =await MyWebClient.DownloadDataTaskAsync(metaDataObject.imgUrl);
         nfts.Add(nft);
     }
 

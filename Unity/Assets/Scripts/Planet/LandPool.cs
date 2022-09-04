@@ -33,7 +33,7 @@ public class LandPool:Singleton<LandPool>
         land.planet = planet;
         land.pos = pos;
         LandData landData = planet.data[pos];
-        land.GetComponent<MeshRenderer>().material.mainTexture = landData.landTexture;
+        land.transform.GetChild(0).GetComponent<MeshRenderer>().material.mainTexture = landData.landTexture;
         return land;
     }
 

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: bbcfb106fc625af488e6b76f83fbf0a2
+guid: a0d10e8845a9a024ca394ac3beb41b68
 ModelImporter:
   serializedVersion: 21202
   internalIDToNameTable: []
@@ -101,5 +101,5 @@ ModelImporter:
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   additionalBone: 0
   userData: 
-  assetBundleName: planet
-  assetBundleVariant: asset
+  assetBundleName: 
+  assetBundleVariant: 

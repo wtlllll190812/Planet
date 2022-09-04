@@ -1,6 +1,7 @@
 using System.IO;
 using UnityEngine;
 using System.Linq;
+using System.Text;
 using Newtonsoft.Json;
 using System.Collections;
 using UnityEngine.Events;
@@ -27,6 +28,7 @@ public class GameManager : MonoBehaviour
     public void Start()
     {
         SetState(EGameState.GlobalView,Sun.instance);
+        StartCoroutine(Load());
     }
 
     /// <summary>
@@ -97,6 +99,8 @@ public class GameManager : MonoBehaviour
             {
                 output[item.name] = item.data.Serialize();
             }
+            
+            //file.Write(Encoding.Default.GetBytes(output.ToString()));
             formatter.Serialize(file, output.ToString());
         }
         Debug.Log("Save Success");
@@ -105,25 +109,37 @@ public class GameManager : MonoBehaviour
     [Button("Load")]
     public IEnumerator Load()
     {
+        //while (BlockchainManager.instance.nfts == null)
+        //    yield return null;
+        //foreach (var item in BlockchainManager.instance.nfts)
+        //{
+        //    if(item.name.Split("_")[1]=="land")
+        //    {
+        //        LandData data = new LandData();
+        //        data.DeSerialize(item);
+        //    }    
+        //    else
+        //    {
+        //        NftModel model = new NftModel();
+        //        model.DeSerialize(item);
+        //    }
+        //}
+
         using (FileStream file = new FileStream("planet2.json", FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read))
         {
             BinaryFormatter formatter = new BinaryFormatter();
             JObject output = JObject.Parse(formatter.Deserialize(file) as string);
-            Debug.Log("Get1");
-            while (BlockchainManager.instance.nfts == null)
-                yield return null;
-            Debug.Log("Get2");
             foreach (var item in output)
             {
                 var planet = Instantiate(planetPref).GetComponent<Planet>();
-                Debug.Log("Get");
                 planet.name = item.Key;
-                //planet.data= new PlanetData();
                 planet.data.Deserialize(item.Value as JObject);
                 planet.transform.position = Sun.instance.transform.position + Vector3.right * planet.data.trackRadius;
+                planet.GenPlanet();
             }
         }
         Debug.Log("Load Success");
+        yield return null;
     }
 }
 

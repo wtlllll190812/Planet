@@ -28,8 +28,17 @@ public class Land :MonoBehaviour, IClickable
 /// </summary>
 public class LandData: NftObject
 {
+    public static Dictionary<string, LandData> landDataDic=new Dictionary<string, LandData>();
     public string landKind;
     public Texture landTexture;
+
+    public LandData() { }
+
+    public LandData(string _landKind)
+    {
+        landKind = _landKind;
+        landDataDic.Add(landKind,this);
+    }
 
     public bool IsSurface()
     {
@@ -44,19 +53,14 @@ public class LandData: NftObject
         return res;
     }
 
-    public override void DeSerialize(JObject jobj)
+    public override void DeSerialize(Nft nft)
     {
-        Debug.Log(jobj);
-        tokenId = BigInteger.Parse(jobj["tokenID"].ToString());
-        landKind = jobj["landKind"].ToString();
-        if (landKind == "empty")
-            return;
-        //while (BlockchainManager.instance.nfts?.Count<=0)
-        //    await
+        tokenId = nft.tokenId;
+        landKind = nft.name;
+
         if (!nftObjDic.ContainsKey(tokenId))
         {
-            Nft nft = BlockchainManager.instance.nfts[0];//.Select(x => x.tokenId = tokenId) as Nft;
-            Debug.Log(nft.tokenId);
+            //Nft nft = BlockchainManager.instance.nfts[0].Select(x => x.tokenId = tokenId) as Nft;
             AssetBundle nftBundle = AssetBundle.LoadFromMemory(nft.nftData);
             nftImage = nftBundle.LoadAllAssets<Texture>()[0];
             //AssetBundle nftBundle2 = AssetBundle.LoadFromMemory(nft.nftData);
@@ -70,5 +74,6 @@ public class LandData: NftObject
             landTexture = obj.landTexture;
             nftObjDic[tokenId].nftImage = null;
         }
+        landDataDic.Add(landKind,this);
     }
 }
