@@ -65,26 +65,37 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 编辑星球
+    /// 编辑地块
     /// </summary>
-    public void EditPlanet(Land land,Vector3 activeDir)
+    public void EditLand(Land land,Vector3 activeDir)
     {
         switch (UIManager.Instance.editorPanel.currentState)
         {
             case EditorState.add:
-                if (!land.planet.data.InRange(land.GetPos(activeDir)))
+                if (!land.planet.planetData.InRange(land.GetPos(activeDir)))
                     break;
                 var newLand=LandPool.Instance.GetLand(land.GetPos(activeDir), land.planet);
-                newLand.planet.data.SetLandKind(land, "surface");
-                newLand.planet.data.Update(land);
+                newLand.planet.planetData.SetLandKind(land, UIManager.Instance.editorPanel.selectedObj.nftData.name);
+                newLand.planet.planetData.Update(land);
                 break;
             case EditorState.remove:
-                land.planet.data.SetLandKind(land, "empty");
-                land.planet.data.Update(land);
+                land.planet.planetData.SetLandKind(land, "empty");
+                land.planet.planetData.Update(land);
                 LandPool.Instance.DestoryLand(land);
                 break;
             default :
                 break;
+        }
+    }
+
+    /// <summary>
+    /// 添加装饰物
+    /// </summary>
+    public void AddModel(Land land, Vector3 activeDir)
+    {
+        if(UIManager.Instance.editorPanel.currentState==EditorState.add)
+        {
+            land.planet.AddNftObject(UIManager.Instance.editorPanel.selectedObj.nftData.name,land.GetPos(activeDir));
         }
     }
 
@@ -97,7 +108,7 @@ public class GameManager : MonoBehaviour
             BinaryFormatter formatter = new BinaryFormatter();
             foreach (var item in planetList)
             {
-                output[item.name] = item.data.Serialize();
+                output[item.name] = item.planetData.Serialize();
             }
             
             //file.Write(Encoding.Default.GetBytes(output.ToString()));
@@ -133,8 +144,9 @@ public class GameManager : MonoBehaviour
             {
                 var planet = Instantiate(planetPref).GetComponent<Planet>();
                 planet.name = item.Key;
-                planet.data.Deserialize(item.Value as JObject);
-                planet.transform.position = Sun.instance.transform.position + Vector3.right * planet.data.trackRadius;
+                planet.planetData.owner = planet;
+                planet.planetData.Deserialize(item.Value as JObject);
+                planet.transform.position = Sun.instance.transform.position + Vector3.right * planet.planetData.trackRadius;
                 planet.GenPlanet();
             }
         }

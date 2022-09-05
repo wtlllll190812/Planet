@@ -32,7 +32,7 @@ public class LandPool:Singleton<LandPool>
         land.transform.parent = planet.transform;
         land.planet = planet;
         land.pos = pos;
-        NftLandData landData = planet.data[pos];
+        NftLandData landData = planet.planetData[pos];
         land.transform.GetChild(0).GetComponent<MeshRenderer>().material.mainTexture = landData.landTexture;
         return land;
     }

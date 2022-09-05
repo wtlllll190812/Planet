@@ -13,7 +13,11 @@ public class Land :MonoBehaviour, IClickable
     public Planet planet;
     public bool OnClick(Vector3 startPos,Vector3 activeData)
     {
-        GameManager.instance.EditPlanet(this,activeData);
+        var kind = UIManager.Instance.editorPanel.selectedObj?.nftKind;
+        if (kind=="land")
+            GameManager.instance.EditLand(this,activeData);
+        else if(kind=="model")
+            GameManager.instance.AddModel(this,activeData);
         return false;
     }
     public Vector3Int GetPos(Vector3 dir)
@@ -26,7 +30,8 @@ public class Land :MonoBehaviour, IClickable
 /// <summary>
 /// 地块类型
 /// </summary>
-public class NftLandData: NftObject
+[System.Serializable]
+public class NftLandData : NftObject
 {
     public static Dictionary<string, NftLandData> landDataDic=new Dictionary<string, NftLandData>();
     public string landKind;
@@ -36,6 +41,7 @@ public class NftLandData: NftObject
 
     public NftLandData(string _landKind)
     {
+        nftKind = "land";
         landKind = _landKind;
         landDataDic.Add(landKind,this);
     }
@@ -57,6 +63,8 @@ public class NftLandData: NftObject
     {
         tokenId = nft.tokenId;
         landKind = nft.name;
+        nftData = nft;
+        nftKind = "land";
 
         if (!nftObjDic.ContainsKey(tokenId))
         {

@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 public class Planet : SerializedMonoBehaviour,IDragable,IClickable,IScalable
 {
-    public PlanetData data;
+    public PlanetData planetData;
     protected CameraData cameraData;
 
     public virtual void Start()
@@ -17,7 +17,7 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable,IScalable
         //Init();
         //GenPlanet();
         GameManager.instance.planetList.Add(this);
-        cameraData = new CameraData(transform,data.cameraRadius);
+        cameraData = new CameraData(transform,planetData.cameraRadius);
     }
 
     public void FixedUpdate()
@@ -28,7 +28,7 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable,IScalable
     [Button("Init")]
     public void Init()
     {
-        data.Init();
+        planetData.Init();
     }
 
     /// <summary>
@@ -37,11 +37,11 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable,IScalable
     [Button("GenPlanet")]
     public virtual void GenPlanet()
     {
-        foreach (NftLandData item in data)
+        foreach (NftLandData item in planetData)
         {
             if (item.IsSurface())
             {
-                LandPool.Instance.GetLand(data.currentPos,this);
+                LandPool.Instance.GetLand(planetData.currentPos,this);
             }
         }
     }
@@ -62,8 +62,8 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable,IScalable
     {
         if (!GameManager.instance.CompareState(EGameState.Editor))
         {
-            transform.RotateAround(Sun.instance.transform.position, Vector3.forward, Time.deltaTime * data.revolutionSpeed);
-            transform.Rotate(transform.up, Time.deltaTime * data.rotationSpeed, Space.Self);
+            transform.RotateAround(Sun.instance.transform.position, Vector3.forward, Time.deltaTime * planetData.revolutionSpeed);
+            transform.Rotate(transform.up, Time.deltaTime * planetData.rotationSpeed, Space.Self);
         }
     }
     
@@ -96,13 +96,17 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable,IScalable
 
     public void OnScaling(Vector2 scale)
     {
-        if (cameraData.zPos + scale.y < data.nearDis && cameraData.zPos + scale.y > data.farDis)
+        if (cameraData.zPos + scale.y < planetData.nearDis && cameraData.zPos + scale.y > planetData.farDis)
             cameraData.zPos += scale.y;
     }
 
-    public void AddNftObject(string objName)
+    public NftModel AddNftObject(string objName, Vector3Int pos)
     {
-        
+        var gObj=Instantiate(NftModel.nftModelDic[objName].nftGameObject);
+        gObj.transform.parent = transform;
+        gObj.transform.position = planetData.GetWorldSpacePos(pos);
+        //gObj.transform.rotation=
+        return null;
     }
 }
 
@@ -114,10 +118,11 @@ public class PlanetData: IEnumerator,IEnumerable
 {
     [SerializeField]private NftLandData[,,] data;
 
+    public Planet owner;
     public Vector3Int currentPos;
     public static Vector3 center;
     public object Current => data[currentPos.x, currentPos.y, currentPos.z];
-    public List<GameObject> nftGobj = new List<GameObject>();
+    public List<NftModel> nftGobj = new List<NftModel>();
 
     public float nearDis;
     public float farDis;
@@ -251,7 +256,8 @@ public class PlanetData: IEnumerator,IEnumerable
     public JObject Serialize()
     {
         JObject planet = new JObject();
-        JArray planetData = new JArray();
+        JArray landData = new JArray();
+        JArray modelData = new JArray();
         planet["nearDis"] = nearDis;
         planet["farDis"] = farDis;
         planet["trackRadius"] = trackRadius;
@@ -271,10 +277,16 @@ public class PlanetData: IEnumerator,IEnumerable
                 }
                 jarX.Add(jarY);
             }
-            planetData.Add(jarX);
+            landData.Add(jarX);
         }
+        planet["data"] = landData;
 
-        planet["data"] = planetData;
+        foreach (var item in nftGobj)
+        {
+            modelData.Add(item.Serialize());
+        }
+        planet["model"] = modelData;
+
         return planet;
     }
 
@@ -287,7 +299,6 @@ public class PlanetData: IEnumerator,IEnumerable
         data = new NftLandData[totalSize, totalSize, totalSize];
         center = new Vector3((totalSize - 1) / 2, (totalSize - 1) / 2, (totalSize - 1) / 2);
 
-        JArray planetData = jobj["data"] as JArray;
         nearDis = float.Parse(jobj["nearDis"].ToString());
         farDis = float.Parse(jobj["farDis"].ToString());
         trackRadius = float.Parse(jobj["trackRadius"].ToString());
@@ -295,9 +306,10 @@ public class PlanetData: IEnumerator,IEnumerable
         rotationSpeed = float.Parse(jobj["rotationSpeed"].ToString());
         revolutionSpeed = float.Parse(jobj["revolutionSpeed"].ToString());
 
-        for (int x = 0; x < planetData.Count; x++)
+        JArray landData = jobj["data"] as JArray;
+        for (int x = 0; x < landData.Count; x++)
         {
-            JArray jarX = planetData[x] as JArray;
+            JArray jarX = landData[x] as JArray;
             for (int y = 0; y < jarX.Count; y++)
             {
                 JArray jarY = jarX[y] as JArray;
@@ -311,8 +323,24 @@ public class PlanetData: IEnumerator,IEnumerable
                 }
             }
         }
+
+        JArray modelData = jobj["model"] as JArray;
+        foreach (JObject item in modelData)
+        {
+            string modelName= item["name"].ToString();
+            Vector3Int newPos = new Vector3Int();
+            newPos.x = int.Parse(item["x"].ToString());
+            newPos.y = int.Parse(item["y"].ToString());
+            newPos.z = int.Parse(item["z"].ToString());
+            owner.AddNftObject(modelName, newPos);
+        }
     }
     
+    public Vector3 GetWorldSpacePos(Vector3Int pos)
+    {
+        return owner.transform.TransformPoint(pos - PlanetData.center);
+    }
+
     //实现IEnumerator,IEnumerable接口
     public bool MoveNext()
     {

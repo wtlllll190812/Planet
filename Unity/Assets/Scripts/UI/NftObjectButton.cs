@@ -2,9 +2,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.Events;
+using Sirenix.OdinInspector;
 using System.Collections.Generic;
 
-public class NftObjectButton : MonoBehaviour
+public class NftObjectButton : SerializedMonoBehaviour
 {
     private Button button;
 

@@ -12,7 +12,7 @@ public class Sun : Planet
             instance = this;
         else
             Destroy(this);
-        cameraData = new CameraData(transform,data.cameraRadius);
+        cameraData = new CameraData(transform,planetData.cameraRadius);
     }
 
     public override void Start()
