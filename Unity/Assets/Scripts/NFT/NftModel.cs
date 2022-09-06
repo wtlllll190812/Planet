@@ -32,9 +32,10 @@ public class NftModel : NftObject
         if (!nftObjDic.ContainsKey(tokenId))
         {
             AssetBundle nftBundle = AssetBundle.LoadFromMemory(nft.imgData);
-            nftImage = nftBundle.LoadAllAssets<Texture>()[0];
-            nftBundle = AssetBundle.LoadFromMemory(nft.nftData);
+            //nftImage = nftBundle.LoadAllAssets<Texture>()[0];
+            //nftBundle = AssetBundle.LoadFromMemory(nft.nftData);
             nftGameObject = GameObject.Instantiate(nftBundle.LoadAllAssets<GameObject>()[0]);
+            nftGameObject.SetActive(false);
             nftObjDic.Add(tokenId, this);
         }
         else
@@ -44,5 +45,6 @@ public class NftModel : NftObject
             nftGameObject = GameObject.Instantiate(obj.nftGameObject);
             nftObjDic[tokenId].nftImage = null;
         }
+        nftModelDic.Add(nft.name,this);
     }
 }

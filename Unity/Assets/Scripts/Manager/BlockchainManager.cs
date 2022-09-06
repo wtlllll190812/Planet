@@ -24,18 +24,10 @@ using System.Text.RegularExpressions;
 using MoralisUnity.Web3Api.Core.Models;
 using Org.BouncyCastle.Utilities.Encoders;
 
-
-
-
-
-
-
-
-
-
-// Token(Legacy)
 [System.Serializable]
-public class Token {
+// Token(Legacy)
+public class Token
+{
     public BigInteger tokenId;
     public string tokenURI;
     public BigInteger amount;
@@ -182,7 +174,6 @@ public class BlockchainManager : MonoBehaviour {
     }
 
     // GetNFT (legacy)
-    [Button("GetNFT")]
     public async Task<List<Token>> GetNFTFromContract() {
         try {
             MoralisUser user = await Moralis.GetUserAsync();
@@ -311,6 +302,7 @@ public class BlockchainManager : MonoBehaviour {
             commodity.price = BigInteger.Parse(ca?[4].ToString());
             commodity.amount = BigInteger.Parse(ca?[5].ToString());
             commodities.Add(commodity);
+            //Debug.Log($"ID: {commodity.itemId} amount:{commodity.amount}");
             i++;
         }
     }
@@ -766,13 +758,14 @@ public class BlockchainManager : MonoBehaviour {
             }
             nfts = nftList;
 
-            //StartCoroutine(GameManager.instance.Load());
+            StartCoroutine(GameManager.instance.Load());
         }
         catch (Exception exp) {
             Debug.LogError(exp.Message);
         }
     }
 
+    [Button("GetNFT")]
     public async void GetMyNFT() {
         MoralisUser user=await Moralis.GetUserAsync();
         GetNFT(user.ethAddress);

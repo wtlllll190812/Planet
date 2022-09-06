@@ -15,7 +15,7 @@ public class bundleTest : MonoBehaviour
     /// </summary>
     private IEnumerator ABBaoJiaZai()
     {
-        string path = "AssetBundles/Test";//AB包的位置
+        string path = "AssetBundles/fruiter.asset";//AB包的位置
         //异步加载
         AssetBundleCreateRequest request = AssetBundle.LoadFromMemoryAsync(File.ReadAllBytes(path));
         yield return request;
@@ -27,3 +27,5 @@ public class bundleTest : MonoBehaviour
         StopCoroutine(ABBaoJiaZai());
     }
 }
+//https://ipfs.moralis.io:2053/ipfs/QmPfdA8KXZ571m8nPHb2k5t6ipsXSzw2S6LswnbYMemhqV/fruiter_object_637980790326929449.json
+//https://ipfs.moralis.io:2053/ipfs/QmeD6SN17BTzb3G6D2MgztqRkG7euLYxdXKwXboyVYTFut/cypress_object_637980789765096146.json

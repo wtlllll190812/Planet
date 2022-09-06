@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
     public void Start()
     {
         SetState(EGameState.GlobalView,Sun.instance);
-        StartCoroutine(Load());
+        //StartCoroutine(Load());
     }
 
     /// <summary>
@@ -92,10 +92,10 @@ public class GameManager : MonoBehaviour
     /// 添加装饰物
     /// </summary>
     public void AddModel(Land land, Vector3 activeDir)
-    {
+    {   //UIManager.Instance.editorPanel.selectedObj.nftData.name
         if(UIManager.Instance.editorPanel.currentState==EditorState.add)
         {
-            land.planet.AddNftObject(UIManager.Instance.editorPanel.selectedObj.nftData.name,land.GetPos(activeDir));
+            land.planet.AddNftObject("cypress", land.GetPos(activeDir));
         }
     }
 
@@ -120,21 +120,21 @@ public class GameManager : MonoBehaviour
     [Button("Load")]
     public IEnumerator Load()
     {
-        //while (BlockchainManager.instance.nfts == null)
-        //    yield return null;
-        //foreach (var item in BlockchainManager.instance.nfts)
-        //{
-        //    if(item.name.Split("_")[1]=="land")
-        //    {
-        //        LandData data = new LandData();
-        //        data.DeSerialize(item);
-        //    }    
-        //    else
-        //    {
-        //        NftModel model = new NftModel();
-        //        model.DeSerialize(item);
-        //    }
-        //}
+        while (BlockchainManager.instance.nfts == null)
+            yield return null;
+        foreach (var item in BlockchainManager.instance.nfts)
+        {
+            if (item.name.Split("_")[1] == "land")
+            {
+                NftLandData data = new NftLandData();
+                data.DeSerialize(item);
+            }
+            else
+            {
+                NftModel model = new NftModel();
+                model.DeSerialize(item);
+            }
+        }
 
         using (FileStream file = new FileStream("planet2.json", FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read))
         {

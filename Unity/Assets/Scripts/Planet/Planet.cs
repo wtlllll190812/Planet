@@ -316,8 +316,11 @@ public class PlanetData: IEnumerator,IEnumerable
                 for (int z = 0; z < jarY.Count; z++)
                 {
                     string kind = jarY[z]["landKind"].ToString();
+                    Debug.Log(kind);
                     if (NftLandData.landDataDic.ContainsKey(kind))
+                    {
                         data[x, y, z] = NftLandData.landDataDic[kind];
+                    }
                     else
                         data[x, y, z] = new NftLandData(kind);
                 }
