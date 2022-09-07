@@ -8,7 +8,6 @@ public class InfinityScrollView : MonoBehaviour
     public RectTransform content;
     public GameObject buttonPref;
     public List<RectTransform> buttonList;
-    public Vector2 currentPos;
     public Vector2 lastPos;
 
     public Vector2Int range;
@@ -17,12 +16,12 @@ public class InfinityScrollView : MonoBehaviour
     public void Awake()
     {
         range = Vector2Int.zero;
-        currentPos = content.anchoredPosition;
+        float currentPos = 0;
         lastPos = content.anchoredPosition;
         for (int i = 0; i < 10; i++)
         {
-            buttonList.Add(Instantiate(buttonPref, content.anchoredPosition + currentPos, transform.rotation, content).GetComponent<RectTransform>());
-            currentPos.x += width;
+            buttonList.Add(Instantiate(buttonPref,new Vector2(currentPos,0), transform.rotation, content).GetComponent<RectTransform>());
+            currentPos += width;
             range.y++;
         }
         range.y--;
@@ -30,7 +29,7 @@ public class InfinityScrollView : MonoBehaviour
 
     public void Add()
     {
-        buttonList.Add(Instantiate(buttonPref, content.anchoredPosition + currentPos, transform.rotation, content).GetComponent<RectTransform>());
+        //buttonList.Add(Instantiate(buttonPref, content.anchoredPosition + currentPos, transform.rotation, content).GetComponent<RectTransform>());
     }
 
     public void OnValueChange(Vector2 pos)

@@ -95,7 +95,7 @@ public class GameManager : MonoBehaviour
     {   //UIManager.Instance.editorPanel.selectedObj.nftData.name
         if(UIManager.Instance.editorPanel.currentState==EditorState.add)
         {
-            land.planet.AddNftObject("cypress", land.GetPos(activeDir));
+            land.planet.AddNftObject("cypress_object", land.GetPos(activeDir));
         }
     }
 
