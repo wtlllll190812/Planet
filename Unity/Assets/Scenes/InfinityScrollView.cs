@@ -12,7 +12,8 @@ public class InfinityScrollView : MonoBehaviour
     public Vector2 lastPos;
 
     public Vector2Int range;
-    private int width = 160;
+    public int width = 160;
+
     public void Awake()
     {
         range = Vector2Int.zero;
