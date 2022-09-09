@@ -12,16 +12,23 @@ public class InfinityScrollView : MonoBehaviour
 
     public Vector2Int range;
     public int width = 160;
+    public int num=5;
 
-    public void Awake()
+    public void Init()
     {
         range = Vector2Int.zero;
-        float currentPos = 0;
+        Vector2 currentPos = Vector2.zero;
+        currentPos.x = width;
         lastPos = content.anchoredPosition;
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < Mathf.Min(num,NftObject.nftObjList.Count); i++)
         {
-            buttonList.Add(Instantiate(buttonPref,new Vector2(currentPos,0), transform.rotation, content).GetComponent<RectTransform>());
-            currentPos += width;
+            var tr = Instantiate(buttonPref, content).GetComponent<RectTransform>();
+            tr.SetParent(content);
+            tr.anchoredPosition = currentPos;
+            Debug.Log(NftLandData.nftObjList[i]);
+            tr.GetComponent<NftObjectButton>().obj= NftObject.nftObjList[i];
+            buttonList.Add(tr);
+            currentPos.x += width;
             range.y++;
         }
         range.y--;

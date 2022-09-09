@@ -202,7 +202,7 @@ public class BlockchainManager : MonoBehaviour {
             List<BigInteger> amounts = JsonConvert.DeserializeObject<List<BigInteger>>(amountsJ.ToString());
 
             int length = tokenIDs.Count;
-            nfts.Clear();
+            List<Nft> newNfts= new List<Nft>();
             for (int i = 0; i < length; i++) {
                 Nft nft = new Nft();
                 nft.tokenId = tokenIDs[i];
@@ -217,8 +217,10 @@ public class BlockchainManager : MonoBehaviour {
                 // The format of data may have problems...
                 nft.nftData = await MyWebClient.DownloadDataTaskAsync(metaDataObject.nftUrl);
                 nft.imgData = await MyWebClient.DownloadDataTaskAsync(metaDataObject.imgUrl);
-                nfts.Add(nft);
+                newNfts.Add(nft);
             }
+            nfts = newNfts;
+            StartCoroutine(GameManager.instance.Load());
         }
         catch (Exception e) {
             Debug.LogError(e.Message);

@@ -20,6 +20,7 @@ public class NftObjectButton : SerializedMonoBehaviour
 
     public void OnClick()
     {
+        Debug.Log("sdsd");
         UIManager.Instance.editorPanel.selectedObj = obj;
         OnClickEvent?.Invoke(this);
     }

@@ -39,7 +39,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 57.3195, y: 53.6667}
+  m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8381833806546832320
 CanvasRenderer:
@@ -143,8 +143,10 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
-  obj: {fileID: 0}
+    SerializationNodes:
+    - Name: obj
+      Entry: 6
+      Data: 
   OnClickEvent:
     m_PersistentCalls:
       m_Calls: []

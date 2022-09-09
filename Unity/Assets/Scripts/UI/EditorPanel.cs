@@ -8,7 +8,7 @@ public class EditorPanel : MonoBehaviour
     public EditorState currentState;
 
     public NftObject selectedObj;
-
+    public InfinityScrollView scrollView;
     public Button noneButton;
     public Button addButton;
     public Button removeButton;

@@ -105,7 +105,10 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable,IScalable
         var gObj=Instantiate(NftModel.nftModelDic[objName].nftGameObject);
         gObj.transform.parent = transform;
         gObj.transform.position = planetData.GetWorldSpacePos(pos);
-        //gObj.transform.rotation=
+        gObj.SetActive(true);
+        var model = gObj.GetComponent<NftHandler>();
+        model.nftModel.pos = pos;
+        planetData.nftGobj.Add(model.nftModel);
         return null;
     }
 }
@@ -131,7 +134,7 @@ public class PlanetData: IEnumerator,IEnumerable
     public float rotationSpeed;
     public float revolutionSpeed;
 
-    private readonly int totalSize=16;
+    private readonly int totalSize = 16;
     private readonly int planetSize =6;
 
     public static Vector3Int[] direction =
@@ -247,7 +250,7 @@ public class PlanetData: IEnumerator,IEnumerable
     /// </summary>
     public void SetLandKind(Land land, string kind)
     {
-        this[land.pos].landKind = kind;
+        this[land.pos]=NftLandData.landDataDic[kind];
     }
     
     /// <summary>
@@ -284,6 +287,7 @@ public class PlanetData: IEnumerator,IEnumerable
         foreach (var item in nftGobj)
         {
             modelData.Add(item.Serialize());
+            Debug.Log(item.Serialize());
         }
         planet["model"] = modelData;
 
@@ -316,7 +320,6 @@ public class PlanetData: IEnumerator,IEnumerable
                 for (int z = 0; z < jarY.Count; z++)
                 {
                     string kind = jarY[z]["landKind"].ToString();
-                    Debug.Log(kind);
                     if (NftLandData.landDataDic.ContainsKey(kind))
                     {
                         data[x, y, z] = NftLandData.landDataDic[kind];
@@ -328,9 +331,10 @@ public class PlanetData: IEnumerator,IEnumerable
         }
 
         JArray modelData = jobj["model"] as JArray;
+        Debug.Log(modelData.ToString());
         foreach (JObject item in modelData)
         {
-            string modelName= item["name"].ToString();
+            string modelName = item["name"].ToString();
             Vector3Int newPos = new Vector3Int();
             newPos.x = int.Parse(item["x"].ToString());
             newPos.y = int.Parse(item["y"].ToString());

@@ -1,0 +1,15 @@
+using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+
+public class NftHandler : MonoBehaviour,IClickable
+{
+    public Planet planet;
+    public NftModel nftModel;
+
+    public bool OnClick(Vector3 startPos, Vector3 activeDir)
+    {
+        Destroy(gameObject);
+        return false;
+    }
+}

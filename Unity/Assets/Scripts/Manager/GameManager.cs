@@ -74,8 +74,8 @@ public class GameManager : MonoBehaviour
             case EditorState.add:
                 if (!land.planet.planetData.InRange(land.GetPos(activeDir)))
                     break;
-                var newLand=LandPool.Instance.GetLand(land.GetPos(activeDir), land.planet);
-                newLand.planet.planetData.SetLandKind(land, UIManager.Instance.editorPanel.selectedObj.nftData.name);
+                land.planet.planetData[land.GetPos(activeDir)]= NftLandData.landDataDic[UIManager.Instance.editorPanel.selectedObj.nftData.name];
+                var newLand =LandPool.Instance.GetLand(land.GetPos(activeDir), land.planet);
                 newLand.planet.planetData.Update(land);
                 break;
             case EditorState.remove:
@@ -92,10 +92,10 @@ public class GameManager : MonoBehaviour
     /// 添加装饰物
     /// </summary>
     public void AddModel(Land land, Vector3 activeDir)
-    {   //UIManager.Instance.editorPanel.selectedObj.nftData.name
+    {   
         if(UIManager.Instance.editorPanel.currentState==EditorState.add)
         {
-            land.planet.AddNftObject("cypress_object", land.GetPos(activeDir));
+            land.planet.AddNftObject(UIManager.Instance.editorPanel.selectedObj.nftData.name, land.GetPos(activeDir));
         }
     }
 
@@ -151,6 +151,7 @@ public class GameManager : MonoBehaviour
             }
         }
         Debug.Log("Load Success");
+        UIManager.Instance.editorPanel.scrollView.Init();
         yield return null;
     }
 }

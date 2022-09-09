@@ -13,10 +13,10 @@ public class Land :MonoBehaviour, IClickable
     public Planet planet;
     public bool OnClick(Vector3 startPos,Vector3 activeData)
     {
-        //var kind = UIManager.Instance.editorPanel.selectedObj?.nftKind;
-        //if (kind=="land")
-        //    GameManager.instance.EditLand(this,activeData);
-        //else if(kind=="model")
+        var kind = UIManager.Instance.editorPanel.selectedObj?.nftKind;
+        if (kind == "land")
+            GameManager.instance.EditLand(this, activeData);
+        else if (kind == "model")
             GameManager.instance.AddModel(this,activeData);
         return false;
     }
@@ -71,22 +71,13 @@ public class NftLandData : NftObject
         nftData = nft;
         nftKind = "land";
 
-        if (!nftObjDic.ContainsKey(tokenId))
-        {
-            //Nft nft = BlockchainManager.instance.nfts[0].Select(x => x.tokenId = tokenId) as Nft;
-            AssetBundle nftBundle = AssetBundle.LoadFromMemory(nft.nftData);
-            landTexture = nftBundle.LoadAllAssets<Texture>()[0];
-            //AssetBundle nftBundle2 = AssetBundle.LoadFromMemory(nft.nftData);
-            //landTexture = nftBundle2.LoadAllAssets<Texture>()[0];
-            nftObjDic.Add(tokenId, this);
-        }
-        else
-        {
-            var obj = nftObjDic[tokenId] as NftLandData;
-            nftImage = obj.nftImage;
-            landTexture = obj.landTexture;
-            nftObjDic[tokenId].nftImage = null;
-        }
+        //Nft nft = BlockchainManager.instance.nfts[0].Select(x => x.tokenId = tokenId) as Nft;
+        AssetBundle nftBundle = AssetBundle.LoadFromMemory(nft.nftData);
+        landTexture = nftBundle.LoadAllAssets<Texture>()[0];
+        //AssetBundle nftBundle2 = AssetBundle.LoadFromMemory(nft.nftData);
+        //landTexture = nftBundle2.LoadAllAssets<Texture>()[0];
+        nftObjList.Add(this);
+        Debug.Log(nftObjList[0]);
         landDataDic.Add(landKind,this);
     }
 }

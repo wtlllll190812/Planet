@@ -6,9 +6,9 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
 [System.Serializable]
-public abstract class NftObject:MonoBehaviour
+public abstract class NftObject
 {
-    public static Dictionary<BigInteger, NftObject> nftObjDic=new Dictionary<BigInteger, NftObject>();
+    public static List<NftObject> nftObjList = new List<NftObject>();
 
     public Nft nftData;
     public Texture nftImage;
