@@ -25,8 +25,8 @@ public class InfinityScrollView : MonoBehaviour
             var tr = Instantiate(buttonPref, content).GetComponent<RectTransform>();
             tr.SetParent(content);
             tr.anchoredPosition = currentPos;
-            Debug.Log(NftLandData.nftObjList[i]);
-            tr.GetComponent<NftObjectButton>().obj= NftObject.nftObjList[i];
+            //Debug.Log(NftLandData.nftObjList[i]);
+            tr.GetComponent<NftObjectButton>().SetNftObj(NftObject.nftObjList[i]);
             buttonList.Add(tr);
             currentPos.x += width;
             range.y++;

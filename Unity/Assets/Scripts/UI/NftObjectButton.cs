@@ -11,7 +11,7 @@ public class NftObjectButton : SerializedMonoBehaviour
 
     public NftObject obj;
     public UnityEvent<NftObjectButton> OnClickEvent;
-
+    public TMPro.TextMeshProUGUI text;
     public void Awake()
     {
         button = GetComponent<Button>();
@@ -20,8 +20,13 @@ public class NftObjectButton : SerializedMonoBehaviour
 
     public void OnClick()
     {
-        Debug.Log("sdsd");
         UIManager.Instance.editorPanel.selectedObj = obj;
         OnClickEvent?.Invoke(this);
+    }
+
+    public void SetNftObj(NftObject nftobj)
+    {
+        obj= nftobj;
+        text.text = obj.nftData.name;
     }
 }

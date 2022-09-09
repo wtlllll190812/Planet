@@ -150,6 +150,7 @@ MonoBehaviour:
   OnClickEvent:
     m_PersistentCalls:
       m_Calls: []
+  text: {fileID: 8381833806715974781}
 --- !u!1 &8381833806715974723
 GameObject:
   m_ObjectHideFlags: 0
