@@ -95,7 +95,16 @@ public class GameManager : MonoBehaviour
     {   
         if(UIManager.Instance.editorPanel.currentState==EditorState.add)
         {
-            land.planet.AddNftObject(UIManager.Instance.editorPanel.selectedObj.nftData.name, land.GetPos(activeDir));
+            string objName = UIManager.Instance.editorPanel.selectedObj.nftData.name;
+            //land.planet.AddNftObject(UIManager.Instance.editorPanel.selectedObj.nftData.name, land.GetPos(activeDir));
+            var gObj = Instantiate(NftModel.nftModelDic[objName].nftGameObject);
+            gObj.transform.parent = land.planet.transform;
+            gObj.transform.position = land.transform.position;
+            gObj.SetActive(true);
+
+            var model = gObj.GetComponent<NftHandler>();
+            model.nftModel.pos = land.pos;
+            land.planet.planetData.nftGobj.Add(model);
         }
     }
 

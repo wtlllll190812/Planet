@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 763211508
+CRC: 4174606696
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: ea147e38dce39c924897beb53294504f
+    Hash: d19928e642a244f9cd2b3e253c990031
   TypeTreeHash:
     serializedVersion: 2
     Hash: 5d2b8174f5979ff1b1b3bfdbf53489e0
@@ -29,6 +29,6 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/Model/baishu/untitled.fbx
+- Assets/Model/baishu/cypress.fbx
 - Assets/Model/baishu/baishu1.png
 Dependencies: []

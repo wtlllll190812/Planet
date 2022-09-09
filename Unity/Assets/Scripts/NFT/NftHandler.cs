@@ -9,6 +9,7 @@ public class NftHandler : MonoBehaviour,IClickable
 
     public bool OnClick(Vector3 startPos, Vector3 activeDir)
     {
+        planet.planetData.nftGobj.Remove(this);
         Destroy(gameObject);
         return false;
     }

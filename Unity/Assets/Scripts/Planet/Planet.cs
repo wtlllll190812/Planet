@@ -108,7 +108,7 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable,IScalable
         gObj.SetActive(true);
         var model = gObj.GetComponent<NftHandler>();
         model.nftModel.pos = pos;
-        planetData.nftGobj.Add(model.nftModel);
+        planetData.nftGobj.Add(model);
         return null;
     }
 }
@@ -125,7 +125,7 @@ public class PlanetData: IEnumerator,IEnumerable
     public Vector3Int currentPos;
     public static Vector3 center;
     public object Current => data[currentPos.x, currentPos.y, currentPos.z];
-    public List<NftModel> nftGobj = new List<NftModel>();
+    public List<NftHandler> nftGobj = new List<NftHandler>();
 
     public float nearDis;
     public float farDis;
@@ -286,8 +286,8 @@ public class PlanetData: IEnumerator,IEnumerable
 
         foreach (var item in nftGobj)
         {
-            modelData.Add(item.Serialize());
-            Debug.Log(item.Serialize());
+            modelData.Add(item.nftModel.Serialize());
+            Debug.Log(item.nftModel.Serialize());
         }
         planet["model"] = modelData;
 

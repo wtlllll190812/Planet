@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 419207101
+CRC: 1213255902
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 7bb15281aad5806784a4e5e7b5bd2517
+    Hash: b19becb58d44ba0a5b504eea7e421477
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 238b6492da2e1de0cebdc9218519a3e5
+    Hash: 5d2b8174f5979ff1b1b3bfdbf53489e0
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -25,7 +25,10 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 48
   Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/Model/Sun.obj
+- Assets/Model/guoshu2/fruiter2.fbx
+- Assets/Model/guoshu2/guoshu2.png
 Dependencies: []

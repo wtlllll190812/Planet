@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 3766950258
+CRC: 1758077915
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 1ebdb62b40b6692a224e50df1eb5efc6
+    Hash: 7a269e54290ae0b1798c9e0fc285c86e
   TypeTreeHash:
     serializedVersion: 2
     Hash: f267fd2d8bcb1179236b6179ac5313bc
@@ -15,5 +15,5 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/Textures/shitou.png
+- Assets/Textures/caokuai.png
 Dependencies: []

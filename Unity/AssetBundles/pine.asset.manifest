@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 110909199
+CRC: 4003450689
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 3e7a1e3170911bb4baa12d5c1d177ae4
+    Hash: d7ba7e3550d05e4480e53e08fc9a1d23
   TypeTreeHash:
     serializedVersion: 2
     Hash: 5d2b8174f5979ff1b1b3bfdbf53489e0
@@ -29,6 +29,6 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/Model/guoshu/fruiter.fbx
-- Assets/Model/guoshu/guoshu1.png
+- Assets/Model/songshu/songshu1.png
+- Assets/Model/songshu/pine.fbx
 Dependencies: []

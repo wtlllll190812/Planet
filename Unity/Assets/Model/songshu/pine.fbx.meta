@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: a0d10e8845a9a024ca394ac3beb41b68
+guid: d102a1a80f724bc40847d6955f45ecab
 ModelImporter:
   serializedVersion: 21202
   internalIDToNameTable: []
@@ -101,5 +101,5 @@ ModelImporter:
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   additionalBone: 0
   userData: 
-  assetBundleName: fruiter
+  assetBundleName: pine
   assetBundleVariant: asset

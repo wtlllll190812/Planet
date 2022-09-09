@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b77e7b4adb9a5964981cc568d4d256b2
+guid: 54f874fa2d8a1d749bab739c0275702a
 ModelImporter:
   serializedVersion: 21202
   internalIDToNameTable: []
@@ -101,5 +101,5 @@ ModelImporter:
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   additionalBone: 0
   userData: 
-  assetBundleName: cypress
+  assetBundleName: fruiter
   assetBundleVariant: asset
