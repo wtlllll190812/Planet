@@ -8,7 +8,6 @@ using System.Collections.Generic;
 public class NftObjectButton : SerializedMonoBehaviour
 {
     private Button button;
-
     public NftObject obj;
     public UnityEvent<NftObjectButton> OnClickEvent;
     public TMPro.TextMeshProUGUI text;

@@ -87,19 +87,25 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
-
+    [Button("sdsd")]
+    public void testc(Vector3Int t)
+    {
+        //Quaternion rot = Quaternion.FromToRotation(transform.TransformDirection(Vector3.up), transform.TransformDirection(PlanetData.GetDir(t)));
+        //transform.rotation = rot;
+    }
     /// <summary>
     /// 添加装饰物
     /// </summary>
     public void AddModel(Land land, Vector3 activeDir)
-    {   
-        if(UIManager.Instance.editorPanel.currentState==EditorState.add)
+    {
+        if (UIManager.Instance.editorPanel.currentState == EditorState.add)
         {
             string objName = UIManager.Instance.editorPanel.selectedObj.nftData.name;
             //land.planet.AddNftObject(UIManager.Instance.editorPanel.selectedObj.nftData.name, land.GetPos(activeDir));
             var gObj = Instantiate(NftModel.nftModelDic[objName].nftGameObject);
             gObj.transform.parent = land.planet.transform;
-            gObj.transform.position = land.transform.position;
+            gObj.transform.position = land.planet.planetData.GetWorldSpacePos(land.GetPos(activeDir));
+            gObj.transform.rotation = land.transform.rotation;
             gObj.SetActive(true);
 
             var model = gObj.GetComponent<NftHandler>();

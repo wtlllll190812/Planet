@@ -10,7 +10,6 @@ public class NftModel : NftObject
 {
     public static Dictionary<string, NftModel> nftModelDic = new Dictionary<string, NftModel>();
     public Vector3Int? pos;
-    public Vector3Int? rot;
     public GameObject nftGameObject;
 
     public override JObject Serialize()
@@ -21,9 +20,6 @@ public class NftModel : NftObject
         res["px"] = pos?.x;
         res["py"] = pos?.y;
         res["pz"] = pos?.z;
-        res["rotx"]=rot?.x;
-        res["roty"]=rot?.y;
-        res["rotz"]=rot?.z;
         return res;
     }
 

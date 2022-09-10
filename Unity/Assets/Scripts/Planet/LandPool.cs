@@ -28,10 +28,13 @@ public class LandPool:Singleton<LandPool>
 
         Vector3 newPos = planet.transform.TransformPoint((pos - PlanetData.center) * landPref.transform.localScale.x);
         land.gameObject.transform.position = newPos;
-        land.transform.rotation = planet.transform.rotation;
+        
         land.transform.parent = planet.transform;
         land.planet = planet;
+        land.transform.rotation = PlanetData.GetDir(pos);
+        
         land.pos = pos;
+
         NftLandData landData = planet.planetData[pos];
         land.transform.GetChild(0).GetComponent<MeshRenderer>().material.mainTexture = landData.landTexture;
         return land;

@@ -336,13 +336,38 @@ public class PlanetData: IEnumerator,IEnumerable
         {
             string modelName = item["name"].ToString();
             Vector3Int newPos = new Vector3Int();
-            newPos.x = int.Parse(item["x"].ToString());
-            newPos.y = int.Parse(item["y"].ToString());
-            newPos.z = int.Parse(item["z"].ToString());
+            newPos.x = int.Parse(item["px"].ToString());
+            newPos.y = int.Parse(item["py"].ToString());
+            newPos.z = int.Parse(item["pz"].ToString());
             owner.AddNftObject(modelName, newPos);
         }
     }
     
+    public static Quaternion GetDir(Vector3Int pos)
+    {
+        int res=-1;
+        float temp = 0f;
+        for (int i = 0; i < 6; i++)
+        {
+            float s = Vector3.Dot(direction[i], Vector3.Normalize(pos - center));
+            if ( s >= temp)
+            {
+                res= i;
+                temp = s;
+            }
+        }
+        switch (res)
+        {
+            case 0:return Quaternion.Euler(0,0,90);
+            case 1:return Quaternion.Euler(0,0,-90);
+            case 2:return Quaternion.Euler(-90,0,0);
+            case 3:return Quaternion.Euler(90,0,0);
+            case 4:return Quaternion.Euler(0,-90,0);
+            case 5:return Quaternion.Euler(0,90,0);
+            default:return Quaternion.Euler(0,0,0);
+        }
+    }
+
     public Vector3 GetWorldSpacePos(Vector3Int pos)
     {
         return owner.transform.TransformPoint(pos - PlanetData.center);

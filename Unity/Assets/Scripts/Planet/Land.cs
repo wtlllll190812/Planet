@@ -56,8 +56,8 @@ public class NftLandData : NftObject
     {
         JObject res = new JObject();
         res["tokenID"] = tokenId.ToString();
-        if (landKind == "surface")
-            res["landKind"] = "rock_land";
+        if (landKind == "rock_land")
+            res["landKind"] = "grass_land";
         else
             res["landKind"] = landKind;
         return res;

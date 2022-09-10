@@ -53,6 +53,7 @@ public class InfinityScrollView : MonoBehaviour
         if(dir)
         {
             buttonList[range.x].anchoredPosition = new Vector2(buttonList[range.y].anchoredPosition.x + width, buttonList[range.x].anchoredPosition.y);
+            buttonList[range.x].GetComponent<NftObjectButton>().SetNftObj(NftObject.nftObjList[(range.y + 1)% NftObject.nftObjList.Count]);
             range.x++;
             range.y++;
             if (range.x == buttonList.Count)
@@ -64,6 +65,7 @@ public class InfinityScrollView : MonoBehaviour
         else
         {
             buttonList[range.y].anchoredPosition = new Vector2(buttonList[range.x].anchoredPosition.x - width, buttonList[range.y].anchoredPosition.y);
+            buttonList[range.y].GetComponent<NftObjectButton>().SetNftObj(NftObject.nftObjList[(range.x - 1)% NftObject.nftObjList.Count]);
             range.x--;
             range.y--;
             if (range.x == -1)
