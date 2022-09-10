@@ -36,6 +36,7 @@ public class NftModel : NftObject
             //nftBundle = AssetBundle.LoadFromMemory(nft.nftData);
             nftGameObject = GameObject.Instantiate(nftBundle.LoadAllAssets<GameObject>()[0]);
             var model = nftGameObject.AddComponent<NftHandler>();
+            nftGameObject.AddComponent<BoxCollider>();
             nftGameObject.name = nft.name;
             nftGameObject.SetActive(false);
             nftObjList.Add(this);

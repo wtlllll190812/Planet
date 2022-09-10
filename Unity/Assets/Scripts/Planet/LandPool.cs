@@ -31,7 +31,7 @@ public class LandPool:Singleton<LandPool>
         
         land.transform.parent = planet.transform;
         land.planet = planet;
-        land.transform.rotation = PlanetData.GetDir(pos);
+        land.transform.localRotation = PlanetData.GetDir(pos,false);
         
         land.pos = pos;
 

@@ -104,8 +104,8 @@ public class GameManager : MonoBehaviour
             //land.planet.AddNftObject(UIManager.Instance.editorPanel.selectedObj.nftData.name, land.GetPos(activeDir));
             var gObj = Instantiate(NftModel.nftModelDic[objName].nftGameObject);
             gObj.transform.parent = land.planet.transform;
-            gObj.transform.position = land.planet.planetData.GetWorldSpacePos(land.GetPos(activeDir));
-            gObj.transform.rotation = land.transform.rotation;
+            gObj.transform.localPosition = (land.GetPos(activeDir)- PlanetData.center)/4;
+            gObj.transform.localRotation = PlanetData.GetDir(land.GetPos(activeDir),true);
             gObj.SetActive(true);
 
             var model = gObj.GetComponent<NftHandler>();
@@ -135,8 +135,8 @@ public class GameManager : MonoBehaviour
     [Button("Load")]
     public IEnumerator Load()
     {
-        while (BlockchainManager.instance.nfts == null)
-            yield return null;
+        //while (BlockchainManager.instance.nfts == null)
+        //    yield return null;
         foreach (var item in BlockchainManager.instance.nfts)
         {
             if (item.name.Split("_")[1] == "land")

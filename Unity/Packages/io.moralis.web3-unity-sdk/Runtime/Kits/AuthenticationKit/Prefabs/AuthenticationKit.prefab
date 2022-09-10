@@ -292,7 +292,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 55
 --- !u!1 &1028142496089569007
 GameObject:
   m_ObjectHideFlags: 0
@@ -1013,7 +1013,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: BlockchainManager, Assembly-CSharp
-        m_MethodName: GetMyNFT
+        m_MethodName: GetNFTFromContract
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

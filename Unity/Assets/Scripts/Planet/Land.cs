@@ -17,13 +17,21 @@ public class Land :MonoBehaviour, IClickable
         if (kind == "land")
             GameManager.instance.EditLand(this, activeData);
         else if (kind == "model")
-            GameManager.instance.AddModel(this,activeData);
+            GameManager.instance.AddModel(this, activeData);
         return false;
     }
-
+    //public void OnMouseDown()
+    //{
+    //    var kind = UIManager.Instance.editorPanel.selectedObj?.nftKind;
+    //    if (kind == "land")
+    //        GameManager.instance.EditLand(this, transform.up);
+    //    else if (kind == "model")
+    //        GameManager.instance.AddModel(this, transform.up);
+    //}
     public Vector3Int GetPos(Vector3 dir)
     {
-        Vector3 nextPos = transform.InverseTransformDirection(dir);
+        Vector3 nextPos = planet.transform.InverseTransformDirection(dir);
+        Debug.Log(nextPos);
         return new Vector3Int(pos.x + Mathf.RoundToInt(nextPos.x), pos.y + Mathf.RoundToInt(nextPos.y), pos.z + Mathf.RoundToInt(nextPos.z));
     }
 }

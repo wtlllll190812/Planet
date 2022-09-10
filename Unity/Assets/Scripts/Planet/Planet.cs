@@ -343,7 +343,7 @@ public class PlanetData: IEnumerator,IEnumerable
         }
     }
     
-    public static Quaternion GetDir(Vector3Int pos)
+    public static Quaternion GetDir(Vector3Int pos,bool ismodel)
     {
         int res=-1;
         float temp = 0f;
@@ -356,14 +356,27 @@ public class PlanetData: IEnumerator,IEnumerable
                 temp = s;
             }
         }
+        if(ismodel)
+        {
+            switch (res)
+            {
+                case 0: return Quaternion.Euler(90, 0, 0);
+                case 1: return Quaternion.Euler(-90, 0, 0);
+                case 2: return Quaternion.Euler(0, 90, 0);
+                case 3: return Quaternion.Euler(0, -90, 0);
+                case 4: return Quaternion.Euler(-180, 0, 0);
+                case 5: return Quaternion.Euler(0, 0, 0);
+                default: return Quaternion.Euler(0, 0, 0);
+            }
+        }
         switch (res)
         {
-            case 0:return Quaternion.Euler(0,0,90);
-            case 1:return Quaternion.Euler(0,0,-90);
-            case 2:return Quaternion.Euler(-90,0,0);
-            case 3:return Quaternion.Euler(90,0,0);
-            case 4:return Quaternion.Euler(0,-90,0);
-            case 5:return Quaternion.Euler(0,90,0);
+            case 0:return Quaternion.Euler(0,0,0);
+            case 1:return Quaternion.Euler(0,0,180);
+            case 2:return Quaternion.Euler(0,0,90);
+            case 3:return Quaternion.Euler(0,0,-90);
+            case 4:return Quaternion.Euler(90,0,0);
+            case 5:return Quaternion.Euler(-90,0,0);
             default:return Quaternion.Euler(0,0,0);
         }
     }
