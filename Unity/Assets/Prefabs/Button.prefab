@@ -147,6 +147,7 @@ MonoBehaviour:
     - Name: obj
       Entry: 6
       Data: 
+  index: 0
   OnClickEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -168,7 +169,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8381833806715974780
 RectTransform:
   m_ObjectHideFlags: 0

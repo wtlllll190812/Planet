@@ -32,9 +32,11 @@ public class NftModel : NftObject
         if (!nftModelDic.ContainsKey(nft.name))
         {
             AssetBundle nftBundle = AssetBundle.LoadFromMemory(nft.imgData);
-            //nftImage = nftBundle.LoadAllAssets<Texture>()[0];
-            //nftBundle = AssetBundle.LoadFromMemory(nft.nftData);
-            nftGameObject = GameObject.Instantiate(nftBundle.LoadAllAssets<GameObject>()[0]);
+            nftImage = nftBundle.LoadAllAssets<Sprite>()[0];
+
+            AssetBundle nftBundle2 = AssetBundle.LoadFromMemory(nft.nftData);
+            nftGameObject = GameObject.Instantiate(nftBundle2.LoadAllAssets<GameObject>()[0]);
+
             var model = nftGameObject.AddComponent<NftHandler>();
             nftGameObject.AddComponent<BoxCollider>();
             nftGameObject.name = nft.name;

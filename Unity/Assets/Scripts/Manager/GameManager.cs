@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour
     public Planet currentPlanet;
     public UnityEvent<EGameState> onStateChange;
     public GameObject planetPref;
+
+    public GameObject loadingUI;
     private EGameState currentState;
     private string path;
 
@@ -181,6 +183,7 @@ public class GameManager : MonoBehaviour
         }    
         
         Debug.Log("Load Success");
+        loadingUI.SetActive(false);
         yield return null;
     }
 }
