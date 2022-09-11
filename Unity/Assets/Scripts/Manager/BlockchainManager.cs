@@ -510,6 +510,35 @@ public class BlockchainManager : MonoBehaviour {
         }
     }
 
+    // Get Balance of the Contract
+    [Button("GetLastTime")]
+    public async Task<BigInteger> GetLastTime() {
+        // Function ABI input parameters
+        object[] inputParams = new object[0];
+        // Function ABI Output parameters
+        object[] outputParams = new object[1];
+        outputParams[0] = new { internalType = "uint256", name = "", type = "uint256" };
+        // Function ABI
+        object[] abi = new object[1];
+        abi[0] = new {
+            inputs = inputParams, name = "GetLastTime", outputs = outputParams, stateMutability = "view",
+            type = "function"
+        };
+        // Define request object
+        RunContractDto rcd = new RunContractDto() {
+            Abi = abi,
+            Params = new { }
+        };
+        // resp: tx hash
+        JToken resp =
+            await Moralis.Web3Api.Native.RunContractFunctionOrigin(contractAddress, "GetLastTime", rcd,
+                ChainList.ropsten);
+
+        BigInteger lastTime = BigInteger.Zero;
+        BigInteger.TryParse(resp.ToString(), out lastTime);
+        return lastTime;
+    }
+    
     // GetRandomKItems
     [Button("GetRandomKItems")]
     public async Task<List<Nft>> GetRandomKItems(BigInteger value) {
