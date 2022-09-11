@@ -20,3 +20,12 @@
 #### 游戏demo视频
 
 [demo链接](https://www.bilibili.com/video/BV1ka411u7Tx/)
+
+合约地址：0xe42A55d693c717bc8B831Ab46be99b0184D74c8c
+
+#### Contributor
+
+Welles Sun：合约开发者，Web3新人，ZJUer
+wtlllll：Unity游戏本体开发，游戏开发者，ZJUer
+RyanFcr：产品经理&商务拓展，NFTGo产品实习生，ZJUer
+LIyee：游戏美术工作者，中国美院er
