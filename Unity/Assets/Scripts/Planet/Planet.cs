@@ -82,7 +82,7 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable,IScalable
     {
     }
 
-    public bool OnClick(Vector3 startPos,Vector3 activeDir)
+    public virtual bool OnClick(Vector3 startPos,Vector3 activeDir)
     {
         if(GameManager.instance.CompareState(EGameState.PlanetView))
             GameManager.instance.SetState(EGameState.Editor,this);
@@ -169,12 +169,20 @@ public class PlanetData: IEnumerator,IEnumerable
             {
                 for (int z = 0; z < totalSize; z++)
                 {
-                    NftLandData newLand = new NftLandData();
                     if (Vector3.Distance(new Vector3(x, y, z), center) > planetSize)
-                        newLand.landKind = "empty";
+                    {
+                        if(!NftLandData.landDataDic.ContainsKey("empty"))
+                            data[x, y, z] = new NftLandData("empty");
+                        else
+                            data[x, y, z] = NftLandData.landDataDic["empty"];
+                    }
                     else
-                        newLand.landKind = "underground";
-                    data[x, y, z]=newLand;
+                    {
+                        if (!NftLandData.landDataDic.ContainsKey("underground"))
+                            data[x, y, z] = new NftLandData("underground");
+                        else
+                            data[x, y, z] = NftLandData.landDataDic["underground"];
+                    }
                 }
             }
         }
@@ -186,7 +194,12 @@ public class PlanetData: IEnumerator,IEnumerable
                 for (int z = 0; z < totalSize; z++)
                 {
                     if (IsBoundary(new Vector3Int(x, y, z)))
-                        data[x, y, z].landKind= "surface";
+                    {
+                        if (!NftLandData.landDataDic.ContainsKey("surface"))
+                            data[x, y, z] = new NftLandData("surface");
+                        else
+                            data[x, y, z] = NftLandData.landDataDic["surface"];
+                    }
                 }
             }
         }

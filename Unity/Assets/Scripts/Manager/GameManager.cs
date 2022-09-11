@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     public UnityEvent<EGameState> onStateChange;
     public GameObject planetPref;
     private EGameState currentState;
+    private string path;
 
     public void Awake() 
     {
@@ -27,6 +28,7 @@ public class GameManager : MonoBehaviour
 
     public void Start()
     {
+        path = Application.persistentDataPath + "/planet.json";
         SetState(EGameState.GlobalView,Sun.instance);
         //StartCoroutine(Load());
     }
@@ -55,6 +57,7 @@ public class GameManager : MonoBehaviour
                 planet.CameraFollow();
                 break;
             case EGameState.Editor:
+                Save();
                 planet.CameraFollow();
                 break;
             default:
@@ -121,7 +124,7 @@ public class GameManager : MonoBehaviour
     [Button("Save")]
     public void Save()
     {
-        using (FileStream file = new FileStream("planet2.json", FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read))
+        using (FileStream file = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read))
         {
             JObject output = new JObject();
             BinaryFormatter formatter = new BinaryFormatter();
@@ -129,8 +132,6 @@ public class GameManager : MonoBehaviour
             {
                 output[item.name] = item.planetData.Serialize();
             }
-            
-            //file.Write(Encoding.Default.GetBytes(output.ToString()));
             formatter.Serialize(file, output.ToString());
         }
         Debug.Log("Save Success");
@@ -139,8 +140,6 @@ public class GameManager : MonoBehaviour
     [Button("Load")]
     public IEnumerator Load()
     {
-        //while (BlockchainManager.instance.nfts == null)
-        //    yield return null;
         foreach (var item in BlockchainManager.instance.nfts)
         {
             if (item.name.Split("_")[1] == "land")
@@ -154,23 +153,36 @@ public class GameManager : MonoBehaviour
                 model.DeSerialize(item);
             }
         }
-
-        using (FileStream file = new FileStream("planet2.json", FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read))
-        {
-            BinaryFormatter formatter = new BinaryFormatter();
-            JObject output = JObject.Parse(formatter.Deserialize(file) as string);
-            foreach (var item in output)
-            {
-                var planet = Instantiate(planetPref).GetComponent<Planet>();
-                planet.name = item.Key;
-                planet.planetData.owner = planet;
-                planet.planetData.Deserialize(item.Value as JObject);
-                planet.transform.position = Sun.instance.transform.position + Vector3.right * planet.planetData.trackRadius;
-                planet.GenPlanet();
-            }
-        }
-        Debug.Log("Load Success");
         UIManager.Instance.editorPanel.scrollView.Init();
+
+        if (!File.Exists(path))
+        {
+            var planet = Instantiate(planetPref).GetComponent<Planet>();
+            planet.name = "planet";
+            planet.planetData.owner = planet;
+            planet.transform.position = Sun.instance.transform.position + Vector3.right * planet.planetData.trackRadius;
+            planet.Init();
+            planet.GenPlanet();
+        }
+        else
+        {
+            using (FileStream file = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                JObject output = JObject.Parse(formatter.Deserialize(file) as string);
+                foreach (var item in output)
+                {
+                    var planet = Instantiate(planetPref).GetComponent<Planet>();
+                    planet.name = item.Key;
+                    planet.planetData.owner = planet;
+                    planet.planetData.Deserialize(item.Value as JObject);
+                    planet.transform.position = Sun.instance.transform.position + Vector3.right * planet.planetData.trackRadius;
+                    planet.GenPlanet();
+                }
+            }
+        }    
+        
+        Debug.Log("Load Success");
         yield return null;
     }
 }

@@ -55,12 +55,16 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  landPref: {fileID: 7660322167204507321, guid: 3a4043cf4af124b4da7660d3e048ca17, type: 3}
-  data:
+  planetData:
+    owner: {fileID: 5339622334229277177}
     currentPos: {x: 0, y: 0, z: 0}
-  cameraSize: -6
-  rotationSpeed: 5
-  revolutionSpeed: 10
+    nftGobj: []
+    nearDis: -5
+    farDis: -10
+    trackRadius: 10
+    cameraRadius: -5
+    rotationSpeed: 5
+    revolutionSpeed: 3
 --- !u!114 &3372099133872137598
 MonoBehaviour:
   m_ObjectHideFlags: 0
