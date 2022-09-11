@@ -26,6 +26,9 @@
 #### Contributor
 
 Welles Sun：合约开发者，Web3新人，ZJUer
+
 wtlllll：Unity游戏本体开发，游戏开发者，ZJUer
+
 RyanFcr：产品经理&商务拓展，NFTGo产品实习生，ZJUer
+
 LIyee：游戏美术工作者，中国美院er
