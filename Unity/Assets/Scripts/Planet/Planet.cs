@@ -70,7 +70,6 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable,IScalable
     //实现拖动接口
     public void DragStart(Vector3 startPos)
     {
-        Debug.Log("start");
     }
 
     public void OnDrag(Vector3 currentPos, Vector3 deltaPos)
@@ -81,7 +80,6 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable,IScalable
 
     public void DragEnd()
     {
-        Debug.Log("end");
     }
 
     public bool OnClick(Vector3 startPos,Vector3 activeDir)
@@ -238,10 +236,10 @@ public class PlanetData: IEnumerator,IEnumerable
             var kind = this[item + land.pos];
             if (kind.landKind=="underground" && this[land.pos].landKind=="empty")
             {
-                this[item + land.pos].landKind = "surface";
+                this[item + land.pos].landKind = "rock_land";
                 LandPool.Instance.GetLand(item + land.pos, land.planet);
+                Debug.Log("GetLand");
             }
-            //if(kind==EKindData.grass&&this[land.pos]==EKindData.grass)
         }
     }
     

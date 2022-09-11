@@ -13,10 +13,10 @@ public class Land :MonoBehaviour, IClickable
     public Planet planet;
     public bool OnClick(Vector3 startPos,Vector3 activeData)
     {
-        var kind = UIManager.Instance.editorPanel.selectedObj?.nftKind;
-        if (kind == "land")
+        //var kind = UIManager.Instance.editorPanel.selectedObj?.nftKind;
+        //if (kind == "land")
             GameManager.instance.EditLand(this, activeData);
-        else if (kind == "model")
+        //else if (kind == "model")
             GameManager.instance.AddModel(this, activeData);
         return false;
     }
@@ -31,7 +31,6 @@ public class Land :MonoBehaviour, IClickable
     public Vector3Int GetPos(Vector3 dir)
     {
         Vector3 nextPos = planet.transform.InverseTransformDirection(dir);
-        Debug.Log(nextPos);
         return new Vector3Int(pos.x + Mathf.RoundToInt(nextPos.x), pos.y + Mathf.RoundToInt(nextPos.y), pos.z + Mathf.RoundToInt(nextPos.z));
     }
 }

@@ -69,10 +69,11 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void EditLand(Land land,Vector3 activeDir)
     {
+        var kind = UIManager.Instance.editorPanel.selectedObj?.nftKind;
         switch (UIManager.Instance.editorPanel.currentState)
         {
             case EditorState.add:
-                if (!land.planet.planetData.InRange(land.GetPos(activeDir)))
+                if (!land.planet.planetData.InRange(land.GetPos(activeDir))||kind!="land")
                     break;
                 land.planet.planetData[land.GetPos(activeDir)]= NftLandData.landDataDic[UIManager.Instance.editorPanel.selectedObj.nftData.name];
                 var newLand =LandPool.Instance.GetLand(land.GetPos(activeDir), land.planet);
@@ -98,7 +99,9 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void AddModel(Land land, Vector3 activeDir)
     {
-        if (UIManager.Instance.editorPanel.currentState == EditorState.add)
+        var kind = UIManager.Instance.editorPanel.selectedObj?.nftKind;
+
+        if (UIManager.Instance.editorPanel.currentState == EditorState.add&&kind=="model")
         {
             string objName = UIManager.Instance.editorPanel.selectedObj.nftData.name;
             //land.planet.AddNftObject(UIManager.Instance.editorPanel.selectedObj.nftData.name, land.GetPos(activeDir));
@@ -110,6 +113,7 @@ public class GameManager : MonoBehaviour
 
             var model = gObj.GetComponent<NftHandler>();
             model.nftModel.pos = land.pos;
+            model.planet = land.planet;
             land.planet.planetData.nftGobj.Add(model);
         }
     }

@@ -38,7 +38,7 @@ public class InputManager : MonoBehaviour
         }
 
         //鼠标持续按下
-        if(Input.GetMouseButton(0))
+        if(Input.GetMouseButton(0) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
         {
             Vector2 pos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -mainCam.transform.position.z));
             Vector3 startPos = new Vector3(pos.x, pos.y, -4);
@@ -75,7 +75,7 @@ public class InputManager : MonoBehaviour
         }
         
         //鼠标抬起
-        if(Input.GetMouseButtonUp(0))
+        if(Input.GetMouseButtonUp(0) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
         {
             if (currentObj != null)
             {

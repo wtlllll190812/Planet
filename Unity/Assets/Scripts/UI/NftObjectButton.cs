@@ -9,6 +9,7 @@ public class NftObjectButton : SerializedMonoBehaviour
 {
     private Button button;
     public NftObject obj;
+    public int index;
     public UnityEvent<NftObjectButton> OnClickEvent;
     public TMPro.TextMeshProUGUI text;
     public void Awake()

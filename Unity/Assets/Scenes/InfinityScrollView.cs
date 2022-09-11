@@ -27,6 +27,7 @@ public class InfinityScrollView : MonoBehaviour
             tr.anchoredPosition = currentPos;
             //Debug.Log(NftLandData.nftObjList[i]);
             tr.GetComponent<NftObjectButton>().SetNftObj(NftObject.nftObjList[i]);
+            tr.GetComponent<NftObjectButton>().index = i;
             buttonList.Add(tr);
             currentPos.x += width;
             range.y++;
@@ -50,10 +51,13 @@ public class InfinityScrollView : MonoBehaviour
 
     public void Move(bool dir)
     {
-        if(dir)
+        var buttonx = buttonList[range.x].GetComponent<NftObjectButton>();
+        var buttony = buttonList[range.y].GetComponent<NftObjectButton>();
+        if (dir)
         {
             buttonList[range.x].anchoredPosition = new Vector2(buttonList[range.y].anchoredPosition.x + width, buttonList[range.x].anchoredPosition.y);
-            buttonList[range.x].GetComponent<NftObjectButton>().SetNftObj(NftObject.nftObjList[(range.y + 1)% NftObject.nftObjList.Count]);
+            buttonx.SetNftObj(NftObject.nftObjList[(buttony.index+1)% NftObject.nftObjList.Count]);
+            buttonx.index = buttony.index+1;
             range.x++;
             range.y++;
             if (range.x == buttonList.Count)
@@ -65,7 +69,8 @@ public class InfinityScrollView : MonoBehaviour
         else
         {
             buttonList[range.y].anchoredPosition = new Vector2(buttonList[range.x].anchoredPosition.x - width, buttonList[range.y].anchoredPosition.y);
-            buttonList[range.y].GetComponent<NftObjectButton>().SetNftObj(NftObject.nftObjList[(range.x - 1)% NftObject.nftObjList.Count]);
+            buttony.SetNftObj(NftObject.nftObjList[(buttonx.index-1)% NftObject.nftObjList.Count]);
+            buttony.index = buttonx.index-1;
             range.x--;
             range.y--;
             if (range.x == -1)
