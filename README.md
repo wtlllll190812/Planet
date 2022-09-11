@@ -32,3 +32,11 @@ wtlllll：Unity游戏本体开发，游戏开发者，ZJUer
 RyanFcr：产品经理&商务拓展，NFTGo产品实习生，ZJUer
 
 LIyee：游戏美术工作者，中国美院er
+
+#### How to use
+如果需要运行的壁纸的话，需要在Wallpaper里执行exe
+
+
+#### PS
+- 项目基于unity与moralis框架运行
+- 视频中的桌面运行效果基于wallpaper engine,仅为预览效果,后续开发中会转移至第一方的壁纸引擎
