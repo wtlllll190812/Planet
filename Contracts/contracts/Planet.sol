@@ -263,7 +263,7 @@ contract Planet is ERC1155URIStorage, ERC1155Holder {
                 block.timestamp - addressToLastTime[msg.sender] > 1 days,
             "No Owner No Money No Time"
         );
-        uint256 num = msg.value / (1 * (10 ** fee));
+        uint256 num = msg.value / (1 * (10 ** fee)) * K;
         require(sumWeight >= num, "Insufficient Pool");
         uint256[] memory tokenIds = new uint[](num);
         string[] memory tokenURIs = new string[](num);
