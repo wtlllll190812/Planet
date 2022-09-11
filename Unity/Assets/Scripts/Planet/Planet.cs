@@ -100,12 +100,16 @@ public class Planet : SerializedMonoBehaviour,IDragable,IClickable,IScalable
 
     public NftModel AddNftObject(string objName, Vector3Int pos)
     {
-        var gObj=Instantiate(NftModel.nftModelDic[objName].nftGameObject);
+        //land.planet.AddNftObject(UIManager.Instance.editorPanel.selectedObj.nftData.name, land.GetPos(activeDir));
+        var gObj = Instantiate(NftModel.nftModelDic[objName].nftGameObject);
         gObj.transform.parent = transform;
-        gObj.transform.position = planetData.GetWorldSpacePos(pos);
+        gObj.transform.localPosition = (pos - PlanetData.center) / 4;
+        gObj.transform.localRotation = PlanetData.GetDir(pos, true);
         gObj.SetActive(true);
+
         var model = gObj.GetComponent<NftHandler>();
         model.nftModel.pos = pos;
+        model.planet = this;
         planetData.nftGobj.Add(model);
         return null;
     }
@@ -247,11 +251,10 @@ public class PlanetData: IEnumerator,IEnumerable
             if (!InRange(item + land.pos))
                 continue;
             var kind = this[item + land.pos];
-            if (kind.landKind=="underground" && this[land.pos].landKind=="empty")
+            if (kind.landKind == "underground" && this[land.pos].landKind=="empty")
             {
-                this[item + land.pos].landKind = "rock_land";
+                this[item + land.pos]=NftLandData.landDataDic["surface"];
                 LandPool.Instance.GetLand(item + land.pos, land.planet);
-                Debug.Log("GetLand");
             }
         }
     }
@@ -298,7 +301,6 @@ public class PlanetData: IEnumerator,IEnumerable
         foreach (var item in nftGobj)
         {
             modelData.Add(item.nftModel.Serialize());
-            Debug.Log(item.nftModel.Serialize());
         }
         planet["model"] = modelData;
 
@@ -331,6 +333,7 @@ public class PlanetData: IEnumerator,IEnumerable
                 for (int z = 0; z < jarY.Count; z++)
                 {
                     string kind = jarY[z]["landKind"].ToString();
+                    Debug.Log(kind);
                     if (NftLandData.landDataDic.ContainsKey(kind))
                     {
                         data[x, y, z] = NftLandData.landDataDic[kind];
@@ -342,7 +345,6 @@ public class PlanetData: IEnumerator,IEnumerable
         }
 
         JArray modelData = jobj["model"] as JArray;
-        Debug.Log(modelData.ToString());
         foreach (JObject item in modelData)
         {
             string modelName = item["name"].ToString();

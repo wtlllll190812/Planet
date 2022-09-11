@@ -91,12 +91,7 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
-    [Button("sdsd")]
-    public void testc(Vector3Int t)
-    {
-        //Quaternion rot = Quaternion.FromToRotation(transform.TransformDirection(Vector3.up), transform.TransformDirection(PlanetData.GetDir(t)));
-        //transform.rotation = rot;
-    }
+
     /// <summary>
     /// 添加装饰物
     /// </summary>
@@ -115,7 +110,7 @@ public class GameManager : MonoBehaviour
             gObj.SetActive(true);
 
             var model = gObj.GetComponent<NftHandler>();
-            model.nftModel.pos = land.pos;
+            model.nftModel.pos = land.GetPos(activeDir);
             model.planet = land.planet;
             land.planet.planetData.nftGobj.Add(model);
         }

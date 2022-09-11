@@ -22,4 +22,9 @@ public class MarketUI : MonoBehaviour
             }
         }
     }
+
+    public void UpdateData()
+    {
+        BlockchainManager.instance.GetUnsoldItems();
+    }
 }

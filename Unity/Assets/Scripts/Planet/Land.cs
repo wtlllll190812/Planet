@@ -13,6 +13,7 @@ public class Land :MonoBehaviour, IClickable
     public Planet planet;
     public bool OnClick(Vector3 startPos,Vector3 activeData)
     {
+        AudioManager.instance.Play("click");
         //var kind = UIManager.Instance.editorPanel.selectedObj?.nftKind;
         //if (kind == "land")
             GameManager.instance.EditLand(this, activeData);
@@ -63,10 +64,7 @@ public class NftLandData : NftObject
     {
         JObject res = new JObject();
         res["tokenID"] = tokenId.ToString();
-        if (landKind == "rock_land")
-            res["landKind"] = "grass_land";
-        else
-            res["landKind"] = landKind;
+        res["landKind"] = landKind;
         return res;
     }
 
