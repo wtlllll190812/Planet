@@ -25,15 +25,6 @@ using MoralisUnity.Web3Api.Core.Models;
 using Org.BouncyCastle.Utilities.Encoders;
 
 [System.Serializable]
-// Token(Legacy)
-public class Token
-{
-    public BigInteger tokenId;
-    public string tokenURI;
-    public BigInteger amount;
-}
-
-[System.Serializable]
 public class Commodity {
     public BigInteger itemId;
     public BigInteger tokenId;
@@ -173,8 +164,9 @@ public class BlockchainManager : MonoBehaviour {
         return resp.ToString();
     }
 
-    // GetNFT (legacy)
-    public async Task<List<Token>> GetNFTFromContract() {
+    // GetNFT
+    [Button("GetNFTFromContract")]
+    public async void GetNFTFromContract() {
         try {
             MoralisUser user = await Moralis.GetUserAsync();
             // Function ABI input parameters
@@ -210,22 +202,27 @@ public class BlockchainManager : MonoBehaviour {
             List<BigInteger> amounts = JsonConvert.DeserializeObject<List<BigInteger>>(amountsJ.ToString());
 
             int length = tokenIDs.Count;
-            List<Token> tokens = new List<Token>();
+            nfts.Clear();
             for (int i = 0; i < length; i++) {
-                Token token = new Token();
-                token.tokenId = tokenIDs[i];
-                token.tokenURI = tokenURIs[i];
-                token.amount = amounts[i];
-                tokens.Add(token);
+                Nft nft = new Nft();
+                nft.tokenId = tokenIDs[i];
+                nft.amount = amounts[i];
+                string tokenURI = tokenURIs[i];
+                WebClient MyWebClient = new WebClient();
+                byte[] metaData = await MyWebClient.DownloadDataTaskAsync(tokenURI);
+                string metaDataString = Encoding.UTF8.GetString(metaData);
+                NftMetaData metaDataObject = JsonConvert.DeserializeObject<NftMetaData>(metaDataString);
+                nft.name = metaDataObject.name;
+                nft.description = metaDataObject.description;
+                // The format of data may have problems...
+                nft.nftData = await MyWebClient.DownloadDataTaskAsync(metaDataObject.nftUrl);
+                nft.imgData = await MyWebClient.DownloadDataTaskAsync(metaDataObject.imgUrl);
+                nfts.Add(nft);
             }
-
-            return tokens;
         }
         catch (Exception e) {
             Debug.LogError(e.Message);
         }
-
-        return null;
     }
 
     // Get Balance of the Contract
@@ -478,7 +475,7 @@ public class BlockchainManager : MonoBehaviour {
             Debug.Log($"Transaction Success! Transaction: {res}");
         }
     }
-    
+
     [Button("changeK")]
     public async void changeK(BigInteger K) {
         object[] args = {
@@ -511,6 +508,35 @@ public class BlockchainManager : MonoBehaviour {
         }
     }
 
+    // Get Balance of the Contract
+    [Button("GetLastTime")]
+    public async Task<BigInteger> GetLastTime() {
+        // Function ABI input parameters
+        object[] inputParams = new object[0];
+        // Function ABI Output parameters
+        object[] outputParams = new object[1];
+        outputParams[0] = new { internalType = "uint256", name = "", type = "uint256" };
+        // Function ABI
+        object[] abi = new object[1];
+        abi[0] = new {
+            inputs = inputParams, name = "GetLastTime", outputs = outputParams, stateMutability = "view",
+            type = "function"
+        };
+        // Define request object
+        RunContractDto rcd = new RunContractDto() {
+            Abi = abi,
+            Params = new { }
+        };
+        // resp: tx hash
+        JToken resp =
+            await Moralis.Web3Api.Native.RunContractFunctionOrigin(contractAddress, "GetLastTime", rcd,
+                ChainList.ropsten);
+
+        BigInteger lastTime = BigInteger.Zero;
+        BigInteger.TryParse(resp.ToString(), out lastTime);
+        return lastTime;
+    }
+    
     // GetRandomKItems
     [Button("GetRandomKItems")]
     public async Task<List<Nft>> GetRandomKItems(BigInteger value) {
@@ -587,14 +613,14 @@ public class BlockchainManager : MonoBehaviour {
                 nft.amount = 1;
                 string tokenURI = tokenURIs[i];
                 WebClient MyWebClient = new WebClient();
-                byte[] metaData =await MyWebClient.DownloadDataTaskAsync(tokenURI);
+                byte[] metaData = await MyWebClient.DownloadDataTaskAsync(tokenURI);
                 string metaDataString = Encoding.UTF8.GetString(metaData);
                 NftMetaData metaDataObject = JsonConvert.DeserializeObject<NftMetaData>(metaDataString);
                 nft.name = metaDataObject.name;
                 nft.description = metaDataObject.description;
                 // The format of data may have problems...
-                nft.nftData =await MyWebClient.DownloadDataTaskAsync(metaDataObject.nftUrl);
-                nft.imgData =await MyWebClient.DownloadDataTaskAsync(metaDataObject.imgUrl);
+                nft.nftData = await MyWebClient.DownloadDataTaskAsync(metaDataObject.nftUrl);
+                nft.imgData = await MyWebClient.DownloadDataTaskAsync(metaDataObject.imgUrl);
                 tokens.Add(nft);
             }
             else {
@@ -717,7 +743,6 @@ public class BlockchainManager : MonoBehaviour {
 
     public async void GetNFT(string address) {
         try {
-
             NftOwnerCollection noc =
                 await Moralis.GetClient().Web3Api.Account.GetNFTsForContract(address.ToLower(),
                     contractAddress,
@@ -756,6 +781,7 @@ public class BlockchainManager : MonoBehaviour {
                 nft.imgData = await MyWebClient.DownloadDataTaskAsync(metaDataObject.imgUrl);
                 nftList.Add(nft);
             }
+
             nfts = nftList;
 
             StartCoroutine(GameManager.instance.Load());
@@ -767,7 +793,7 @@ public class BlockchainManager : MonoBehaviour {
 
     [Button("GetNFT")]
     public async void GetMyNFT() {
-        MoralisUser user=await Moralis.GetUserAsync();
+        MoralisUser user = await Moralis.GetUserAsync();
         GetNFT(user.ethAddress);
     }
 
@@ -801,14 +827,14 @@ public class BlockchainManager : MonoBehaviour {
         Nft nft = new Nft();
         nft.tokenId = tokenId;
         nft.amount = amount;
-        byte[] metaData =await MyWebClient.DownloadDataTaskAsync(tokenURI);
+        byte[] metaData = await MyWebClient.DownloadDataTaskAsync(tokenURI);
         string metaDataString = Encoding.UTF8.GetString(metaData);
         NftMetaData metaDataObject = JsonConvert.DeserializeObject<NftMetaData>(metaDataString);
         nft.name = metaDataObject.name;
         nft.description = metaDataObject.description;
         // The format of data may have problems...
-        nft.nftData =await MyWebClient.DownloadDataTaskAsync(metaDataObject.nftUrl);
-        nft.imgData =await MyWebClient.DownloadDataTaskAsync(metaDataObject.imgUrl);
+        nft.nftData = await MyWebClient.DownloadDataTaskAsync(metaDataObject.nftUrl);
+        nft.imgData = await MyWebClient.DownloadDataTaskAsync(metaDataObject.imgUrl);
         nfts.Add(nft);
     }
 
