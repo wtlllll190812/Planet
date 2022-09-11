@@ -34,7 +34,7 @@ RyanFcr：产品经理&商务拓展，NFTGo产品实习生，ZJUer
 LIyee：游戏美术工作者，中国美院er
 
 #### How to use
-如果需要运行的壁纸的话，需要在Wallpaper里执行exe
+如果需要运行壁纸的话，需要在Wallpaper里导入exe
 
 
 #### PS
