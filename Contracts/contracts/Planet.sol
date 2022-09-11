@@ -256,18 +256,19 @@ contract Planet is ERC1155URIStorage, ERC1155Holder {
     }
 
     function GetRandomKItems() external payable {
-        require(sumWeight >= K, "Insufficient Pool");
         require(
             msg.sender == Owner ||
-                msg.value == 1 * (10**fee) ||
+                msg.value >= 1 * (10**fee) ||
                 addressToLastTime[msg.sender] == 0 ||
                 block.timestamp - addressToLastTime[msg.sender] > 1 days,
             "No Owner No Money No Time"
         );
-        uint256[] memory tokenIds = new uint[](K);
-        string[] memory tokenURIs = new string[](K);
+        uint256 num = msg.value / (1 * (10 ** fee));
+        require(sumWeight >= num, "Insufficient Pool");
+        uint256[] memory tokenIds = new uint[](num);
+        string[] memory tokenURIs = new string[](num);
 
-        for (uint256 i = 0; i < K; i++) {
+        for (uint256 i = 0; i < num; i++) {
             uint256 randNumber = (uint256(
                 keccak256(abi.encodePacked(block.timestamp, i))
             ) % sumWeight) + 1;
@@ -350,5 +351,9 @@ contract Planet is ERC1155URIStorage, ERC1155Holder {
         } else {
             commodityIds.remove(itemId);
         }
+    }
+
+    function LastGetTime() external view returns (uint256) {
+        return addressToLastTime[msg.sender];
     }
 }
