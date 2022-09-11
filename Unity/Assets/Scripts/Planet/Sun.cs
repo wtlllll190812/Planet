@@ -12,12 +12,11 @@ public class Sun : Planet
             instance = this;
         else
             Destroy(this);
-        cameraData = new CameraData(transform,planetData.cameraRadius);
     }
 
     public override void Start()
     {
-
+        cameraData = new CameraData(transform, planetData.cameraRadius);
     }
 
     public override void GenPlanet()

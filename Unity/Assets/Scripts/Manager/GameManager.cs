@@ -81,11 +81,13 @@ public class GameManager : MonoBehaviour
                 land.planet.planetData[land.GetPos(activeDir)]= NftLandData.landDataDic[UIManager.Instance.editorPanel.selectedObj.nftData.name];
                 var newLand =LandPool.Instance.GetLand(land.GetPos(activeDir), land.planet);
                 newLand.planet.planetData.Update(land);
+                AudioManager.instance.Play("click");
                 break;
             case EditorState.remove:
                 land.planet.planetData.SetLandKind(land, "empty");
                 land.planet.planetData.Update(land);
                 LandPool.Instance.DestoryLand(land);
+                AudioManager.instance.Play("click");
                 break;
             default :
                 break;
@@ -113,6 +115,7 @@ public class GameManager : MonoBehaviour
             model.nftModel.pos = land.GetPos(activeDir);
             model.planet = land.planet;
             land.planet.planetData.nftGobj.Add(model);
+            AudioManager.instance.Play("click");
         }
     }
 

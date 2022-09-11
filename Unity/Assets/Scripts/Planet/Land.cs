@@ -13,7 +13,6 @@ public class Land :MonoBehaviour, IClickable
     public Planet planet;
     public bool OnClick(Vector3 startPos,Vector3 activeData)
     {
-        AudioManager.instance.Play("click");
         //var kind = UIManager.Instance.editorPanel.selectedObj?.nftKind;
         //if (kind == "land")
             GameManager.instance.EditLand(this, activeData);

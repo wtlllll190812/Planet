@@ -4,14 +4,11 @@ using System.Collections.Generic;
 
 public class WormHole : Planet,IClickable
 {
-    public void Awake()
-    {
-        
-    }
+    public GameObject confirmUi;
 
     public override void Start()
     {
-
+        cameraData = new CameraData(transform, planetData.cameraRadius);
     }
 
     public override void GenPlanet()
@@ -20,8 +17,14 @@ public class WormHole : Planet,IClickable
 
     public override bool OnClick(Vector3 startPos, Vector3 activeDir)
     {
+        if (GameManager.instance.currentPlanet == this)
+            confirmUi.SetActive(true);
         base.OnClick(startPos, activeDir);
-        BlockchainManager.instance.GetRandomKItems(1);
         return true;
+    }
+
+    public void GetRandomItem()
+    {
+        BlockchainManager.instance.GetRandomKItems(1);
     }
 }
