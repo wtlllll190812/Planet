@@ -653,8 +653,10 @@ public class BlockchainManager : MonoBehaviour {
     #region IPFS
 
     [Button("UploadToIpfs")]
-    public async Task<string> UploadToIpfs(string nftName, string nftDesc, string nftPath, string imgPath) {
+    public async Task<string> UploadToIpfs(string nftName, string nftDesc, string nftPath) {
         // Get data of NFT material
+        nftPath = @"D:\TL\unity\Ongoing\Planet\Unity\AssetBundles\" + nftPath + ".asset";
+        string imgPath= @"D:\TL\unity\Ongoing\Planet\Unity\AssetBundles\" + nftPath + "_image.asset";
         FileStream fs = new FileStream(nftPath, FileMode.Open, FileAccess.Read);
         byte[] nftData = new byte[fs.Length];
         fs.Read(nftData, 0, nftData.Length);
