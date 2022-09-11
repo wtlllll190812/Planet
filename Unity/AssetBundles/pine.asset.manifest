@@ -1,34 +1,19 @@
 ManifestFileVersion: 0
-CRC: 4003450689
+CRC: 3812417299
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: d7ba7e3550d05e4480e53e08fc9a1d23
+    Hash: 2fb134dc266697784636653bbffba2dc
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 5d2b8174f5979ff1b1b3bfdbf53489e0
+    Hash: f267fd2d8bcb1179236b6179ac5313bc
 HashAppended: 0
 ClassTypes:
-- Class: 1
-  Script: {instanceID: 0}
-- Class: 4
-  Script: {instanceID: 0}
-- Class: 21
-  Script: {instanceID: 0}
-- Class: 23
-  Script: {instanceID: 0}
 - Class: 28
-  Script: {instanceID: 0}
-- Class: 33
-  Script: {instanceID: 0}
-- Class: 43
-  Script: {instanceID: 0}
-- Class: 48
   Script: {instanceID: 0}
 - Class: 213
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/Model/songshu/songshu1.png
-- Assets/Model/songshu/pine.fbx
 Dependencies: []

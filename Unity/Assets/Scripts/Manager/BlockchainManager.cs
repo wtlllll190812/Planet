@@ -653,10 +653,10 @@ public class BlockchainManager : MonoBehaviour {
     #region IPFS
 
     [Button("UploadToIpfs")]
-    public async Task<string> UploadToIpfs(string nftName, string nftDesc, string nftPath) {
+    public async Task<string> UploadToIpfs(string nftName, string nftDesc, string path) {
         // Get data of NFT material
-        nftPath = @"D:\TL\unity\Ongoing\Planet\Unity\AssetBundles\" + nftPath + ".asset";
-        string imgPath= @"D:\TL\unity\Ongoing\Planet\Unity\AssetBundles\" + nftPath + "_image.asset";
+        string nftPath = @"D:\TL\unity\Ongoing\Planet\Unity\AssetBundles\" + path + ".asset";
+        string imgPath= @"D:\TL\unity\Ongoing\Planet\Unity\AssetBundles\" + path + "_img.asset";
         FileStream fs = new FileStream(nftPath, FileMode.Open, FileAccess.Read);
         byte[] nftData = new byte[fs.Length];
         fs.Read(nftData, 0, nftData.Length);
@@ -793,12 +793,6 @@ public class BlockchainManager : MonoBehaviour {
         catch (Exception exp) {
             Debug.LogError(exp.Message);
         }
-    }
-
-    [Button("GetNFT")]
-    public async void GetMyNFT() {
-        MoralisUser user = await Moralis.GetUserAsync();
-        GetNFT(user.ethAddress);
     }
 
     #endregion

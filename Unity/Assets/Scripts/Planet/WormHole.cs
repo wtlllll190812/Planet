@@ -25,6 +25,6 @@ public class WormHole : Planet,IClickable
 
     public void GetRandomItem()
     {
-        BlockchainManager.instance.GetRandomKItems(1);
+        BlockchainManager.instance.GetRandomKItems(System.Numerics.BigInteger.Pow(10,18));
     }
 }

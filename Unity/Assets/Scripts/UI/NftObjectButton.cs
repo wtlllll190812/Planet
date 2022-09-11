@@ -27,6 +27,7 @@ public class NftObjectButton : SerializedMonoBehaviour
     public void SetNftObj(NftObject nftobj)
     {
         obj= nftobj;
+        GetComponent<Image>().sprite = nftobj.nftImage;
         text.text = obj.nftData.name;
     }
 }

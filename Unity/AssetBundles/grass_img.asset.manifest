@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 1758077915
+CRC: 2967894648
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 3fbd6fee73786eca7d20169484ff0eb5
+    Hash: af23e6f4d836d1d656fd5e7faa6d0318
   TypeTreeHash:
     serializedVersion: 2
     Hash: f267fd2d8bcb1179236b6179ac5313bc
@@ -15,5 +15,5 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/Textures/caokuai.png
+- Assets/Textures/grass_land.png
 Dependencies: []

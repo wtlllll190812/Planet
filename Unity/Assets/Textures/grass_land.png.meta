@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 7acfabc2322c4aa48afde2c331ad0a9b
+guid: 5d7d9c6b45b07c44398e12f48c796a4f
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -94,5 +94,5 @@ TextureImporter:
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
   userData: 
-  assetBundleName: pine_object
+  assetBundleName: grass_land_img
   assetBundleVariant: asset

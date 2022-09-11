@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 2320711995
+CRC: 360898312
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -9,17 +9,23 @@ AssetBundleManifest:
       Name: fruiter.asset
       Dependencies: {}
     Info_2:
-      Name: pine.asset
-      Dependencies: {}
-    Info_3:
       Name: fruiter2.asset
       Dependencies: {}
-    Info_4:
+    Info_3:
       Name: cypress.asset
       Dependencies: {}
-    Info_5:
+    Info_4:
       Name: earth.asset
       Dependencies: {}
+    Info_5:
+      Name: pine_object.asset
+      Dependencies: {}
     Info_6:
-      Name: grass.asset
+      Name: pine_object_img.asset
+      Dependencies: {}
+    Info_7:
+      Name: grass_land.asset
+      Dependencies: {}
+    Info_8:
+      Name: grass_land_img.asset
       Dependencies: {}

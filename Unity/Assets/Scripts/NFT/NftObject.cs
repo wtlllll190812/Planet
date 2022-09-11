@@ -11,7 +11,7 @@ public abstract class NftObject
     public static List<NftObject> nftObjList = new List<NftObject>();
 
     public Nft nftData;
-    public Texture nftImage;
+    public Sprite nftImage;
     public BigInteger tokenId;
     public string nftKind;
 

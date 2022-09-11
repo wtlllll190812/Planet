@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 1758077915
+CRC: 1616875725
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 3fbd6fee73786eca7d20169484ff0eb5
+    Hash: 61c109e997964edeeb278f0ff9da26be
   TypeTreeHash:
     serializedVersion: 2
     Hash: f267fd2d8bcb1179236b6179ac5313bc
@@ -15,5 +15,5 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/Textures/caokuai.png
+- Assets/Model/songshu/pine.png
 Dependencies: []
