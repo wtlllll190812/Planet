@@ -57,7 +57,7 @@
 ## Guide - 如何运行Demo？
 
 ### 运行壁纸
-目前的Demo如果需要运行壁纸的话，请在Wallpaper engine里导入exe，未来将迁移到第一方的壁纸引擎
+在[Release](https://github.com/wtlllll190812/Planet/releases/tag/publish)中下载`build.zip`并解压，直接运行`Planet.exe`即可。目前的Demo如果需要运行壁纸的话，请在Wallpaper Engine里导入`Planet.exe`，未来将迁移到第一方的壁纸引擎。
 
 ### 登陆
 点击Connect并使用钱包扫描二维码登陆，目前合约部署在测试链Ropsten上，请使用Ropsten地址登陆，登陆后需要等待一段时间NFT加载。
@@ -99,4 +99,4 @@
 
 ## PS
 - 项目基于Unity与Moralis框架运行
-- 视频中的桌面运行效果基于Wallpaper engine，仅为预览效果，后续开发中会转移至第一方的壁纸引擎
+- 视频中的桌面运行效果基于Wallpaper Engine，仅为预览效果，后续开发中会转移至第一方的壁纸引擎
