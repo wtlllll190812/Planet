@@ -36,6 +36,12 @@
 我们的商业模式是玩家通过抽卡购买我们设计的稀有NFT来盈利，同时玩家与玩家之间可以在商城里进行点对点的交易。我们通过数据调研了接近一万位用户，70%的用户对自己的专属星球并且能够成为桌面的概念感兴趣，并愿意试玩，我们也发现普通素材上链成NFT的操作，反复的metamask弹窗操作加上gas fee会导致70%的用户直接流失成3%，所以我们采用了普通素材不上链，稀有购买的素材才上链成为NFT，满足用户的付费需求，我们也在不断地设计出精美的「地块」作为素材。在未来，我们也鼓励玩家使用我们简单的设计工具自己从零到一设计最基础的「地块」和「装饰品」，我们也会支持玩家自己持有的NFT导入通过3D建模生成有“生命”的「装饰品」，NFT们在玩家的内心世界大团聚。
 
 ## How - 我们怎么做？
+
+### [Demo](https://www.bilibili.com/video/BV1ka411u7Tx/) <a href="https://www.bilibili.com/video/BV1ka411u7Tx"><image src="https://github.com/CSWellesSun/Images/blob/main/bilibili.png" height="20px"/></a> 
+
+- 基础商店模块
+- 基础建造模块
+
 ### 1.0 
 - 完善商城社区板块
 - 可以导出成桌面（目前仍基于Wallpaper Engine）
@@ -48,23 +54,7 @@
 ### 3.0
 - ……
 
-## 游戏演示Demo
-[demo链接](https://www.bilibili.com/video/BV1ka411u7Tx/)
-
-合约地址：0xe42A55d693c717bc8B831Ab46be99b0184D74c8c (RopstenETH)
-
-## Contributor
-Welles Sun：合约开发者，Web3新人，ZJUer
-
-wtlllll：Unity游戏本体开发，游戏开发者，ZJUer
-
-RyanFcr：产品经理&商务拓展，NFTGo产品实习生，ZJUer
-
-LIyee：游戏美术工作者，中国美院er
-
-RitzzzZ：运营，ZJUer
-
-## How to Play Demo
+## Guide - 如何运行Demo？
 
 ### 运行壁纸
 目前的Demo如果需要运行壁纸的话，请在Wallpaper engine里导入exe，未来将迁移到第一方的壁纸引擎
@@ -97,6 +87,16 @@ RitzzzZ：运营，ZJUer
   <image src="https://github.com/CSWellesSun/Images/blob/main/Planet/readme_buy.png" width="300px"/>
 </div>
 
-## 项目框架
+## Who - 我们是谁？
+
+| **Name**   | **Description**      | **School** |
+|------------|----------------------|------------|
+| Welles Sun | 合约开发者，Web3新人         | ZJUer      |
+| wtlllll    | Unity游戏本体开发，游戏开发者    | ZJUer      |
+| RyanFcr    | 产品经理&商务拓展，NFTGo产品实习生 | ZJUer      |
+| LIyee      | 游戏美术工作者              | CAAer      |
+| RitzzzZ    | 运营                   | ZJUer      |
+
+## PS
 - 项目基于Unity与Moralis框架运行
 - 视频中的桌面运行效果基于Wallpaper engine，仅为预览效果，后续开发中会转移至第一方的壁纸引擎
