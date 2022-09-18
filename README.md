@@ -8,7 +8,9 @@
 ![](https://img.shields.io/badge/version-v0.1-orange)
 [![](https://img.shields.io/badge/contract-ropsten-ff69b4)](https://ropsten.etherscan.io/address/0xe42A55d693c717bc8B831Ab46be99b0184D74c8c)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/wtlllll190812/Planet)
-![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2FPlanet_GameFi)
+![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2FPlanet_GameFi) 
+<a href="https://www.bilibili.com/video/BV1ka411u7Tx"><image src="https://github.com/CSWellesSun/Images/blob/main/bilibili.png" height="20px"/></a> 
+<a href="https://dorahacks.io/zh/buidl/3431"><image src="https://github.com/CSWellesSun/Images/blob/main/dorahacks.svg" height="20px"/></a> 
 
 ## Why - 我们为什么做？
 
