@@ -1,0 +1,19 @@
+ManifestFileVersion: 0
+CRC: 698396372
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 08dda95a9e34c5505ba0cc7896b22809
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: f267fd2d8bcb1179236b6179ac5313bc
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Textures/shitou.png
+Dependencies: []

@@ -101,5 +101,5 @@ ModelImporter:
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   additionalBone: 0
   userData: 
-  assetBundleName: cypress
+  assetBundleName: cypress_object
   assetBundleVariant: asset

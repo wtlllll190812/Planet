@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 8f9722b237b1d4a439a382eafdc2a72c
+guid: 564ed8f5cb7ff80419b921b7dcc9f122
 ModelImporter:
   serializedVersion: 21202
   internalIDToNameTable: []
@@ -101,5 +101,5 @@ ModelImporter:
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   additionalBone: 0
   userData: 
-  assetBundleName: 
-  assetBundleVariant: 
+  assetBundleName: grass_object
+  assetBundleVariant: asset

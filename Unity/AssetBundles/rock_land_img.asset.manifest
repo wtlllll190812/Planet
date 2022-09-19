@@ -1,0 +1,19 @@
+ManifestFileVersion: 0
+CRC: 413183705
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 63c6d87a21178e39bebd596a61ba23b3
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: f267fd2d8bcb1179236b6179ac5313bc
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Textures/rock.png
+Dependencies: []

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: d9e61539ebd95db4397098a92dc43ada
+guid: 4e05e8418d33b2b4598dbf30707f9891
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -94,5 +94,5 @@ TextureImporter:
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
   userData: 
-  assetBundleName: 
-  assetBundleVariant: 
+  assetBundleName: cypress_object_img
+  assetBundleVariant: asset

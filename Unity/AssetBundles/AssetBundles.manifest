@@ -1,31 +1,64 @@
 ManifestFileVersion: 0
-CRC: 360898312
+CRC: 581176689
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: rock.asset
-      Dependencies: {}
-    Info_1:
-      Name: fruiter.asset
-      Dependencies: {}
-    Info_2:
-      Name: fruiter2.asset
-      Dependencies: {}
-    Info_3:
-      Name: cypress.asset
-      Dependencies: {}
-    Info_4:
-      Name: earth.asset
-      Dependencies: {}
-    Info_5:
       Name: pine_object.asset
       Dependencies: {}
-    Info_6:
+    Info_1:
       Name: pine_object_img.asset
       Dependencies: {}
-    Info_7:
+    Info_2:
       Name: grass_land.asset
       Dependencies: {}
-    Info_8:
+    Info_3:
       Name: grass_land_img.asset
+      Dependencies: {}
+    Info_4:
+      Name: flower_object.asset
+      Dependencies: {}
+    Info_5:
+      Name: grass_object.asset
+      Dependencies: {}
+    Info_6:
+      Name: grass_object_img.asset
+      Dependencies: {}
+    Info_7:
+      Name: fruiter_object.asset
+      Dependencies: {}
+    Info_8:
+      Name: flower_object_img.asset
+      Dependencies: {}
+    Info_9:
+      Name: fruiter2_object.asset
+      Dependencies: {}
+    Info_10:
+      Name: fruiter2_object_img.asset
+      Dependencies: {}
+    Info_11:
+      Name: cypress_object.asset
+      Dependencies: {}
+    Info_12:
+      Name: fruiter_object_img.asset
+      Dependencies: {}
+    Info_13:
+      Name: cypress_object_img.asset
+      Dependencies: {}
+    Info_14:
+      Name: earth_land.asset
+      Dependencies: {}
+    Info_15:
+      Name: earth_land_img.asset
+      Dependencies: {}
+    Info_16:
+      Name: rock_land.asset
+      Dependencies: {}
+    Info_17:
+      Name: rock_land_img.asset
+      Dependencies: {}
+    Info_18:
+      Name: house_object.asset
+      Dependencies: {}
+    Info_19:
+      Name: house_object_img.asset
       Dependencies: {}

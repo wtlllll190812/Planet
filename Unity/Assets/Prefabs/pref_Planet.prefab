@@ -59,8 +59,8 @@ MonoBehaviour:
     owner: {fileID: 5339622334229277177}
     currentPos: {x: 0, y: 0, z: 0}
     nftGobj: []
-    nearDis: -5
-    farDis: -10
+    nearDis: -3
+    farDis: -12
     trackRadius: 10
     cameraRadius: -5
     rotationSpeed: 5

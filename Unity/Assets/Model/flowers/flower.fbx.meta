@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 9b5bb44e46369ff4fbe4cbeba8a471c4
+guid: f45cfc9507daa294a9803daa07d117d7
 ModelImporter:
   serializedVersion: 21202
   internalIDToNameTable: []
@@ -101,5 +101,5 @@ ModelImporter:
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   additionalBone: 0
   userData: 
-  assetBundleName: 
-  assetBundleVariant: 
+  assetBundleName: flower_object
+  assetBundleVariant: asset
