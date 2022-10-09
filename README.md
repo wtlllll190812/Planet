@@ -42,15 +42,12 @@
 
 ### [Demo](https://www.bilibili.com/video/BV1ka411u7Tx/) <a href="https://www.bilibili.com/video/BV1ka411u7Tx"><image src="https://github.com/CSWellesSun/Images/blob/main/bilibili.png" height="20px"/></a> 
 
-- 基础商店模块
-- 基础建造模块
-
 ### 1.0 
 - 完善商城社区板块
-- 更多精美的「地块」和「装饰品」
+- 玩家可以自己设计基础「地块」
 
 ### 2.0
-- 玩家可以自己设计基础「地块」
+- 支持导出成桌面（目前仍基于Wallpaper Engine）
 - 动态装饰物，可以和玩家互动
 - 玩家可以上传自己的NFT，通过AI生成3D版并成为专属于自己的「装饰物」
 
